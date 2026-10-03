@@ -6,6 +6,13 @@ This is a mass-filtered spectral-library retrieval baseline for the [Enveda CASM
 
 Best public MRR@25: **0.176**. The real conditional fingerprint GAN v2 submission **Succeeded** and scored **0.171**, verified on 2026-10-03; it is 0.005 below the best. The chemical-prior historical-hybrid experiment was submitted successfully from notebook version 1 on 2026-10-02 and scored **0.176**, tying the historical hybrid. The preceding PubChemLite experiment scored **0.171**. See [the consolidated results and repository contents](docs/GITHUB_SNAPSHOT.md) for all submissions, validation caveats, and which assets must be regenerated.
 
+The [detailed Chinese analysis](docs/ANALYSIS_REPORT_20261003.md) explains the
+measured GAN comparison, actual failure cases, candidate coverage, overfitting,
+chemical evidence limits and runtime bottlenecks. The [next-run PRD](docs/PRD_NEXT_RUN_20261003.md)
+defines a separate inference release, new held-out protocol, controlled routing /
+chemical / graph / GAN experiments, resource targets and publication gates.
+The PRD is a specification for future work, not an already executed experiment.
+
 ## Chemical priors and generative-model analysis (2026-10-02)
 
 Chemical-prior matching and ChEBI/LIPID MAPS/PubChem offline catalog import are

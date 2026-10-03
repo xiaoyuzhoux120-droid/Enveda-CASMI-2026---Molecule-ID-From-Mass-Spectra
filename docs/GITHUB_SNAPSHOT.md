@@ -1,5 +1,10 @@
 # Results snapshot — 2026-10-03
 
+Read the [detailed Chinese analysis](ANALYSIS_REPORT_20261003.md) for final
+interpretation and the [next-run PRD](PRD_NEXT_RUN_20261003.md) for implementation
+scope, fresh holdouts, experiment controls, runtime targets and acceptance gates.
+The next-run specification has not yet been implemented or executed.
+
 ## Kaggle public results
 
 | Submission / notebook version | Method | Public MRR@25 |
