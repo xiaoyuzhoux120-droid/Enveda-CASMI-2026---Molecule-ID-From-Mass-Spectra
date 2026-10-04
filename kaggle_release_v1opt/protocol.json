@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "namespace": "casmi-v1-routing-20261003-v1:",
+  "configs": [
+    {
+      "name": "B0",
+      "guard": 0.5,
+      "margin": null
+    },
+    {
+      "name": "guard065",
+      "guard": 0.65,
+      "margin": null
+    },
+    {
+      "name": "guard075",
+      "guard": 0.75,
+      "margin": null
+    },
+    {
+      "name": "guard095",
+      "guard": 0.95,
+      "margin": null
+    },
+    {
+      "name": "always_expand",
+      "guard": 1.01,
+      "margin": null
+    },
+    {
+      "name": "margin010",
+      "guard": 0.5,
+      "margin": 0.1
+    }
+  ],
+  "development_selected": 500,
+  "acceptance_selected": 1000,
+  "maximum_spectra_per_identity": 2,
+  "mass_range": [
+    157,
+    1159
+  ],
+  "quality": "supported adduct; precursor error <=30ppm when known; nonempty vector",
+  "research_budget_seconds": 7200,
+  "ranking_pilot": "50 queries; <=6 seconds/query",
+  "development_selection": "maximize unknown MRR subject to known MRR >=B0-.001 and top1 >=B0-.002; baseline/simpler config on ties",
+  "acceptance": "only frozen candidate vs B0; unknown delta>=.001 and CI95 lower>0; known CI95 lower>=-.001 and Top1 delta>=-.002",
+  "bootstrap": {
+    "repeats": 10000,
+    "seed": 20261003
+  },
+  "fallback": "retain B0 if not accepted; no scientific upgrade submission",
+  "prior_seen_count": 62423,
+  "prior_sha256": "54aedb054443e3426da41ea0ee9870d237677913600f6f6a43461ebfc165fa51",
+  "research_notebook_must_not_be_submitted": true
+}
