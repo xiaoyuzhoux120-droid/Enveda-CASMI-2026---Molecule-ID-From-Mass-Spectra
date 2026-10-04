@@ -1,8 +1,33 @@
 {
-  "stage": "foundation_ready_to_launch",
+  "stage": "foundation_recovery_prepared",
   "M0_all_model_asset_requirements_complete": false,
   "FPNet_trained": false,
   "acceptance_opened": false,
   "competition_submission_allowed": false,
-  "local_foundation_tests_passed": 7
+  "local_foundation_tests_passed": 7,
+  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-foundation-20261004?scriptVersionId=355247134",
+  "source_commit": "d3e5447d298f02b43b98ddf4b0145cee4ad87960",
+  "embedded_source_sha256": "e094ea8ab49a65fb2fb81527f089cc161b7ee703389ec64c830edd560747fad8",
+  "accelerator": "None",
+  "internet": false,
+  "identity_selected": {
+    "train": 120000,
+    "development": 2000,
+    "acceptance": 3000
+  },
+  "selected_spectra": 686199,
+  "actual_identity_counts": {
+    "train": 119977,
+    "development": 1930,
+    "acceptance": 2870
+  },
+  "reference_audit": {
+    "rows": 2539608,
+    "formula_parse_failure": 11960,
+    "recomputed_gt30_ppm": 52708,
+    "old_gt30_recomputed_le30": 52801
+  },
+  "local_tests_passed": 14,
+  "prior_status": "Cancelled",
+  "prior_actual_seconds": 2082.0
 }

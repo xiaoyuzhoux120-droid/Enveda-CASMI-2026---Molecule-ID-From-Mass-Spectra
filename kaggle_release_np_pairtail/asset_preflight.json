@@ -1,0 +1,86 @@
+{
+  "official_ms_pred_commit": "708148c2a8eb0c32120644436fefd2fe90cd2214",
+  "assets": {
+    "external/forward_assets/glacier_msg/best.ckpt": {
+      "sha256": "5a47cecca707d3abd5a49c7dbac99d100aa2a586d5d4f848f1e8e35140d7db11",
+      "bytes": 181602423,
+      "execution_status": "not run"
+    },
+    "external/forward_assets/iceberg_msg/gen/best.ckpt": {
+      "sha256": "77d78adf7b60e2fdf68b45db39346c7bde2a1a2dbf57c5e7fc2b05223d43f16a",
+      "bytes": 41561516,
+      "execution_status": "not run"
+    },
+    "external/forward_assets/iceberg_msg/inten_contr/best.ckpt": {
+      "sha256": "d2785ff38beb52a1a22200832ed07b9817709470aa03d45bf6af75905bdaa7fa",
+      "bytes": 40604948,
+      "execution_status": "not run"
+    },
+    "external/forward_assets/official_ms_pred/msg_labels.tsv": {
+      "sha256": "0b29f4b150fa043f2ea382df3d7a02ddfdf5dc9baee9790299b3890d3582f244",
+      "bytes": 17651715,
+      "execution_status": "not run"
+    },
+    "external/lotus/260413_frozen_metadata.csv.gz": {
+      "sha256": "09885dcfb3bc0e6d700fefcd5778e91446a1f9d5d2fbbcbf00eb5d2e83b68844",
+      "bytes": 90298678,
+      "execution_status": "not run"
+    }
+  },
+  "GLACIER": {
+    "checkpoint_source": "https://github.com/coleygroup/ms-pred/blob/708148c2a8eb0c32120644436fefd2fe90cd2214/README.md",
+    "training_dataset": "MassSpecGym public, not NIST",
+    "supported_adducts": [
+      "[M+H]+"
+    ],
+    "polarity": "positive",
+    "training_instruments": [
+      "Orbitrap",
+      "QTOF"
+    ],
+    "instrument_aliases_declared": {},
+    "labels_rows": 119029,
+    "training_precursor_range": [
+      60.081045906016,
+      995.556
+    ],
+    "model_max_heavy_atoms": 100,
+    "model_spectral_upper_limit": 1500,
+    "collision_energy_labels_range": [
+      0,
+      358
+    ],
+    "collision_energy_units_verification": "pending full preprocessing provenance; never silently equate eV and NCE",
+    "software_license": "MIT",
+    "checkpoint_license_status": "Publicly provided by authors for use; archive has no standalone license file; do not redistribute pending eligibility review",
+    "enabled_in_confirmatory": false
+  },
+  "ICEBERG": {
+    "training_dataset": "MassSpecGym public, not NIST",
+    "software_license": "MIT",
+    "checkpoint_license_status": "Same public-release provenance; no archive license file",
+    "enabled_in_confirmatory": false,
+    "reason": "compatibility/domain/coverage pilot not executed"
+  },
+  "LOTUS": {
+    "source_url": "https://zenodo.org/records/19360665",
+    "version": "v11 2026-04-13",
+    "license": "CC BY 4.0 as returned by Zenodo record API",
+    "creators": [
+      "Adriano Rutz",
+      "Jonathan Bisson",
+      "Pierre-Marie Allard"
+    ],
+    "upstream_md5": "b17048b3b77daae9ab1e480b6591aabd",
+    "md5_verified": true,
+    "import_status": "pending"
+  },
+  "NPAtlas": {
+    "enabled": false,
+    "reason": "eligibility not established"
+  },
+  "PubChem": {
+    "enabled": false
+  },
+  "note": "Downloaded and safely inspected parameter metadata only; neither model inference nor ranking improvement is claimed."
+}

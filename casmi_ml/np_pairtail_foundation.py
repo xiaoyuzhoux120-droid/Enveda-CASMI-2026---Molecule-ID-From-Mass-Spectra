@@ -76,12 +76,14 @@ def representative_priority(reference, query, instrument=True):
 
 
 class Progress:
-    def __init__(self, root, total=14400):
+    def __init__(self, root, total=14400, prior_seconds=0.):
         self.root, self.start, self.total = Path(root), time.monotonic(), total
+        self.prior_seconds = float(prior_seconds)
         self.events = []
+        self.identity_cache = {}
     def emit(self, stage, **values):
         import resource
-        seconds = time.monotonic() - self.start
+        seconds = self.prior_seconds + time.monotonic() - self.start
         row = {'stage': stage, 'elapsed_seconds': seconds,
                'cpu_peak_rss_native': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
                **values}
@@ -200,6 +202,52 @@ def prepare(train_path, root, mapping, observed, protocol, progress):
     return frames
 
 
+def restore_prepared(directory, root, mapping, observed, protocol, progress):
+    """Resume the completed M0 checkpoint; independently verify its invariants."""
+    import shutil
+    directory=Path(directory);root=Path(root)
+    stored=json.loads((directory/'protocol_np_pairtail_20261004.json').read_text())
+    if stored!=protocol:
+        raise ValueError('Cached M0 scientific protocol differs')
+    manifest=json.loads((directory/'split_manifest.json').read_text())
+    frames={};signatures={};hashes={}
+    for split in ['train','development','acceptance']:
+        path=directory/f'{split}.parquet'
+        digest=hashlib.sha256()
+        with path.open('rb') as stream:
+            for block in iter(lambda:stream.read(8<<20),b''):digest.update(block)
+        hashes[path.name]=digest.hexdigest()
+        frame=pd.read_parquet(path)
+        actual=set(frame.identity)
+        if actual!=set(manifest['identity_lists'][split]):
+            raise ValueError('Cached M0 identity membership differs')
+        if not (frame.normalized_smiles.map(mapping)==frame.identity).all():
+            raise ValueError('Cached M0 aliases differ from canonical map')
+        if any(partition(identity)!=split for identity in actual):
+            raise ValueError('Cached M0 split salt differs')
+        if split=='acceptance' and actual & observed:
+            raise ValueError('Cached acceptance includes observed identities')
+        if frame.ingest_lib.eq('enveda-np-examples').any():
+            raise ValueError('Diagnostic-source query in cached main cohorts')
+        if frame.groupby('identity').size().max()>protocol['spectra_per_identity'][split]:
+            raise ValueError('Cached M0 spectra-per-identity cap exceeded')
+        signatures[split]={key:set(frame[key]) for key in ['exact_signature','binned_signature']}
+        frames[split]=frame
+        shutil.copyfile(path,root/path.name)
+    for a,b in [('train','development'),('train','acceptance'),('development','acceptance')]:
+        if set(frames[a].identity)&set(frames[b].identity):raise ValueError('Cached M0 identity overlap')
+        for kind in signatures[a]:
+            if signatures[a][kind]&signatures[b][kind]:raise ValueError('Cached M0 numerical spectrum overlap')
+    if frames['development'].identity.nunique()<1000 or frames['acceptance'].identity.nunique()<1500:
+        raise ValueError('Cached M0 insufficient sample sizes')
+    shutil.copyfile(directory/'split_manifest.json',root/'split_manifest.json')
+    write_json(root/'M0_restored_checkpoint.json',{'source':str(directory),'sha256':hashes,
+        'identity_membership_and_signatures_rechecked':True,'acceptance_predictions_computed':False})
+    progress.emit('M0_checkpoint_restored',actual_identities={s:int(f.identity.nunique()) for s,f in frames.items()},
+        acceptance_predictions_computed=False,checkpoint_hashes=hashes)
+    return frames
+
+
 def load_references(train_path, masses, query_frames, mapping, root, progress):
     started=time.monotonic(); target=np.sort(masses)
     query=pd.concat(query_frames,ignore_index=True)
@@ -242,9 +290,68 @@ def load_references(train_path, masses, query_frames, mapping, root, progress):
     return records,metadata
 
 
-class RepresentativeHybrid(RoutingHybrid):
-    def __init__(self,records,meta,coconut,catalog,rules,instrument):
-        super().__init__(records,coconut,catalog,rules)
+class SharedAnalog:
+    """Memoize pure analog scores with complete scoring-input keys.
+
+    Includes exact center, catalog signature, and all 25 weighted neighbors.
+    It never reads query identity, ground truth, query ID, or a previous CSV.
+    """
+    def __init__(self):
+        self.fingerprints, self.results = {}, {}
+        self.hits = self.misses = 0
+
+    def rank(self, engine, center, library, expanded=False):
+        pool = engine.unified if expanded else engine.coconut
+        masses = engine.new_mass if expanded else engine.old_mass
+        order = engine.new_order if expanded else engine.old_order
+        # All engines share the same frozen pool; assert that equality once
+        # per materialized pool rather than trusting its row count.
+        if not hasattr(engine, '_pool_signatures'):
+            engine._pool_signatures = tuple(hashlib.sha256(
+                pd.util.hash_pandas_object(p[COCONUT_COLUMNS], index=True).to_numpy().tobytes()).hexdigest()
+                for p in [engine.coconut, engine.unified])
+        signature = engine._pool_signatures[int(expanded)]
+        neighbors = tuple((key, smiles, float(score).hex()) for key, smiles, score in library[:25])
+        cache_key = (signature, float(center).hex(), neighbors)
+        if cache_key not in self.results:
+            self.results[cache_key] = coconut_rank(center, library, pool, masses, order, self.fingerprints)
+            self.misses += 1
+        else:
+            self.hits += 1
+        return self.results[cache_key]
+
+
+class CachedRoutingHybrid(RoutingHybrid):
+    def __init__(self, *args, shared=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.shared = shared or SharedAnalog()
+
+    def controls(self, group, configs=CONFIGS):
+        if len(configs) != 1 or configs[0] != CONFIGS[0]:
+            raise ValueError('Foundation memoization is restricted to frozen C0 routing')
+        started = time.monotonic()
+        center, library = library_rank(group, self.records, self.matrix, self.masses, self.order)
+        old = self.shared.rank(self, center, library)
+        pairs = blend(library, old)
+        confidence = float(library[0][2]) if library else 0.
+        margin = confidence-float(library[1][2]) if len(library)>1 else confidence
+        evidence = []
+        if confidence < .5:
+            analog = self.shared.rank(self, center, library, True)
+            pairs = blend(library, analog)
+            evidence = extract_evidence(group, self.rules)
+            if evidence:
+                structures = dict(pairs); scores, _ = candidate_scores(structures, evidence, self.rules)
+                pairs = [(key, structures[key]) for key in rerank([k for k,_ in pairs], scores, self.weight)]
+        return {'B0':pairs}, {'confidence':confidence, 'margin':margin,
+            'protected':{'B0':confidence >= .5}, 'rule_matches':len(evidence),
+            'seconds':time.monotonic()-started, 'analog_cache_hits':self.shared.hits,
+            'analog_cache_misses':self.shared.misses}
+
+
+class RepresentativeHybrid(CachedRoutingHybrid):
+    def __init__(self,records,meta,coconut,catalog,rules,instrument,shared=None):
+        super().__init__(records,coconut,catalog,rules,shared=shared)
         self.meta,self.instrument=meta,instrument
     def controls(self,group,configs=CONFIGS):
         # Stable metadata representative of each structure in the same mass
@@ -263,19 +370,20 @@ class RepresentativeHybrid(RoutingHybrid):
         mass=np.asarray([r[0] for r in records]);matrix=self.matrix[index]
         center,library=library_rank(group,records,matrix,mass,np.argsort(mass))
         confidence=library[0][2] if library else 0.
-        old=coconut_rank(center,library,self.coconut,self.old_mass,self.old_order,self.cache)
+        old=self.shared.rank(self,center,library)
         output=blend(library,old);evidence=[]
         if confidence<.5:
-            analog=coconut_rank(center,library,self.unified,self.new_mass,self.new_order,self.cache)
+            analog=self.shared.rank(self,center,library,True)
             output=blend(library,analog);evidence=extract_evidence(group,self.rules)
             if evidence:
                 structures=dict(output);scores,_=candidate_scores(structures,evidence,self.rules)
                 output=[(k,structures[k]) for k in rerank(list(structures),scores,self.weight)]
-        return {'B0':output},{'confidence':float(confidence),'representatives':len(records),'instrument_aware':self.instrument}
+        return {'B0':output},{'confidence':float(confidence),'representatives':len(records),'instrument_aware':self.instrument,
+            'analog_cache_hits':self.shared.hits,'analog_cache_misses':self.shared.misses}
 
 
 def evaluate(engine,frame,mapping,progress,label,parity=False):
-    enumerator=rdMolStandardize.TautomerEnumerator();cache={};cases=[];started=time.monotonic()
+    enumerator=rdMolStandardize.TautomerEnumerator();cache=progress.identity_cache;cases=[];started=time.monotonic()
     for n,(truth,group) in enumerate(frame.groupby('identity',sort=True),1):
         outputs,audit=engine.controls(group,[CONFIGS[0]])
         if parity and n<=100:
@@ -287,7 +395,11 @@ def evaluate(engine,frame,mapping,progress,label,parity=False):
         cases.append({'identity':truth,'rr':1/rank if rank else 0.,'rank':rank,
                       'ranking':[{'key':k,'smiles':s,'identity':cache[s]} for k,s in pairs],**audit})
         if n%25==0:
-            progress.emit(label,completed=n,total=int(frame.identity.nunique()),seconds=time.monotonic()-started)
+            seconds=time.monotonic()-started;total=int(frame.identity.nunique())
+            progress.emit(label,completed=n,total=total,seconds=seconds,
+                queries_per_second=n/max(seconds,1e-6),estimated_remaining_seconds=(total-n)*seconds/n,
+                analog_cache_hits=getattr(getattr(engine,'shared',None),'hits',0),
+                analog_cache_misses=getattr(getattr(engine,'shared',None),'misses',0))
         if n==100 and (time.monotonic()-started)/100>6:
             raise TimeoutError('100-query pilot exceeds six seconds/query')
     write_json(progress.root/(label+'_cases.json'),cases)
@@ -296,28 +408,28 @@ def evaluate(engine,frame,mapping,progress,label,parity=False):
             'recall25':float(np.mean([r['rank']>0 for r in cases]))}
 
 
-def run(train_path,coconut_path,catalog_path,dictionary_path,cache_path,observed_path,protocol,root):
-    root=Path(root);root.mkdir(parents=True,exist_ok=True);progress=Progress(root)
+def run(train_path,coconut_path,catalog_path,dictionary_path,cache_path,observed_path,protocol,root,prior_seconds=0.,prepared=None):
+    root=Path(root);root.mkdir(parents=True,exist_ok=True);progress=Progress(root,prior_seconds=prior_seconds)
     write_json(root/'protocol_np_pairtail_20261004.json',protocol)
     mapping=json.loads(Path(cache_path).read_text());observed=set(json.loads(Path(observed_path).read_text()))
     try:
-        frames=prepare(train_path,root,mapping,observed,protocol,progress)
+        frames=restore_prepared(prepared,root,mapping,observed,protocol,progress) if prepared else prepare(train_path,root,mapping,observed,protocol,progress)
         # Only development references/queries are used by this stage.
         dev=frames['development'];masses=(dev.precursor_mz-dev.adduct.map(ADDUCT_MASS)).to_numpy()
         records,meta=load_references(train_path,masses,[dev],mapping,root,progress)
         coconut=pd.read_parquet(coconut_path,columns=COCONUT_COLUMNS);catalog=pd.read_parquet(catalog_path);rules=load_rules(dictionary_path)
-        results={}
+        results={};shared=SharedAnalog()
         known_baseline_identities={m['identity'] for m in meta if mass_keep(m,30,True) and m['mass_source']=='formula'}
         for condition in ['unknown','known']:
             include=[i for i,m in enumerate(meta) if condition=='known' or not m['is_query_identity']]
             baseline_ids=[i for i in include if mass_keep(meta[i],30,True) and meta[i]['mass_source']=='formula']
             remaining={meta[i]['identity'] for i in baseline_ids}
             query=dev if condition=='unknown' else dev[dev.identity.isin(remaining)]
-            engine=RoutingHybrid([records[i] for i in baseline_ids],coconut,catalog,rules)
+            engine=CachedRoutingHybrid([records[i] for i in baseline_ids],coconut,catalog,rules,shared=shared)
             results['C0_'+condition]=evaluate(engine,query,mapping,progress,'C0_'+condition,parity=True)
             for threshold in [10,20,30]:
                 ids=[i for i in include if mass_keep(meta[i],threshold)]
-                engine=RoutingHybrid([records[i] for i in ids],coconut,catalog,rules)
+                engine=CachedRoutingHybrid([records[i] for i in ids],coconut,catalog,rules,shared=shared)
                 results[f'C1_ppm{threshold}_{condition}']=evaluate(engine,query,mapping,progress,f'C1_ppm{threshold}_{condition}')
         valid=[t for t in [10,20,30] if results[f'C1_ppm{t}_known']['mrr25']>=results['C0_known']['mrr25']-.001 and results[f'C1_ppm{t}_known']['top1']>=results['C0_known']['top1']-.002]
         threshold=max(valid,key=lambda t:(results[f'C1_ppm{t}_unknown']['mrr25'],-[10,20,30].index(t))) if valid else None
@@ -328,7 +440,7 @@ def run(train_path,coconut_path,catalog_path,dictionary_path,cache_path,observed
                 query=dev if condition=='unknown' else dev[dev.identity.isin(known_baseline_identities)]
                 for aware in [False,True]:
                     label=f'C2_instrument{int(aware)}_'+condition
-                    engine=RepresentativeHybrid([records[i] for i in ids],[meta[i] for i in ids],coconut,catalog,rules,aware)
+                    engine=RepresentativeHybrid([records[i] for i in ids],[meta[i] for i in ids],coconut,catalog,rules,aware,shared=shared)
                     results[label]=evaluate(engine,query,mapping,progress,label)
         write_json(root/'development_foundation_results.json',results)
         progress.emit('M1_foundation_complete',afix_threshold=threshold,acceptance_opened=False,

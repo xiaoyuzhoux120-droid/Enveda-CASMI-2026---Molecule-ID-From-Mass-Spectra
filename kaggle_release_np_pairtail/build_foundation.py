@@ -58,6 +58,8 @@ def build():
         for name in SOURCES:
             value=(ROOT/name).read_bytes();compile(value,name,'exec');z.writestr(name,value)
         z.writestr('protocol_np_pairtail_20261004.json',json.dumps(protocol))
+        if (DEST/'foundation_recovery.json').exists():
+            z.writestr('foundation_recovery.json',(DEST/'foundation_recovery.json').read_bytes())
     payload=buf.getvalue();sha=hashlib.sha256(payload).hexdigest()
     original=json.loads((ROOT/'kaggle_release_chemistry/notebook/chemical_priors_hybrid.ipynb').read_text())
     bootstrap=''.join(original['cells'][1]['source']);bootstrap=bootstrap[bootstrap.index('from pathlib import Path\n'):]
@@ -77,7 +79,18 @@ previous=json.loads(cohort.read_text())
 observed.update(x['identity'] for x in previous['selected'])
 observed_path=WORKING/'observed_identity_exclusions.json'
 observed_path.write_text(json.dumps(sorted(observed)))
-run(TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,cached,observed_path,protocol,WORKING/'np_pairtail_foundation')
+recovery_path=code_dir/'foundation_recovery.json'
+recovery=json.loads(recovery_path.read_text()) if recovery_path.exists() else {}
+prior_seconds=float(recovery.get('prior_actual_run_seconds',0.))
+prepared=None
+if recovery:
+    for p in Path('/kaggle/input').rglob('split_manifest.json'):
+        previous_source=p.parent.parent/'chemistry_code/casmi_ml/np_pairtail_foundation.py'
+        if previous_source.exists() and hashlib.sha256(previous_source.read_bytes()).hexdigest()==recovery['prior_foundation_module_sha256']:
+            if prepared is not None:raise ValueError('More than one frozen M0 recovery checkpoint')
+            prepared=p.parent
+    if prepared is None:raise ValueError('Mount the canceled original Foundation V1 output; no silent data rebuild')
+run(TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,cached,observed_path,protocol,WORKING/'np_pairtail_foundation',prior_seconds=prior_seconds,prepared=prepared)
 print('M0/M1 research only. Acceptance was not opened; FPNet is not trained; no competition submission.',flush=True)
 '''
     cells=[]

@@ -4,6 +4,7 @@ import pandas as pd
 from casmi_ml.np_pairtail_foundation import (
     partition, order, reference_mass, mass_keep, representative_priority,
     spectrum_signature, RepresentativeHybrid,
+    SharedAnalog, CachedRoutingHybrid,
 )
 from casmi_ml.v1_routing import CONFIGS
 
@@ -65,3 +66,32 @@ def test_real_representative_engine_id_remapping():
     after=engine.controls(q.assign(molecule_id='arbitrary-name'),[CONFIGS[0]])[0]
     assert before==after
     assert len(before['B0'])==1
+
+
+def test_shared_analog_cache_preserves_uncached_full_rankings():
+    from baseline import vectorize
+    from hybrid import coconut_rank
+    from casmi_ml.v1_routing import RoutingHybrid
+    rows=[(180.063388,'ABCDEFGHIJKLMN','OCC(O)C(O)C(O)C(O)CO',vectorize([50.,80.],[.5,1.])),
+          (180.063388,'NOPQRSTUVWXYZA','OC1OC(O)C(O)C(O)C1O',vectorize([50.,100.],[1.,.2]))]
+    coconut=pd.DataFrame({'inchikey':['ABCDEFGHIJKLMNOPQRST','ZZZZZZZZZZZZZZAAAAAA'],
+        'canonical_smiles':[rows[0][2],rows[1][2]],'exact_mass':[180.063388,180.063388]})
+    q=pd.DataFrame({'precursor_mz':[181.070665],'adduct':['[M+H]+'],
+        'ms2_mzs':[[50.,80.]],'ms2_normalized_intensities':[[.5,1.]],'molecule_id':['any-id']})
+    shared=SharedAnalog();cached=CachedRoutingHybrid(rows,coconut,None,(),shared=shared)
+    original=RoutingHybrid(rows,coconut,None,())
+    expected=original.controls(q,[CONFIGS[0]])[0]
+    assert cached.controls(q,[CONFIGS[0]])[0]==expected
+    assert cached.controls(q.assign(molecule_id='another'),[CONFIGS[0]])[0]==expected
+    assert shared.hits>0
+    library=[('key',rows[0][2],.25)]
+    first=shared.rank(cached,180.063388,library)
+    modified=[('key',rows[0][2],.9)]
+    changed=shared.rank(cached,180.063388,modified)
+    exact=coconut_rank(180.063388,modified,cached.coconut,cached.old_mass,cached.old_order,{})
+    assert changed==exact and first!=changed
+    # A same-size catalog with different content must get a different key.
+    other=coconut.copy();other.loc[0,'canonical_smiles']='CCO'
+    second=CachedRoutingHybrid(rows,other,None,(),shared=shared)
+    assert shared.rank(second,180.063388,modified)==coconut_rank(
+        180.063388,modified,second.coconut,second.old_mass,second.old_order,{})
