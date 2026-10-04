@@ -1,5 +1,5 @@
 {
-  "status": "research_complete_inference_release_prepared",
+  "status": "competition_notebook_running",
   "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-v1-routing-research-20261003?scriptVersionId=355064584",
   "research_source_commit": "5586d3e",
   "research_embedded_source_sha256": "17575695c61d0b653b2b843e6ef7f7b16d852d24f3343ca34f7d1c5e7a305061",
@@ -13,7 +13,7 @@
     "passed": 28,
     "scope": "routing, chemistry, inference, packaging and arbitrary query-ID remapping"
   },
-  "competition_submitted": false,
+  "competition_submitted": true,
   "public_score": null,
   "notes": [
     "Baseline replay is not a new public score.",
@@ -148,5 +148,52 @@
       "casmi_ml/v1_routing.py": "439e5ea09d06cde58fa05454e18171246950cecbcccceece2ca6a3caf40ff185"
     },
     "research_or_visible_answers_included": false
-  }
+  },
+  "inference_source_commit": "5e50296315d3de784b9ffbfa7e77974027421c84",
+  "inference_script_version_id": 355079135,
+  "inference_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-2026-chemical-priors-hybrid?scriptVersionId=355079135",
+  "version_name": "V1 B0 identity-normalized inference 5e50296",
+  "inference_runtime_seconds": 364.6,
+  "inference_independent_verification": {
+    "status": "passed",
+    "rows": 400,
+    "unique_smiles_rechecked": 9281,
+    "all_rows_match_first_representative_normalized_v1": true,
+    "changed_rows": 21,
+    "duplicate_slots_removed": 28,
+    "min_candidates": 4,
+    "max_candidates": 25,
+    "source_files_match_frozen_release": 6,
+    "archive_bytes": 335947,
+    "archive_sha256": "0090e6e86d0ed774926e8c6839eb30b8d92643531e1c8a4bda56feeaa41044d3",
+    "csv_sha256": "e684a3dd6bcbeab0085dc8acb6968d9cb40f915452bb94fa4162c436fe7471cf",
+    "report": {
+      "status": "inference_complete",
+      "config": {
+        "name": "B0",
+        "guard": 0.5,
+        "margin": null
+      },
+      "molecules": 400,
+      "reference_seconds": 198.83440674500002,
+      "index_seconds": 8.044313700999965,
+      "total_seconds": 333.11461467600003,
+      "protected": 400,
+      "rule_matched": 0,
+      "canonical_duplicates_removed": 28,
+      "normalization_seconds": 100.07597894000003,
+      "validation_and_csv_write_seconds": 6.311276833000079,
+      "ranking_phase_seconds": {
+        "library_retrieval": 7.321958286000324,
+        "historical_analog": 12.366725278000047,
+        "expanded_analog": 0.0,
+        "chemical_evidence_and_rerank": 0.0
+      },
+      "output_normalization": "default RDKit tautomer identity; retain first; no refill",
+      "neural_training": false,
+      "research_acceptance_executed": false,
+      "graph_generation": false
+    }
+  },
+  "competition_description": "Frozen source 5e50296; V1 B0 inference, first-representative tautomer-ID deduplication. guard095 rejected by independent gate. No GAN training or fixed-ID lookup."
 }
