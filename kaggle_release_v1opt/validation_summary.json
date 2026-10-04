@@ -1,5 +1,5 @@
 {
-  "status": "research_independently_verified",
+  "status": "competition_succeeded_and_verified",
   "acceptance": {
     "accepted": false,
     "selected": {
@@ -319,7 +319,7 @@
     "archive_sha256": "b376b0ceae03568262596d4cb9288db3c87f05764856ef12123ca6af412e7420"
   },
   "local_tests": 28,
-  "competition_score": null,
+  "competition_score": 0.176,
   "final_inference_pending": false,
   "final_inference_verification": {
     "status": "passed",
@@ -363,5 +363,17 @@
     }
   },
   "formal_inference_runtime_seconds": 364.6,
-  "competition_status": "Notebook Running"
+  "competition_status": "Succeeded",
+  "competition": {
+    "status": "Succeeded",
+    "public_score": 0.176,
+    "verified_date": "2026-10-04",
+    "verification_timezone": "America/Los_Angeles",
+    "script_version_id": 355079135,
+    "frozen_source_commit": "5e50296315d3de784b9ffbfa7e77974027421c84",
+    "proof": "kaggle_release_v1opt/kaggle_submission_succeeded_20261004.jpg",
+    "proof_sha256": "fe92af5b991e1e1cc499623294e925185a289323e107f1a8f0a58a0352b8cdf8",
+    "score_precision": "Displayed to three decimals; no unrounded score available",
+    "hidden_runtime_seconds": null
+  }
 }

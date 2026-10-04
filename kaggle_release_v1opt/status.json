@@ -1,5 +1,5 @@
 {
-  "status": "competition_notebook_running",
+  "status": "competition_succeeded_and_verified",
   "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-v1-routing-research-20261003?scriptVersionId=355064584",
   "research_source_commit": "5586d3e",
   "research_embedded_source_sha256": "17575695c61d0b653b2b843e6ef7f7b16d852d24f3343ca34f7d1c5e7a305061",
@@ -14,7 +14,7 @@
     "scope": "routing, chemistry, inference, packaging and arbitrary query-ID remapping"
   },
   "competition_submitted": true,
-  "public_score": null,
+  "public_score": 0.176,
   "notes": [
     "Baseline replay is not a new public score.",
     "Research notebook must not be submitted; use the later inference-only release.",
@@ -195,5 +195,17 @@
       "graph_generation": false
     }
   },
-  "competition_description": "Frozen source 5e50296; V1 B0 inference, first-representative tautomer-ID deduplication. guard095 rejected by independent gate. No GAN training or fixed-ID lookup."
+  "competition_description": "Frozen source 5e50296; V1 B0 inference, first-representative tautomer-ID deduplication. guard095 rejected by independent gate. No GAN training or fixed-ID lookup.",
+  "competition": {
+    "status": "Succeeded",
+    "public_score": 0.176,
+    "verified_date": "2026-10-04",
+    "verification_timezone": "America/Los_Angeles",
+    "script_version_id": 355079135,
+    "frozen_source_commit": "5e50296315d3de784b9ffbfa7e77974027421c84",
+    "proof": "kaggle_release_v1opt/kaggle_submission_succeeded_20261004.jpg",
+    "proof_sha256": "fe92af5b991e1e1cc499623294e925185a289323e107f1a8f0a58a0352b8cdf8",
+    "score_precision": "Displayed to three decimals; no unrounded score available",
+    "hidden_runtime_seconds": null
+  }
 }
