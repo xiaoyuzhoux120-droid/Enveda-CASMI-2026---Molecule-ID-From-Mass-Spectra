@@ -13,6 +13,8 @@ defines a separate inference release, new held-out protocol, controlled routing 
 chemical / graph / GAN experiments, resource targets and publication gates.
 The PRD is a specification for future work, not an already executed experiment.
 
+The next execution now follows the [v1-based optimization specification](docs/PRD_V1_OPTIMIZATION_20261003.md): reproduce the frozen 0.176 v1 baseline, then compare routing and chemical-rule changes individually. GAN training and graph edits are outside the next default run. Verify the original embedded source with `python scripts/verify_v1_baseline.py`; this check does not execute the notebook or reproduce its public score.
+
 ## Chemical priors and generative-model analysis (2026-10-02)
 
 Chemical-prior matching and ChEBI/LIPID MAPS/PubChem offline catalog import are

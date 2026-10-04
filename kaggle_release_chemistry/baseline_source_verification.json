@@ -1,0 +1,38 @@
+{
+  "status": "source_provenance_verified",
+  "source_commit": "06e12ee720b19af2ebb562811d074d1caa91b0ec",
+  "archive_sha256": "27cdd79e735f5ce2e0c9b43eacaad507b6757ac8f1a6dfb9c292704bc8c0d7e9",
+  "files": [
+    {
+      "path": "baseline.py",
+      "sha256": "0c18125a6885c956e3249393c80da18727c1756fada947fb65501ba689f19758",
+      "embedded_matches_frozen_commit": true,
+      "current_matches_frozen_commit": true
+    },
+    {
+      "path": "casmi_ml/__init__.py",
+      "sha256": "2846e0d884c10437752b006de2ba55158698576006aefeb2c76ee46f0cd1b73c",
+      "embedded_matches_frozen_commit": true,
+      "current_matches_frozen_commit": true
+    },
+    {
+      "path": "casmi_ml/chemical_priors.py",
+      "sha256": "768dd08154af9190bddfd4c20796ebcfc113c33a57d367146925117fc1dec74c",
+      "embedded_matches_frozen_commit": true,
+      "current_matches_frozen_commit": true
+    },
+    {
+      "path": "casmi_ml/hybrid_chemistry.py",
+      "sha256": "520c73f719b6e1a896024fba0b724807e08110a3a8ac4af0727025d4b0f6287e",
+      "embedded_matches_frozen_commit": true,
+      "current_matches_frozen_commit": true
+    },
+    {
+      "path": "hybrid.py",
+      "sha256": "31aceb88d728a43936a327204c405bfe778d86633d8cb5c1a5c818c2503fc3cc",
+      "embedded_matches_frozen_commit": true,
+      "current_matches_frozen_commit": true
+    }
+  ],
+  "scope": "Static source verification only; no full-data rerun or new Kaggle score."
+}
