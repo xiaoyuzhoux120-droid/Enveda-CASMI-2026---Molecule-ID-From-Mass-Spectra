@@ -1,0 +1,324 @@
+{
+  "status": "research_independently_verified",
+  "acceptance": {
+    "accepted": false,
+    "selected": {
+      "name": "guard095",
+      "guard": 0.95,
+      "margin": null
+    },
+    "unknown": {
+      "difference": 0.00034046968350089443,
+      "ci95": [
+        -0.001236382779179112,
+        0.002081379776943484
+      ],
+      "molecules": 970,
+      "repeats": 10000,
+      "seed": 20261003
+    },
+    "known": {
+      "difference": -0.00037127672773768313,
+      "ci95": [
+        -0.0010730326417004049,
+        1.1667791273054427e-05
+      ],
+      "molecules": 832,
+      "repeats": 10000,
+      "seed": 20261003
+    },
+    "known_top1_difference": 0.0,
+    "release_config": {
+      "name": "B0",
+      "guard": 0.5,
+      "margin": null
+    },
+    "limitations": [
+      "Exclude all recoverable previously observed identity keys, all old raw train/holdout buckets, first 2000 old development raw keys, and reconstructed v2 dev/acceptance selections. No old neural model is used. Unretained historical query records cannot be exhaustively audited.",
+      "Proxy cohorts are not hidden test labels."
+    ]
+  },
+  "case_ranks_and_gate": {
+    "status": "independently_verified",
+    "frozen_gate": {
+      "accepted": false,
+      "selected": {
+        "name": "guard095",
+        "guard": 0.95,
+        "margin": null
+      },
+      "unknown": {
+        "difference": 0.00034046968350089443,
+        "ci95": [
+          -0.001236382779179112,
+          0.002081379776943484
+        ],
+        "molecules": 970,
+        "repeats": 10000,
+        "seed": 20261003
+      },
+      "known": {
+        "difference": -0.00037127672773768313,
+        "ci95": [
+          -0.0010730326417004049,
+          1.1667791273054427e-05
+        ],
+        "molecules": 832,
+        "repeats": 10000,
+        "seed": 20261003
+      },
+      "known_top1_difference": 0.0,
+      "release_config": {
+        "name": "B0",
+        "guard": 0.5,
+        "margin": null
+      }
+    },
+    "development_acceptance_identity_overlap": 0,
+    "cohorts": {
+      "dev_unknown": {
+        "molecules": 481,
+        "duplicate_slots_removed_across_arms": 309,
+        "raw": {
+          "B0": {
+            "molecules": 481,
+            "mrr25": 0.01670614187642051,
+            "top1": 0.0,
+            "top25": 0.07276507276507277
+          },
+          "guard065": {
+            "molecules": 481,
+            "mrr25": 0.017329842500121137,
+            "top1": 0.0,
+            "top25": 0.07484407484407485
+          },
+          "guard075": {
+            "molecules": 481,
+            "mrr25": 0.018455968626247266,
+            "top1": 0.0,
+            "top25": 0.079002079002079
+          },
+          "guard095": {
+            "molecules": 481,
+            "mrr25": 0.018585741256019892,
+            "top1": 0.0,
+            "top25": 0.08316008316008316
+          },
+          "always_expand": {
+            "molecules": 481,
+            "mrr25": 0.018585741256019892,
+            "top1": 0.0,
+            "top25": 0.08316008316008316
+          },
+          "margin010": {
+            "molecules": 481,
+            "mrr25": 0.01720320487348351,
+            "top1": 0.0,
+            "top25": 0.07692307692307693
+          }
+        },
+        "normalized": {
+          "B0": {
+            "molecules": 481,
+            "mrr25": 0.016721891892170528,
+            "top1": 0.0,
+            "top25": 0.07276507276507277
+          },
+          "guard065": {
+            "molecules": 481,
+            "mrr25": 0.01734559251587115,
+            "top1": 0.0,
+            "top25": 0.07484407484407485
+          },
+          "guard075": {
+            "molecules": 481,
+            "mrr25": 0.01847171864199728,
+            "top1": 0.0,
+            "top25": 0.079002079002079
+          },
+          "guard095": {
+            "molecules": 481,
+            "mrr25": 0.01868654135681999,
+            "top1": 0.0,
+            "top25": 0.08316008316008316
+          },
+          "always_expand": {
+            "molecules": 481,
+            "mrr25": 0.01868654135681999,
+            "top1": 0.0,
+            "top25": 0.08316008316008316
+          },
+          "margin010": {
+            "molecules": 481,
+            "mrr25": 0.01730400497428361,
+            "top1": 0.0,
+            "top25": 0.07692307692307693
+          }
+        }
+      },
+      "dev_known": {
+        "molecules": 426,
+        "duplicate_slots_removed_across_arms": 243,
+        "raw": {
+          "B0": {
+            "molecules": 426,
+            "mrr25": 0.7828419314603524,
+            "top1": 0.7136150234741784,
+            "top25": 0.9178403755868545
+          },
+          "guard065": {
+            "molecules": 426,
+            "mrr25": 0.7826401358916184,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "guard075": {
+            "molecules": 426,
+            "mrr25": 0.7826223524231307,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "guard095": {
+            "molecules": 426,
+            "mrr25": 0.7825734478847894,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "always_expand": {
+            "molecules": 426,
+            "mrr25": 0.7823677693692519,
+            "top1": 0.7136150234741784,
+            "top25": 0.9107981220657277
+          },
+          "margin010": {
+            "molecules": 426,
+            "mrr25": 0.7823677693692519,
+            "top1": 0.7136150234741784,
+            "top25": 0.9107981220657277
+          }
+        },
+        "normalized": {
+          "B0": {
+            "molecules": 426,
+            "mrr25": 0.7828419314603524,
+            "top1": 0.7136150234741784,
+            "top25": 0.9178403755868545
+          },
+          "guard065": {
+            "molecules": 426,
+            "mrr25": 0.7826401358916184,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "guard075": {
+            "molecules": 426,
+            "mrr25": 0.7826223524231307,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "guard095": {
+            "molecules": 426,
+            "mrr25": 0.7825734478847894,
+            "top1": 0.7136150234741784,
+            "top25": 0.9154929577464789
+          },
+          "always_expand": {
+            "molecules": 426,
+            "mrr25": 0.7823677693692519,
+            "top1": 0.7136150234741784,
+            "top25": 0.9107981220657277
+          },
+          "margin010": {
+            "molecules": 426,
+            "mrr25": 0.7823677693692519,
+            "top1": 0.7136150234741784,
+            "top25": 0.9107981220657277
+          }
+        }
+      },
+      "acceptance_unknown": {
+        "molecules": 970,
+        "duplicate_slots_removed_across_arms": 276,
+        "raw": {
+          "B0": {
+            "molecules": 970,
+            "mrr25": 0.015275746347072771,
+            "top1": 0.0,
+            "top25": 0.07938144329896907
+          },
+          "guard095": {
+            "molecules": 970,
+            "mrr25": 0.015616216030573667,
+            "top1": 0.0,
+            "top25": 0.08453608247422681
+          }
+        },
+        "normalized": {
+          "B0": {
+            "molecules": 970,
+            "mrr25": 0.015513994504817594,
+            "top1": 0.0,
+            "top25": 0.07938144329896907
+          },
+          "guard095": {
+            "molecules": 970,
+            "mrr25": 0.015765789975932937,
+            "top1": 0.0,
+            "top25": 0.08453608247422681
+          }
+        }
+      },
+      "acceptance_known": {
+        "molecules": 832,
+        "duplicate_slots_removed_across_arms": 212,
+        "raw": {
+          "B0": {
+            "molecules": 832,
+            "mrr25": 0.781046253863395,
+            "top1": 0.7223557692307693,
+            "top25": 0.921875
+          },
+          "guard095": {
+            "molecules": 832,
+            "mrr25": 0.7806749771356574,
+            "top1": 0.7223557692307693,
+            "top25": 0.9206730769230769
+          }
+        },
+        "normalized": {
+          "B0": {
+            "molecules": 832,
+            "mrr25": 0.7811125299288213,
+            "top1": 0.7223557692307693,
+            "top25": 0.921875
+          },
+          "guard095": {
+            "molecules": 832,
+            "mrr25": 0.7807049313498579,
+            "top1": 0.7223557692307693,
+            "top25": 0.9206730769230769
+          }
+        }
+      }
+    },
+    "format_policy": "default RDKit tautomer identity; retain first; no refill",
+    "limitations": [
+      "Verifies retained cases and identity lists, not all original training rows.",
+      "Deduplication analysis does not change frozen raw-routing acceptance."
+    ]
+  },
+  "canonical_identities_and_frozen_source": {
+    "status": "passed",
+    "unique_candidate_smiles": 37757,
+    "rdkit_version": "2026.03.3",
+    "archived_source_files_matched": 7,
+    "frozen_commit": "5586d3e"
+  },
+  "download": {
+    "archive_bytes": 27354633,
+    "archive_sha256": "b376b0ceae03568262596d4cb9288db3c87f05764856ef12123ca6af412e7420"
+  },
+  "local_tests": 28,
+  "competition_score": null,
+  "final_inference_pending": true
+}

@@ -5,8 +5,10 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import sys
 import zipfile
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from casmi_ml.v1_routing import CONFIGS
 
 ROOT = Path(__file__).resolve().parents[1]

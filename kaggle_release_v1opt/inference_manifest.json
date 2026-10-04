@@ -1,0 +1,22 @@
+{
+  "embedded_source_sha256": "a7b7207e136d166f0c8730a3aa5af87b137f55fb9c3e2f37a9183e0d4bf442c1",
+  "acceptance_sha256": "3d20d4f7c4d48a0f560538fbe66f7c33792e7bcf02b129a513b72473564d76db",
+  "config": {
+    "name": "B0",
+    "guard": 0.5,
+    "margin": null
+  },
+  "scientific_upgrade_accepted": false,
+  "research_source_commit": "5586d3e",
+  "research_script_version_id": 355064584,
+  "notebook_bytes": 32112,
+  "source_files": {
+    "baseline.py": "8b391a36ce565fe3e86ca2498f60f427f22147aefce8519583c764905fdea42c",
+    "hybrid.py": "31aceb88d728a43936a327204c405bfe778d86633d8cb5c1a5c818c2503fc3cc",
+    "casmi_ml/__init__.py": "2846e0d884c10437752b006de2ba55158698576006aefeb2c76ee46f0cd1b73c",
+    "casmi_ml/chemical_priors.py": "768dd08154af9190bddfd4c20796ebcfc113c33a57d367146925117fc1dec74c",
+    "casmi_ml/hybrid_chemistry.py": "520c73f719b6e1a896024fba0b724807e08110a3a8ac4af0727025d4b0f6287e",
+    "casmi_ml/v1_routing.py": "439e5ea09d06cde58fa05454e18171246950cecbcccceece2ca6a3caf40ff185"
+  },
+  "research_or_visible_answers_included": false
+}

@@ -1,0 +1,38 @@
+{
+  "accepted": false,
+  "selected": {
+    "name": "guard095",
+    "guard": 0.95,
+    "margin": null
+  },
+  "unknown": {
+    "difference": 0.00034046968350089443,
+    "ci95": [
+      -0.001236382779179112,
+      0.002081379776943484
+    ],
+    "molecules": 970,
+    "repeats": 10000,
+    "seed": 20261003
+  },
+  "known": {
+    "difference": -0.00037127672773768313,
+    "ci95": [
+      -0.0010730326417004049,
+      1.1667791273054427e-05
+    ],
+    "molecules": 832,
+    "repeats": 10000,
+    "seed": 20261003
+  },
+  "known_top1_difference": 0.0,
+  "release_config": {
+    "name": "B0",
+    "guard": 0.5,
+    "margin": null
+  },
+  "limitations": [
+    "Exclude all recoverable previously observed identity keys, all old raw train/holdout buckets, first 2000 old development raw keys, and reconstructed v2 dev/acceptance selections. No old neural model is used. Unretained historical query records cannot be exhaustively audited.",
+    "Proxy cohorts are not hidden test labels."
+  ]
+}
