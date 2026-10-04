@@ -1,6 +1,6 @@
 {
-  "embedded_source_sha256": "279cdac18675a3b0c51690af188cacde3d5fbe0f5b7ae3d0fa92e87ec049a1f1",
-  "notebook_bytes": 53421,
+  "embedded_source_sha256": "3e2747228ca009cfdc3776989d73db801ddf286777c6f901df2046c1db2d29dd",
+  "notebook_bytes": 53168,
   "source_files": {
     "baseline.py": "8b391a36ce565fe3e86ca2498f60f427f22147aefce8519583c764905fdea42c",
     "hybrid.py": "31aceb88d728a43936a327204c405bfe778d86633d8cb5c1a5c818c2503fc3cc",

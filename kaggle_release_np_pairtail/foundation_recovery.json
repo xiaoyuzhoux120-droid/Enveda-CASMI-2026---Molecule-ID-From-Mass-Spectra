@@ -2,12 +2,22 @@
   "prior_script_version_id": 355247134,
   "prior_source_commit": "d3e5447d298f02b43b98ddf4b0145cee4ad87960",
   "prior_kaggle_status": "Cancelled",
-  "prior_actual_run_seconds": 2082.0,
+  "prior_actual_run_seconds": 2111.1,
   "reason": "Repeated exact analog/fingerprint/canonical identity computations across C0/C1/C2 threaten whole research budget; replace only with input-complete memoization",
   "scientific_protocol_changed": false,
   "acceptance_opened": false,
   "old_results_used_for_parameter_selection": false,
   "local_parity_tests_passed": 14,
   "prior_foundation_module_sha256": "f36bb0b9fa1c4ae20704753a3130d54abf7b2f706afbea3bd5c6aa08b3ec9c2e",
-  "restore_completed_M0_checkpoint": true
+  "restore_completed_M0_checkpoint": true,
+  "additional_failed_runs": [
+    {
+      "script_version_id": 355257316,
+      "status": "Failed",
+      "seconds": 29.1,
+      "source_commit": "e16d47ac8cf9b68b9be12769b5a10ab7690f1359",
+      "error": "bootstrap recursive train.parquet glob matched raw competition and M0 checkpoint",
+      "fix": "require co-located raw train/test file pair"
+    }
+  ]
 }

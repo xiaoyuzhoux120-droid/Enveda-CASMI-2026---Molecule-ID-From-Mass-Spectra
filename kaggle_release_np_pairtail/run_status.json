@@ -1,13 +1,13 @@
 {
-  "stage": "foundation_recovery_prepared",
+  "stage": "cached_foundation_bootstrap_repair_prepared",
   "M0_all_model_asset_requirements_complete": false,
   "FPNet_trained": false,
   "acceptance_opened": false,
   "competition_submission_allowed": false,
-  "local_foundation_tests_passed": 7,
-  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-foundation-20261004?scriptVersionId=355247134",
-  "source_commit": "d3e5447d298f02b43b98ddf4b0145cee4ad87960",
-  "embedded_source_sha256": "e094ea8ab49a65fb2fb81527f089cc161b7ee703389ec64c830edd560747fad8",
+  "local_foundation_tests_passed": 8,
+  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-cached-foundation-20261004?scriptVersionId=355257316",
+  "source_commit": "e16d47ac8cf9b68b9be12769b5a10ab7690f1359",
+  "embedded_source_sha256": "3e2747228ca009cfdc3776989d73db801ddf286777c6f901df2046c1db2d29dd",
   "accelerator": "None",
   "internet": false,
   "identity_selected": {
@@ -29,5 +29,7 @@
   },
   "local_tests_passed": 14,
   "prior_status": "Cancelled",
-  "prior_actual_seconds": 2082.0
+  "prior_actual_seconds": 2111.1,
+  "latest_actual_run_status": "Failed",
+  "latest_actual_run_seconds": 29.1
 }

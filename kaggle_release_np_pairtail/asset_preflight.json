@@ -73,7 +73,10 @@
     ],
     "upstream_md5": "b17048b3b77daae9ab1e480b6591aabd",
     "md5_verified": true,
-    "import_status": "pending"
+    "import_status": "completed",
+    "structures": 151848,
+    "rejected_rows": 46,
+    "derived_sha256": "a7224f20e88018c50a03982ec579d6d0cf129ecd6fec70744ea7368ad2dbfd05"
   },
   "NPAtlas": {
     "enabled": false,

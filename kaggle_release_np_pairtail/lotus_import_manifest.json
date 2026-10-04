@@ -1,0 +1,190 @@
+{
+  "archive_members": [],
+  "charged_structures": 901,
+  "derived_sha256": "a7224f20e88018c50a03982ec579d6d0cf129ecd6fec70744ea7368ad2dbfd05",
+  "duplicate_structure_keys": 75446,
+  "input_rows": 227340,
+  "mass_tolerance_da": 0.01,
+  "neutral_representative_replacements": 37,
+  "operation": "public_structure_import",
+  "policy": {
+    "charged_candidates": "require adduct/charge compatibility during candidate retrieval",
+    "disconnected": "reject all disconnected structures; no parent-molecule guessing",
+    "graph": "preserve charges, isotopes and tautomers; no salt stripping or neutralization",
+    "identity": "raw InChIKey14; prefer first actual neutral source graph when present, else retain first graph; union all source provenance",
+    "mass": "recomputed RDKit ExactMolWt for the preserved molecular graph",
+    "selection": "public structure consistency only; no test labels or online queries"
+  },
+  "rdkit_version": "2026.03.3",
+  "rejected_rows": 46,
+  "rejection_examples": [
+    {
+      "reason": "identity_mismatch",
+      "record": "4825",
+      "source_id": "http://www.wikidata.org/entity/Q104203011"
+    },
+    {
+      "reason": "identity_mismatch",
+      "record": "56010",
+      "source_id": "http://www.wikidata.org/entity/Q105109833"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "158582",
+      "source_id": "http://www.wikidata.org/entity/Q106041985"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "158583",
+      "source_id": "http://www.wikidata.org/entity/Q106041985"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "171614",
+      "source_id": "http://www.wikidata.org/entity/Q115785156"
+    },
+    {
+      "reason": "identity_mismatch",
+      "record": "176741",
+      "source_id": "http://www.wikidata.org/entity/Q123116825"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "177606",
+      "source_id": "http://www.wikidata.org/entity/Q125034104"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "181055",
+      "source_id": "http://www.wikidata.org/entity/Q130336"
+    },
+    {
+      "reason": "identity_mismatch",
+      "record": "181288",
+      "source_id": "http://www.wikidata.org/entity/Q135270"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "181423",
+      "source_id": "http://www.wikidata.org/entity/Q139857"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "181650",
+      "source_id": "http://www.wikidata.org/entity/Q15410999"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "181986",
+      "source_id": "http://www.wikidata.org/entity/Q161249"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182237",
+      "source_id": "http://www.wikidata.org/entity/Q184782"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182238",
+      "source_id": "http://www.wikidata.org/entity/Q184832"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182299",
+      "source_id": "http://www.wikidata.org/entity/Q194322"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182485",
+      "source_id": "http://www.wikidata.org/entity/Q209569"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182553",
+      "source_id": "http://www.wikidata.org/entity/Q211086"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182836",
+      "source_id": "http://www.wikidata.org/entity/Q2447"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182850",
+      "source_id": "http://www.wikidata.org/entity/Q2462"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "182852",
+      "source_id": "http://www.wikidata.org/entity/Q2468"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "183085",
+      "source_id": "http://www.wikidata.org/entity/Q26997411"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "183598",
+      "source_id": "http://www.wikidata.org/entity/Q27098256"
+    },
+    {
+      "reason": "disconnected_structure",
+      "record": "183615",
+      "source_id": "http://www.wikidata.org/entity/Q27098329"
+    },
+    {
+      "reason": "identity_mismatch",
+      "record": "183672",
+      "source_id": "http://www.wikidata.org/entity/Q27101942"
+    },
+    {
+      "reason": "identity_mismatch",
+      "record": "185967",
+      "source_id": "http://www.wikidata.org/entity/Q27110025"
+    }
+  ],
+  "rejections": {
+    "disconnected_structure": 33,
+    "identity_mismatch": 13
+  },
+  "resolved_columns": {
+    "charge": null,
+    "exact_mass": "structure_exact_mass",
+    "formula": "structure_molecular_formula",
+    "inchikey": "structure_inchikey",
+    "smiles": "structure_smiles",
+    "source_id": "structure_wikidata"
+  },
+  "schema_version": 1,
+  "source": {
+    "expected_sha256": "8bed5aee59eb703b2a7c1329d6d0286e2e34ed38c5af6f123cbbd1db87e4261e",
+    "license": "CC BY 4.0",
+    "release": "v11 2026-04-13",
+    "schema": {
+      "charge": null,
+      "exact_mass": "structure_exact_mass",
+      "formula": "structure_molecular_formula",
+      "inchikey": "structure_inchikey",
+      "smiles": "structure_smiles",
+      "source_id": "structure_wikidata"
+    },
+    "source": "LOTUS",
+    "source_metadata": {
+      "creators": [
+        "Adriano Rutz",
+        "Jonathan Bisson",
+        "Pierre-Marie Allard"
+      ],
+      "projection_policy": "exact structural-column duplicate elimination only; no spectra/query labels; raw file retains complete organism/reference metadata",
+      "raw_metadata_sha256": "09885dcfb3bc0e6d700fefcd5778e91446a1f9d5d2fbbcbf00eb5d2e83b68844",
+      "raw_rows": 709740
+    },
+    "source_url": "https://zenodo.org/records/19360665"
+  },
+  "source_sha256": "8bed5aee59eb703b2a7c1329d6d0286e2e34ed38c5af6f123cbbd1db87e4261e",
+  "structures": 151848,
+  "valid_rows": 227294,
+  "warning_examples": [],
+  "warnings": {}
+}

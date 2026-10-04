@@ -64,6 +64,12 @@ def build():
     original=json.loads((ROOT/'kaggle_release_chemistry/notebook/chemical_priors_hybrid.ipynb').read_text())
     bootstrap=''.join(original['cells'][1]['source']);bootstrap=bootstrap[bootstrap.index('from pathlib import Path\n'):]
     bootstrap=bootstrap.replace('from casmi_ml.hybrid_chemistry import predict, behavior_check','from casmi_ml.np_pairtail_foundation import run')
+    # Research checkpoints also contain train.parquet; only a directory with
+    # the competition train/test pair can supply raw competition data.
+    bootstrap=bootstrap.replace('TRAIN_PATH = unique(INPUT.rglob("train.parquet"), "competition train.parquet")',
+        'TRAIN_PATH = unique((p for p in INPUT.rglob("train.parquet") if (p.parent/"test.parquet").is_file()), "competition train/test pair")')
+    bootstrap=bootstrap.replace('TEST_PATH = unique(INPUT.rglob("test.parquet"), "competition test.parquet")',
+        'TEST_PATH = TRAIN_PATH.parent / "test.parquet"')
     code=f'CODE_BASE64 = {base64.b64encode(payload).decode()!r}\nCODE_SHA256 = {sha!r}\n'+"SUMS_SHA256 = '1563d3ed2c3a3529926c0507880c4ab39e3477265487978b496cf635ae0553fa'\nCOCONUT_SHA256 = '6d8bd9206fa576fecd2741c020ba64f5f4e60609f767bd8aad8a6628a5b87bbd'\n"+bootstrap
     runner='''protocol=json.loads((code_dir/'protocol_np_pairtail_20261004.json').read_text())
 def checked_input(name,expected):
