@@ -1,0 +1,8 @@
+{
+  "stage": "foundation_ready_to_launch",
+  "M0_all_model_asset_requirements_complete": false,
+  "FPNet_trained": false,
+  "acceptance_opened": false,
+  "competition_submission_allowed": false,
+  "local_foundation_tests_passed": 7
+}
