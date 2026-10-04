@@ -89,3 +89,14 @@ def test_output_normalization_keeps_first_tautomer_and_never_worsens_truth_rank(
     assert cache[pairs[0][1]] == cache[pairs[1][1]]
     assert unique_official_candidates(result, cache, enumerator) == result
     assert result.index(pairs[2]) < pairs.index(pairs[2])
+
+
+def test_predictions_are_invariant_to_arbitrary_query_id_remapping():
+    _, records, coconut, catalog, test = fixture()
+    engine = RoutingHybrid(records, coconut, catalog, load_rules(DICTIONARY))
+    original, _ = engine.predict_selected(test, CONFIGS[-1])
+    remap = {'protected': 'new_unseen_id_82', 'low': 'new_unseen_id_17'}
+    renamed = test.assign(molecule_id=test.molecule_id.map(remap))
+    changed, _ = engine.predict_selected(renamed, CONFIGS[-1])
+    restored = changed.assign(molecule_id=changed.molecule_id.map({v:k for k,v in remap.items()}))
+    assert original.equals(restored)

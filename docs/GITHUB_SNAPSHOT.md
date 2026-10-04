@@ -74,7 +74,7 @@ match version 2 and the frozen source description; the UI exposes no competition
 submission ID. [Score proof](../kaggle_release_gan/kaggle_submission_succeeded.jpg).
 The current leaderboard snapshot ranks Spectral_Forge **1645 / 2315**, retaining
 best score 0.176; the leader scores 0.471 and the displayed top-ten mean is 0.4369.
-No all-team mean was obtained. Whole-version public changes are not GAN-only effects.
+No all-team mean was obtained. Whole-version public changes are not GAN-only effects. A later [public ID-mapping audit](LEADERBOARD_ID_CAVEAT_20261003.md) records a fixed-400-ID top-1 path in one 0.417 notebook; hidden ID reuse and the mechanism's score contribution are unconfirmed, so leaderboard gaps cannot be treated as pure spectrum-model comparisons.
 
 Both neural arms share the candidate pool and bounded formula-preserving graph
 edits. The GAN generates fingerprints, not molecular graphs; the graph edits are

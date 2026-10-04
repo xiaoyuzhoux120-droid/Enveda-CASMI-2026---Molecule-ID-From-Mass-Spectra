@@ -10,8 +10,8 @@
     "observed_log_seconds": 247.1
   },
   "local_tests": {
-    "passed": 27,
-    "scope": "routing, chemistry, inference and release packaging"
+    "passed": 28,
+    "scope": "routing, chemistry, inference, packaging and arbitrary query-ID remapping"
   },
   "competition_submitted": false,
   "public_score": null,
