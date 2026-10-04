@@ -3,7 +3,7 @@
 Read the [detailed Chinese analysis](ANALYSIS_REPORT_20261003.md) for final
 interpretation and the [next-run PRD](PRD_NEXT_RUN_20261003.md) for implementation
 scope, fresh holdouts, experiment controls, runtime targets and acceptance gates.
-The next-run specification has not yet been implemented or executed.
+The older next-run specification is superseded by the [V1 optimization PRD](PRD_V1_OPTIMIZATION_20261003.md). Its separate [research execution](../kaggle_release_v1opt/README.md) has matched all 400 original visible V1 candidate rankings in 225.71 seconds. Fresh routing acceptance is running; final inference and competition submission are pending, with no new public score.
 
 ## Kaggle public results
 

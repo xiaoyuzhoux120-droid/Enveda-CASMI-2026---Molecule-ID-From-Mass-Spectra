@@ -52,3 +52,40 @@ def test_acceptance_requires_improvement_and_known_noninferiority():
     assert ok['accepted'] and ok['release_config'] == config
     failed = acceptance(rows([0.] * 100, [.02] * 100), rows([1.] * 100, [.99] * 100), config)
     assert not failed['accepted'] and failed['release_config']['name'] == 'B0'
+
+
+def test_competition_entry_reads_dynamic_ids_and_reproduces_v1(tmp_path, monkeypatch):
+    import pandas as pd
+    from casmi_ml import v1_routing
+    _, records, coconut, catalog, test = fixture()
+    expanded = pd.concat([test.assign(molecule_id=test.molecule_id + f'_{i}') for i in range(19)], ignore_index=True)
+    expanded.to_parquet(tmp_path / 'test.parquet', index=False)
+    coconut.to_parquet(tmp_path / 'coconut.parquet', index=False)
+    catalog.to_parquet(tmp_path / 'catalog.parquet', index=False)
+    monkeypatch.setattr(v1_routing, 'load_candidates', lambda path, masses: (records, {}))
+    result, report = v1_routing.inference(tmp_path, tmp_path / 'coconut.parquet',
+                                         tmp_path / 'catalog.parquet', DICTIONARY,
+                                         tmp_path / 'submission.csv', CONFIGS[0])
+    expected, _ = HybridChemistry(records, coconut, catalog, load_rules(DICTIONARY)).predict(expanded)
+    assert result.equals(expected)
+    assert len(result) == 38 and set(result.molecule_id) == set(expanded.molecule_id)
+    assert not report['neural_training'] and not report['research_acceptance_executed']
+
+
+def test_unfrozen_configuration_is_rejected_before_loading_data(tmp_path):
+    from casmi_ml.v1_routing import inference
+    with pytest.raises(ValueError, match='Unknown or altered'):
+        inference(tmp_path, 'absent', 'absent', 'absent', tmp_path / 'out.csv',
+                  {'name': 'guard075', 'guard': .8, 'margin': None})
+
+
+def test_output_normalization_keeps_first_tautomer_and_never_worsens_truth_rank():
+    from rdkit.Chem.MolStandardize import rdMolStandardize
+    from casmi_ml.v1_routing import unique_official_candidates
+    pairs = [('first', 'CC(=O)C'), ('duplicate', 'CC(O)=C'), ('truth', 'CCO')]
+    cache, enumerator = {}, rdMolStandardize.TautomerEnumerator()
+    result = unique_official_candidates(pairs, cache, enumerator)
+    assert result == [pairs[0], pairs[2]]
+    assert cache[pairs[0][1]] == cache[pairs[1][1]]
+    assert unique_official_candidates(result, cache, enumerator) == result
+    assert result.index(pairs[2]) < pairs.index(pairs[2])

@@ -1,0 +1,82 @@
+{
+  "status": "research_notebook_running",
+  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-v1-routing-research-20261003?scriptVersionId=355064584",
+  "research_source_commit": "5586d3e",
+  "research_embedded_source_sha256": "17575695c61d0b653b2b843e6ef7f7b16d852d24f3343ca34f7d1c5e7a305061",
+  "baseline_replay": {
+    "matched_original_all_rows": true,
+    "molecules": 400,
+    "seconds": 225.709936224,
+    "observed_log_seconds": 247.1
+  },
+  "local_tests": {
+    "passed": 27,
+    "scope": "routing, chemistry, inference and release packaging"
+  },
+  "competition_submitted": false,
+  "public_score": null,
+  "notes": [
+    "Baseline replay is not a new public score.",
+    "Research notebook must not be submitted; use the later inference-only release.",
+    "Kaggle input download was blocked by Chrome; research uses the original mounted inputs.",
+    "Scientific configurations remain frozen at commit 5586d3e; subsequent working changes only add inference entry and related tests."
+  ],
+  "output_identity_audit": {
+    "visible_v1_rows": 400,
+    "unique_smiles": 9281,
+    "canonical_duplicates_or_invalid_rows": 21,
+    "examples": [
+      {
+        "molecule_id": "m_05b52e",
+        "candidates": 25,
+        "unique_canonical": 24
+      },
+      {
+        "molecule_id": "m_2d1eba",
+        "candidates": 25,
+        "unique_canonical": 24
+      },
+      {
+        "molecule_id": "m_4b55af",
+        "candidates": 25,
+        "unique_canonical": 23
+      },
+      {
+        "molecule_id": "m_5dda21",
+        "candidates": 25,
+        "unique_canonical": 24
+      },
+      {
+        "molecule_id": "m_6d224e",
+        "candidates": 25,
+        "unique_canonical": 23
+      },
+      {
+        "molecule_id": "m_6f414f",
+        "candidates": 25,
+        "unique_canonical": 24
+      },
+      {
+        "molecule_id": "m_70fe91",
+        "candidates": 25,
+        "unique_canonical": 23
+      },
+      {
+        "molecule_id": "m_741f2c",
+        "candidates": 25,
+        "unique_canonical": 23
+      },
+      {
+        "molecule_id": "m_79cf07",
+        "candidates": 25,
+        "unique_canonical": 24
+      },
+      {
+        "molecule_id": "m_89b9d2",
+        "candidates": 25,
+        "unique_canonical": 24
+      }
+    ]
+  },
+  "output_normalization_declared_before_acceptance": "keep first default RDKit tautomer InChIKey14; no refill; frozen raw ranking gates unchanged"
+}

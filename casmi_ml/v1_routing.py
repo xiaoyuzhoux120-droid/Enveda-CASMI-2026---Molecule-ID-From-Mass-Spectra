@@ -1,13 +1,19 @@
 """V1-only routing controls; no neural training or graph generation."""
 import math
 import time
+import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from rdkit import Chem
+from rdkit.Chem.MolStandardize import rdMolStandardize
 
 from hybrid import blend, coconut_rank, library_rank
 from casmi_ml.chemical_priors import candidate_scores, extract_evidence, rerank
-from casmi_ml.hybrid_chemistry import HybridChemistry, validate_submission
+from baseline import ADDUCT_MASS, load_candidates
+from casmi_ml.chemical_priors import load_rules
+from casmi_ml.hybrid_chemistry import COCONUT_COLUMNS, HybridChemistry, validate_submission
 
 
 CONFIGS = (
@@ -105,3 +111,73 @@ def acceptance(unknown, known, selected):
     return {'accepted': bool(accepted), 'selected': selected, 'unknown': u,
             'known': k, 'known_top1_difference': top1_delta,
             'release_config': selected if accepted else CONFIGS[0]}
+
+
+def unique_official_candidates(pairs, cache, enumerator):
+    """Keep the first ranked representative of each official tautomer identity."""
+    retained, seen = [], set()
+    for key, smiles in pairs:
+        if smiles not in cache:
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None or not mol.GetNumAtoms():
+                raise ValueError('Invalid candidate structure during output normalization')
+            identity = Chem.MolToInchiKey(enumerator.Canonicalize(mol))[:14]
+            if len(identity) != 14:
+                raise ValueError('Candidate official identity could not be computed')
+            cache[smiles] = identity
+        identity = cache[smiles]
+        if identity not in seen:
+            seen.add(identity)
+            retained.append((key, smiles))
+    return retained
+
+
+def inference(data_dir, coconut_path, catalog_path, dictionary_path, output, config):
+    """Competition entry: dynamic test inference only, no research imports."""
+    if config not in CONFIGS:
+        raise ValueError('Unknown or altered frozen routing configuration')
+    started = time.monotonic()
+    test = pd.read_parquet(Path(data_dir) / 'test.parquet')
+    masses = test.precursor_mz.to_numpy() - test.adduct.map(ADDUCT_MASS).to_numpy()
+    masses = masses[np.isfinite(masses) & (masses > 0)]
+    if not len(masses):
+        raise ValueError('No supported query precursor masses')
+    print('V1 inference reference loading', flush=True)
+    records, _ = load_candidates(Path(data_dir) / 'train.parquet', masses)
+    reference_seconds = time.monotonic() - started
+    engine = RoutingHybrid(records, pd.read_parquet(coconut_path, columns=COCONUT_COLUMNS),
+                           pd.read_parquet(catalog_path), load_rules(dictionary_path))
+    index_seconds = time.monotonic() - started - reference_seconds
+    rows, audits = [], []
+    identity_cache = {}
+    enumerator = rdMolStandardize.TautomerEnumerator()
+    for number, (molecule_id, group) in enumerate(test.groupby('molecule_id', sort=False), 1):
+        if time.monotonic() - started > 2700:
+            raise TimeoutError('Inference exceeded 45 minute engineering acceptance budget')
+        outputs, audit = engine.controls(group, [config])
+        raw_pairs = outputs[config['name']]
+        pairs = unique_official_candidates(raw_pairs, identity_cache, enumerator)
+        rows.append({'molecule_id': molecule_id,
+                     'smiles': ';'.join(smi for _, smi in pairs)})
+        audits.append({'molecule_id': molecule_id, **audit,
+                       'canonical_duplicates_removed': len(raw_pairs) - len(pairs)})
+        if number % 25 == 0:
+            print(f'V1 inference {number}/{test.molecule_id.nunique()}; '
+                  f'{time.monotonic()-started:.1f}s elapsed', flush=True)
+    submission = pd.DataFrame(rows)
+    validate_submission(test, submission)
+    path = Path(output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    submission.to_csv(path, index=False)
+    report = {'status': 'inference_complete', 'config': config, 'molecules': len(submission),
+              'reference_seconds': reference_seconds, 'index_seconds': index_seconds,
+              'total_seconds': time.monotonic() - started,
+              'protected': sum(a['protected'][config['name']] for a in audits),
+              'rule_matched': sum(a['rule_matches'] > 0 for a in audits),
+              'canonical_duplicates_removed': sum(a['canonical_duplicates_removed'] for a in audits),
+              'output_normalization': 'default RDKit tautomer identity; retain first; no refill',
+              'neural_training': False, 'research_acceptance_executed': False,
+              'graph_generation': False}
+    Path(str(path) + '.report.json').write_text(json.dumps(report, indent=2) + '\n')
+    Path(str(path) + '.routing.json').write_text(json.dumps(audits, indent=2) + '\n')
+    return submission, report
