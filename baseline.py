@@ -7,6 +7,7 @@ The same source is embedded in the Kaggle notebook for a code submission.
 import argparse
 import math
 import re
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -82,7 +83,7 @@ def make_matrix(vectors):
                              shape=(len(vectors), 12501), dtype=np.float32)
 
 
-def load_candidates(train_path, target_masses, tolerance_ppm=35):
+def load_candidates(train_path, target_masses, tolerance_ppm=35, *, progress_seconds=None, deadline=None):
     """Scan once and materialize spectra only near a test neutral mass."""
     target_masses = np.sort(np.asarray(target_masses, dtype=np.float64))
     parquet = pq.ParquetFile(train_path)
@@ -91,7 +92,10 @@ def load_candidates(train_path, target_masses, tolerance_ppm=35):
     formula_cache = {}
     records = []
     popularity = Counter()
+    last_progress = time.monotonic()
     for batch_no, batch in enumerate(parquet.iter_batches(batch_size=8192, columns=columns)):
+        if deadline is not None and time.monotonic() > deadline:
+            raise TimeoutError('Reference loading exceeded inference budget')
         formulas = batch.column(0).to_pylist()
         for f in set(formulas):
             if f not in formula_cache:
@@ -116,9 +120,11 @@ def load_candidates(train_path, target_masses, tolerance_ppm=35):
                 if vector:
                     records.append((formula_cache[f], str(key), str(smiles), vector))
                     popularity[(str(key), str(smiles))] += 1
-        if batch_no % 50 == 0:
+        if (batch_no % 50 == 0 or
+                (progress_seconds is not None and time.monotonic()-last_progress >= progress_seconds)):
             print(f"scanned {batch_no * 8192:,}/{parquet.metadata.num_rows:,}; "
                   f"kept {len(records):,}", flush=True)
+            last_progress = time.monotonic()
     print(f"Library spectra kept: {len(records):,}", flush=True)
     return records, popularity
 

@@ -37,24 +37,35 @@ class RoutingHybrid(HybridChemistry):
     def controls(self, group, configs=CONFIGS):
         started = time.monotonic()
         center, library = library_rank(group, self.records, self.matrix, self.masses, self.order)
+        library_finished = time.monotonic()
         old = coconut_rank(center, library, self.coconut, self.old_mass, self.old_order, self.cache)
+        historical_analog_finished = time.monotonic()
         historical = blend(library, old)
         confidence = float(library[0][2]) if library else 0.
         margin = confidence - float(library[1][2]) if len(library) > 1 else confidence
         guards = {c['name']: protected(confidence, margin, c) for c in configs}
         expanded = None
         evidence = []
+        expanded_analog_seconds = chemistry_seconds = 0.
         if not all(guards.values()):
+            expansion_started = time.monotonic()
             analog = coconut_rank(center, library, self.unified, self.new_mass, self.new_order, self.cache)
+            expansion_finished = time.monotonic()
+            expanded_analog_seconds = expansion_finished - expansion_started
             pairs = blend(library, analog)
             structures = dict(pairs)
             evidence = extract_evidence(group, self.rules)
             scores, _ = candidate_scores(structures, evidence, self.rules) if evidence else ({}, {})
             keys = rerank([key for key, _ in pairs], scores, self.weight) if evidence else list(structures)
             expanded = [(key, structures[key]) for key in keys]
+            chemistry_seconds = time.monotonic() - expansion_finished
         outputs = {name: historical if guard else expanded for name, guard in guards.items()}
         return outputs, {'confidence': confidence, 'margin': margin, 'protected': guards,
-                         'rule_matches': len(evidence), 'seconds': time.monotonic() - started}
+                         'rule_matches': len(evidence), 'seconds': time.monotonic() - started,
+                         'phase_seconds': {'library_retrieval': library_finished-started,
+                             'historical_analog': historical_analog_finished-library_finished,
+                             'expanded_analog': expanded_analog_seconds,
+                             'chemical_evidence_and_rerank': chemistry_seconds}}
 
     def predict_selected(self, test, config):
         rows, audits = [], []
@@ -143,7 +154,8 @@ def inference(data_dir, coconut_path, catalog_path, dictionary_path, output, con
     if not len(masses):
         raise ValueError('No supported query precursor masses')
     print('V1 inference reference loading', flush=True)
-    records, _ = load_candidates(Path(data_dir) / 'train.parquet', masses)
+    records, _ = load_candidates(Path(data_dir) / 'train.parquet', masses,
+                                progress_seconds=60, deadline=started+2700)
     reference_seconds = time.monotonic() - started
     engine = RoutingHybrid(records, pd.read_parquet(coconut_path, columns=COCONUT_COLUMNS),
                            pd.read_parquet(catalog_path), load_rules(dictionary_path))
@@ -151,12 +163,15 @@ def inference(data_dir, coconut_path, catalog_path, dictionary_path, output, con
     rows, audits = [], []
     identity_cache = {}
     enumerator = rdMolStandardize.TautomerEnumerator()
+    normalization_seconds = 0.
     for number, (molecule_id, group) in enumerate(test.groupby('molecule_id', sort=False), 1):
         if time.monotonic() - started > 2700:
             raise TimeoutError('Inference exceeded 45 minute engineering acceptance budget')
         outputs, audit = engine.controls(group, [config])
         raw_pairs = outputs[config['name']]
+        normalization_started = time.monotonic()
         pairs = unique_official_candidates(raw_pairs, identity_cache, enumerator)
+        normalization_seconds += time.monotonic() - normalization_started
         rows.append({'molecule_id': molecule_id,
                      'smiles': ';'.join(smi for _, smi in pairs)})
         audits.append({'molecule_id': molecule_id, **audit,
@@ -165,6 +180,7 @@ def inference(data_dir, coconut_path, catalog_path, dictionary_path, output, con
             print(f'V1 inference {number}/{test.molecule_id.nunique()}; '
                   f'{time.monotonic()-started:.1f}s elapsed', flush=True)
     submission = pd.DataFrame(rows)
+    write_started = time.monotonic()
     validate_submission(test, submission)
     path = Path(output)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -175,6 +191,11 @@ def inference(data_dir, coconut_path, catalog_path, dictionary_path, output, con
               'protected': sum(a['protected'][config['name']] for a in audits),
               'rule_matched': sum(a['rule_matches'] > 0 for a in audits),
               'canonical_duplicates_removed': sum(a['canonical_duplicates_removed'] for a in audits),
+              'normalization_seconds': normalization_seconds,
+              'validation_and_csv_write_seconds': time.monotonic()-write_started,
+              'ranking_phase_seconds': {name:sum(a['phase_seconds'][name] for a in audits)
+                  for name in ('library_retrieval','historical_analog','expanded_analog',
+                               'chemical_evidence_and_rerank')},
               'output_normalization': 'default RDKit tautomer identity; retain first; no refill',
               'neural_training': False, 'research_acceptance_executed': False,
               'graph_generation': False}

@@ -17,3 +17,5 @@ The inference entry now keeps the first ranked representative for each official 
 Validation: 28 targeted routing, chemistry and release packaging tests passed. These engineering checks do not establish chemical generalization. Final inference timing, actual output and competition score must be recorded after execution.
 
 [Public ID-mapping caveat](../docs/LEADERBOARD_ID_CAVEAT_20261003.md): a separately inspected public notebook uses a fixed 400-ID top-1 map. Our inference excludes such lookup data and passes an arbitrary query-ID remapping regression. This does not establish hidden ID reuse.
+
+Final-entry instrumentation records reference/index loading, retrieval, analog ranking, chemistry, candidate identity normalization and output-writing time. Optional reference-load progress/deadline arguments leave legacy default scoring unchanged; the original frozen replay archive remains authoritative.

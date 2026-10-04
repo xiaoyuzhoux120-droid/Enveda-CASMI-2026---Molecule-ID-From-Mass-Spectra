@@ -1,14 +1,19 @@
 """Independently verify saved routing cases, frozen gate, and output deduplication."""
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
-from casmi_ml.v1_routing import acceptance, metrics
+from casmi_ml.v1_routing import acceptance, choose, metrics
 
 
 def audit(root):
     root = Path(root)
-    selected = json.loads((root / 'selection.json').read_text())['selected']
+    selection = json.loads((root / 'selection.json').read_text())
+    selected = selection['selected']
+    if (not selection['frozen_before_acceptance'] or selection['protocol_sha256'] !=
+            hashlib.sha256((root / 'protocol.json').read_bytes()).hexdigest()):
+        raise ValueError('Selection freeze/protocol record mismatch')
     saved = json.loads((root / 'acceptance_report.json').read_text())
     unknown = json.loads((root / 'acceptance_unknown_cases.json').read_text())
     known = json.loads((root / 'acceptance_known_cases.json').read_text())
@@ -41,6 +46,10 @@ def audit(root):
                           'raw':{n:metrics(rows,n) for n in names},
                           'normalized':{n:metrics(clean,n) for n in names}}
     if identity_sets[0] & identity_sets[1]: raise ValueError('Development/acceptance identity leakage')
+    dev_unknown = json.loads((root / 'dev_unknown_cases.json').read_text())
+    dev_known = json.loads((root / 'dev_known_cases.json').read_text())
+    if choose(dev_unknown, dev_known) != selected:
+        raise ValueError('Saved choice disagrees with frozen development selection')
     rebuilt = acceptance(unknown, known, selected)
     for field in ('accepted','selected','release_config','known_top1_difference','unknown','known'):
         if rebuilt[field] != saved[field]: raise ValueError(f'Frozen gate mismatch: {field}')

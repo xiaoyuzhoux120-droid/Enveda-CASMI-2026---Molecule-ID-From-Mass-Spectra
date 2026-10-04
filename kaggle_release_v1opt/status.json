@@ -19,7 +19,7 @@
     "Baseline replay is not a new public score.",
     "Research notebook must not be submitted; use the later inference-only release.",
     "Kaggle input download was blocked by Chrome; research uses the original mounted inputs.",
-    "Scientific configurations remain frozen at commit 5586d3e; subsequent working changes only add inference entry and related tests."
+    "Scientific routing and selection/acceptance remain frozen at 5586d3e. Later changes add inference, candidate-only identity normalization, non-scoring phase timers, optional reference-load progress/deadline and related checks."
   ],
   "output_identity_audit": {
     "visible_v1_rows": 400,
@@ -78,5 +78,13 @@
       }
     ]
   },
-  "output_normalization_declared_before_acceptance": "keep first default RDKit tautomer InChIKey14; no refill; frozen raw ranking gates unchanged"
+  "output_normalization_declared_before_acceptance": "keep first default RDKit tautomer InChIKey14; no refill; frozen raw ranking gates unchanged",
+  "research_progress": {
+    "stage": "development_unknown",
+    "completed": 100,
+    "total": 481,
+    "observed_log_seconds": 2708.9,
+    "known_reference_spectra": 1163731,
+    "unknown_reference_spectra": 1155135
+  }
 }

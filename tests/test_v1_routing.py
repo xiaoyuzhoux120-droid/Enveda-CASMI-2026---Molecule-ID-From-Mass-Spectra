@@ -62,7 +62,7 @@ def test_competition_entry_reads_dynamic_ids_and_reproduces_v1(tmp_path, monkeyp
     expanded.to_parquet(tmp_path / 'test.parquet', index=False)
     coconut.to_parquet(tmp_path / 'coconut.parquet', index=False)
     catalog.to_parquet(tmp_path / 'catalog.parquet', index=False)
-    monkeypatch.setattr(v1_routing, 'load_candidates', lambda path, masses: (records, {}))
+    monkeypatch.setattr(v1_routing, 'load_candidates', lambda path, masses, **kwargs: (records, {}))
     result, report = v1_routing.inference(tmp_path, tmp_path / 'coconut.parquet',
                                          tmp_path / 'catalog.parquet', DICTIONARY,
                                          tmp_path / 'submission.csv', CONFIGS[0])
