@@ -1,4 +1,20 @@
 import numpy as np
+
+
+def test_scoped_mass_pool_preserves_every_query_candidate_without_identity_labels():
+    from casmi_ml.np_pairtail_fpnet import query_window_mask
+    centers=np.array([157.,157.002,500.,1159.,np.nan])
+    masses=np.r_[np.linspace(100,1200,10000),157.-.006,157.+.006,500.*(1-35e-6),500.*(1+35e-6),np.nan]
+    expected=np.zeros(len(masses),bool)
+    for center in centers[np.isfinite(centers)]:
+        width=max(center*35e-6,.006)
+        expected|=(masses>=center-width)&(masses<=center+width)
+    assert np.array_equal(query_window_mask(masses,centers),expected)
+    for center in centers[np.isfinite(centers)]:
+        width=max(center*35e-6,.006)
+        full=masses[(masses>=center-width)&(masses<=center+width)]
+        scoped=masses[query_window_mask(masses,centers)]
+        assert np.array_equal(full,scoped[(scoped>=center-width)&(scoped<=center+width)])
 import pandas as pd
 import pytest
 import torch

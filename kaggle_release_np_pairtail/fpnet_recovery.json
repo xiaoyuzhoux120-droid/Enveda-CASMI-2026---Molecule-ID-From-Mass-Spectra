@@ -1,0 +1,11 @@
+{
+  "prior_M2_actual_seconds": 209.3,
+  "prior_version": 355383879,
+  "prior_status": "Cancelled",
+  "prior_source_commit": "ec1b7458d1879a337f350b2218904210af5fc352",
+  "prior_embedded_source_sha256": "854a59263c2660bf38533b28a17b1df6efcc9970c6d34f246e4dc9b87da065e2",
+  "reason": "Full 867111 uncached structure identity normalization was unnecessary for the M2 development window gate",
+  "engineering_change": "Apply exact union of unchanged development precursor/adduct mass windows before canonicalization; no structure truth labels used; candidate sets inside each window unchanged",
+  "scientific_parameters_changed": false,
+  "acceptance_opened": false
+}

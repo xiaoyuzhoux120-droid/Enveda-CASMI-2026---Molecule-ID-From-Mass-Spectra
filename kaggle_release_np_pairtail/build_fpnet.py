@@ -42,6 +42,8 @@ def build():
         for name in names:
             content=(ROOT/name).read_bytes();compile(content,name,'exec');archive.writestr(name,content)
         archive.writestr('protocol_fpnet_20261004.json',json.dumps(protocol))
+        recovery=DEST/'fpnet_recovery.json'
+        if recovery.exists():archive.writestr('fpnet_recovery.json',recovery.read_bytes())
     payload=buffer.getvalue();sha=hashlib.sha256(payload).hexdigest()
     original=json.loads((DEST/'notebook/np_pairtail_foundation.ipynb').read_text())
     bootstrap=''.join(original['cells'][1]['source'])
@@ -51,6 +53,9 @@ def build():
     bootstrap=f'CODE_BASE64 = {base64.b64encode(payload).decode()!r}\nCODE_SHA256 = {sha!r}\n'+bootstrap
     frozen_sources=json.loads((DEST/'build_manifest.json').read_text())['source_files']
     runner='''import time
+import pandas as pd
+import numpy as np
+from baseline import ADDUCT_MASS
 preparation_started=time.monotonic()
 protocol=json.loads((code_dir/'protocol_fpnet_20261004.json').read_text())
 roots=[p.parent for p in Path('/kaggle/input').rglob('development_foundation_results.json') if (p.parent/'split_manifest.json').exists()]
@@ -69,15 +74,19 @@ if not mapping_paths:raise ValueError('Mount frozen identity cache from the prio
 mapping=json.loads(mapping_paths[0].read_text())
 pool=WORKING/'base_structure_pool.parquet'
 prior_seconds=json.loads((foundation/'runtime_profile.json').read_text())[-1]['elapsed_seconds']
+recovery=json.loads((code_dir/'fpnet_recovery.json').read_text()) if (code_dir/'fpnet_recovery.json').exists() else {}
+prior_seconds+=recovery.get('prior_M2_actual_seconds',0.)
 deadline=preparation_started+protocol['total_research_budget_seconds']-prior_seconds
-prepare_base_structure_pool(TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,mapping,pool,deadline=deadline)
+query_metadata=pd.read_parquet(foundation/'development.parquet',columns=['identity','precursor_mz','adduct'])
+query_centers=[float(np.median(g.precursor_mz-g.adduct.map(ADDUCT_MASS))) for _,g in query_metadata.groupby('identity',sort=True)]
+prepare_base_structure_pool(TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,mapping,pool,deadline=deadline,query_centers=query_centers)
 root=WORKING/'np_pairtail_fpnet'
 root.mkdir(exist_ok=True)
 data_manifest={'train_source_sha256':sha256(TRAIN_PATH),'foundation_file_sha256':{
     name:sha256(foundation/name) for name in ['train.parquet','development.parquet','split_manifest.json','protocol_np_pairtail_20261004.json']},
     'acceptance_file_read':False,'candidate_pool_sha256':sha256(pool),'embedded_source_sha256':CODE_SHA256}
 (root/'data_manifest.json').write_text(json.dumps(data_manifest,indent=2))
-run(foundation,root,protocol,pool,preparation_seconds=time.monotonic()-preparation_started)
+run(foundation,root,protocol,pool,preparation_seconds=time.monotonic()-preparation_started+recovery.get('prior_M2_actual_seconds',0.))
 print('M2 only; ranker, forward, frozen acceptance and competition release remain gated.',flush=True)
 '''
     runner=runner.replace('FROZEN_FOUNDATION_SOURCE_SHA256',repr(frozen_sources))

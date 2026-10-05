@@ -213,7 +213,22 @@ def _canonical_pool_smiles(smiles):
     return Chem.MolToInchiKey(mol)[:14], Chem.MolToSmiles(mol)
 
 
-def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping, output, deadline=math.inf):
+def query_window_mask(masses, centers):
+    """Exact union of deployment windows; never consult structure identities."""
+    centers = np.asarray(centers, float)
+    centers = centers[np.isfinite(centers) & (centers > 0)]
+    masses = np.asarray(masses, float)
+    if not len(centers):
+        return np.zeros(len(masses), bool)
+    widths = np.maximum(centers*35e-6, .006)
+    order = np.argsort(centers-widths, kind='stable')
+    lower = (centers-widths)[order]
+    upper = np.maximum.accumulate((centers+widths)[order])
+    position = np.searchsorted(lower, masses, side='right')-1
+    return np.isfinite(masses) & (position >= 0) & (masses <= upper[np.maximum(position, 0)])
+
+
+def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping, output, deadline=math.inf, query_centers=None):
     """C0 structure proposal universe; LOTUS is added only in M3/C4.
 
     No spectrum or held-out label is used. Preserve multiple source flags and
@@ -238,6 +253,11 @@ def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping,
         str(p['source']) for p in json.loads(value)})))
     frame = pd.concat([f[['normalized_smiles','mass','sources']] for f in [metadata_frame,coconut,public]], ignore_index=True)
     frame = frame[np.isfinite(frame.mass) & frame.mass.gt(0) & frame.normalized_smiles.notna()].copy()
+    before_scope = len(frame)
+    if query_centers is not None:
+        frame = frame[query_window_mask(frame.mass, query_centers)].copy()
+    print(json.dumps({'stage':'M2_pool_mass_scope', 'source_rows':before_scope,
+                     'eligible_rows':len(frame), 'query_only':query_centers is not None}), flush=True)
     smiles = sorted(set(frame.normalized_smiles)-set(mapping))
     identities = dict(mapping); canonical = {}
     started = time.monotonic()
@@ -259,6 +279,8 @@ def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping,
     write_json(Path(output).with_suffix('.manifest.json'), {
         'rows':len(frame), 'identities':int(frame.identity.nunique()),
         'source_flags':sorted(set(frame.sources)), 'canonicalization_seconds':time.monotonic()-started,
+        'scope':'development deployment mass-window union' if query_centers is not None else 'full source universe',
+        'source_rows_before_scope':before_scope,
         'sha256':sha256(output), 'acceptance_labels_used':False})
     return output
 
