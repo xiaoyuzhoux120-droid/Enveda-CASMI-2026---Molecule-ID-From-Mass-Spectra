@@ -1,13 +1,13 @@
 {
-  "stage": "cached_foundation_bootstrap_repair_prepared",
+  "stage": "M1_complete_M2_prepared",
   "M0_all_model_asset_requirements_complete": false,
   "FPNet_trained": false,
   "acceptance_opened": false,
   "competition_submission_allowed": false,
   "local_foundation_tests_passed": 8,
-  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-cached-foundation-20261004?scriptVersionId=355257316",
-  "source_commit": "e16d47ac8cf9b68b9be12769b5a10ab7690f1359",
-  "embedded_source_sha256": "3e2747228ca009cfdc3776989d73db801ddf286777c6f901df2046c1db2d29dd",
+  "research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-cached-foundation-20261004?scriptVersionId=355258706",
+  "source_commit": "e9e590753f04feeeb8e697e3bfab1c8abd12bff6",
+  "embedded_source_sha256": "279cdac18675a3b0c51690af188cacde3d5fbe0f5b7ae3d0fa92e87ec049a1f1",
   "accelerator": "None",
   "internet": false,
   "identity_selected": {
@@ -27,9 +27,15 @@
     "recomputed_gt30_ppm": 52708,
     "old_gt30_recomputed_le30": 52801
   },
-  "local_tests_passed": 14,
+  "local_tests_passed": 17,
   "prior_status": "Cancelled",
   "prior_actual_seconds": 2111.1,
-  "latest_actual_run_status": "Failed",
-  "latest_actual_run_seconds": 29.1
+  "latest_actual_run_status": "Succeeded",
+  "latest_actual_run_seconds": 2656.4,
+  "cumulative_research_seconds": 4728.6359351149995,
+  "remaining_research_seconds": 9671.364064885,
+  "foundation_metrics_evidence": "development_foundation_results.json",
+  "selected_foundation_arm": "C1_ppm10",
+  "representative_module_enabled": false,
+  "representative_fallback_reason": "Both C2 arms breach frozen known MRR and Top1 protection limits"
 }

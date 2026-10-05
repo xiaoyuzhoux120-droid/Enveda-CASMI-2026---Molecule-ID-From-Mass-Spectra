@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "prd_sha256": "751caab7d1da09862564f18b20b31896d8ff1b93819fbf1213230066e78784ff",
+  "salt": "casmi26-np-pairtail-20261004-v1:",
+  "rdkit_version": "2026.03.3",
+  "identity_ratio": [
+    0.8,
+    0.1,
+    0.1
+  ],
+  "train_identity_cap": 120000,
+  "development_selected": 2000,
+  "acceptance_selected": 3000,
+  "minimum_development": 1000,
+  "minimum_acceptance": 1500,
+  "spectra_per_identity": {
+    "train": 8,
+    "development": 4,
+    "acceptance": 4
+  },
+  "afix_thresholds_ppm": [
+    10,
+    20,
+    30
+  ],
+  "query_mass_window_unchanged": true,
+  "afix_policy": "formula first, deterministic precursor fallback; recompute charge-1 adduct residual; exclude above threshold, preserve old fields; no adduct relabeling",
+  "reference_representatives": [
+    "polarity/adduct/peaks/stable ID",
+    "polarity/adduct/instrument/peaks/stable ID"
+  ],
+  "cross_split_spectrum_duplicates": "remove every owner of any exact or retrieval-bin signature shared across splits before freezing actual cohorts",
+  "canonical_cache_sha256": "250a38268299159a31a104e018fd6ed26ca8cfc67b1b5a6ccae2280ae6cc1243",
+  "prior_seen_sha256": "54aedb054443e3426da41ea0ee9870d237677913600f6f6a43461ebfc165fa51",
+  "prior_cohort_sha256": "3ede6b82efa02357694467be55e304209e0028c0bf4fa77535b815926774b95d",
+  "reuse": "canonical input map only, no old candidate ranks/query lookup/weights",
+  "total_research_budget_seconds": 14400,
+  "data_audit_budget_seconds": 1200,
+  "afix_reference_budget_seconds": 1500,
+  "pilot_queries": 100,
+  "stage": "M0 data preparation / M1 C0-C2 development only",
+  "fpnet": {
+    "layers": 6,
+    "hidden": 512,
+    "heads": 8,
+    "dropout": 0.1,
+    "seeds": [
+      20261004,
+      20261005,
+      20261006
+    ],
+    "minimum_epochs": 6,
+    "maximum_epochs": 20,
+    "effective_batch": 64,
+    "seed_seconds": 2700
+  },
+  "acceptance": {
+    "repeats": 10000,
+    "seed": 20261004,
+    "unknown_delta_min": 0.001,
+    "unknown_ci_lower_gt": 0,
+    "known_ci_lower_min": -0.001,
+    "known_top1_drop_max": 0.002,
+    "known_recall25_drop_max": 0.002
+  },
+  "acceptance_predictions_allowed_in_foundation": false,
+  "competition_submission_allowed_in_foundation": false,
+  "forward_weights_domains_licenses": "pending separate verified asset manifests; no forward execution authorized by this package",
+  "NPAtlas": {
+    "enabled": false,
+    "reason": "use eligibility not established"
+  },
+  "PubChem": {
+    "enabled": false
+  },
+  "M2_predeclared_details": {
+    "max_peaks": 64,
+    "pos_weight_cap": 10,
+    "bit_selection": "positive and negative identities both present in train",
+    "sampling": "one uniformly sampled identity-view per identity/epoch; half single, half merged",
+    "merged_peak_bin_da": 0.001,
+    "mixed_adduct_instrument_metadata": "missing",
+    "merged_losses": "preserve strongest original peak precursor-minus-fragment; never synthetic average precursor",
+    "pool": "C0 structure sources only for FR-11; LOTUS is a separate M3/C4 increment",
+    "training_microbatch": "64 split32/card if two GPUs; 32 accumulate2 if one GPU",
+    "acceptance_parquet_read": false,
+    "cumulative_foundation_budget_carried": true,
+    "checkpoint_selection": "development fused weighted BCE",
+    "random_ranking_seed": 20261004,
+    "conditional_candidate_bootstrap": 10000,
+    "original_M0_checkpoint_script_version": 355247134,
+    "completed_foundation_required_script_version": 355258706,
+    "original_M0_checkpoint_source_sha256": "e094ea8ab49a65fb2fb81527f089cc161b7ee703389ec64c830edd560747fad8",
+    "completed_foundation_embedded_source_sha256": "279cdac18675a3b0c51690af188cacde3d5fbe0f5b7ae3d0fa92e87ec049a1f1",
+    "upstream_incomplete_or_failed": "refuse M2, retain failure",
+    "resume": "complete epoch checkpoint retained, no half-epoch weight used"
+  }
+}
