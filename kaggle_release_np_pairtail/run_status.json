@@ -1,5 +1,5 @@
 {
-  "stage": "M1_complete_M2_prepared",
+  "stage": "M2_formal_running",
   "M0_all_model_asset_requirements_complete": false,
   "FPNet_trained": false,
   "acceptance_opened": false,
@@ -37,5 +37,12 @@
   "foundation_metrics_evidence": "development_foundation_results.json",
   "selected_foundation_arm": "C1_ppm10",
   "representative_module_enabled": false,
-  "representative_fallback_reason": "Both C2 arms breach frozen known MRR and Top1 protection limits"
+  "representative_fallback_reason": "Both C2 arms breach frozen known MRR and Top1 protection limits",
+  "M2_research_notebook": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355383879",
+  "M2_source_commit": "ec1b7458d1879a337f350b2218904210af5fc352",
+  "M2_embedded_source_sha256": "854a59263c2660bf38533b28a17b1df6efcc9970c6d34f246e4dc9b87da065e2",
+  "M2_accelerator": "GPU T4 x2",
+  "M2_internet": false,
+  "M2_latest_stage": "M2_pool_identity_audit",
+  "M2_latest_visible_seconds": 80.2
 }
