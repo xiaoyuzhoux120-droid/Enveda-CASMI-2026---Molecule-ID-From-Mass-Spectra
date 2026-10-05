@@ -321,6 +321,46 @@ def predict(model, dataset, bits, device, batch_size=64):
     return grouped_logits(output, dataset.layout)
 
 
+def retry_effective_batch_fp32(model, optimizer, batches, bits, criterion, device, cpu_rng, cuda_rng=()):
+    """Retry an AMP-skipped transaction; preserve examples, dropout and updates.
+
+    GradScaler has already skipped the optimizer step and reduced its scale.
+    A finite loss with FP16 gradient overflow is distinct from a corrupt loss
+    or weight. Retry the full accumulation group in FP32, including earlier
+    microbatches, and reject any nonfinite FP32 gradient/state.
+    """
+    optimizer.zero_grad(set_to_none=True)
+    examples = sum(len(batch['target']) for batch in batches)
+    if not examples:
+        raise ValueError('Cannot retry an empty effective batch')
+    total_loss = 0.
+    devices = list(range(torch.cuda.device_count())) if device.type == 'cuda' else []
+    with torch.random.fork_rng(devices=devices):
+        torch.set_rng_state(cpu_rng)
+        if devices:
+            torch.cuda.set_rng_state_all(cuda_rng)
+        for batch in batches:
+            target = batch['target'][:, bits].to(device).float()
+            with torch.autocast(device.type, enabled=False):
+                logits = model(*(batch[k].to(device) for k in ['peaks','mask','meta']))
+                loss = criterion(logits, target)
+            if not torch.isfinite(loss):
+                raise FloatingPointError('Nonfinite FP32 retry loss')
+            (loss*len(target)/examples).backward()
+            total_loss += float(loss.detach())*len(target)
+    if any(parameter.grad is not None and not torch.isfinite(parameter.grad).all()
+           for parameter in model.parameters()):
+        raise FloatingPointError('Nonfinite FP32 retry gradient')
+    optimizer.step()
+    if any(not torch.isfinite(parameter).all() for parameter in model.parameters()):
+        raise FloatingPointError('Nonfinite weight after FP32 retry')
+    if any(isinstance(value,torch.Tensor) and not torch.isfinite(value).all()
+           for state in optimizer.state.values() for value in state.values()):
+        raise FloatingPointError('Nonfinite optimizer state after FP32 retry')
+    optimizer.zero_grad(set_to_none=True)
+    return total_loss
+
+
 def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.):
     torch.manual_seed(seed); np.random.seed(seed); torch.cuda.manual_seed_all(seed)
     torch.set_num_threads(4)
@@ -332,7 +372,7 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
     cpu_loss = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(weights, dtype=torch.float32))
     scaler = torch.amp.GradScaler('cuda')
     max_epochs = protocol['fpnet']['maximum_epochs']; min_epochs = protocol['fpnet']['minimum_epochs']
-    best, stale, updates, history = math.inf, 0, 0, []
+    best, stale, updates, history, amp_retries = math.inf, 0, 0, [], 0
     dev_target = np.asarray(dev.arrays['target'][:, bits], np.float32)
     per_seed_budget = protocol['fpnet']['seed_seconds']
     def check_budget():
@@ -351,10 +391,15 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
             pin_memory=True, drop_last=False, persistent_workers=False)
         model.train(); optimizer.zero_grad(set_to_none=True)
         epoch_start = time.monotonic(); epoch_loss, seen = 0., 0
+        pending_batches, group_original_loss = [], 0.
         for card in range(torch.cuda.device_count()):
             torch.cuda.reset_peak_memory_stats(card)
         for step, batch in enumerate(loader):
             check_budget()
+            if not pending_batches:
+                group_cpu_rng = torch.get_rng_state()
+                group_cuda_rng = torch.cuda.get_rng_state_all()
+            pending_batches.append(batch)
             fraction = (epoch-1)+(step+1)/len(loader)
             rate = fraction/2 if fraction < 2 else .5*(1+math.cos(math.pi*(fraction-2)/(max_epochs-2)))
             for group in optimizer.param_groups:
@@ -369,12 +414,22 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
             group_size = min(accumulation, len(loader)-(step//accumulation)*accumulation)
             scaler.scale(loss/group_size).backward()
             epoch_loss += float(loss.detach())*len(target); seen += len(target)
+            group_original_loss += float(loss.detach())*len(target)
             if (step+1) % accumulation == 0 or step+1 == len(loader):
                 old_scale = scaler.get_scale()
-                scaler.step(optimizer); scaler.update(); optimizer.zero_grad(set_to_none=True)
+                scaler.step(optimizer); scaler.update()
                 if scaler.get_scale() < old_scale:
-                    raise FloatingPointError('AMP skipped a nonfinite gradient update')
+                    replacement_loss = retry_effective_batch_fp32(model, optimizer,
+                        pending_batches, bits, criterion, device, group_cpu_rng, group_cuda_rng)
+                    epoch_loss += replacement_loss-group_original_loss
+                    amp_retries += 1
+                    print(json.dumps({'stage':'M2_AMP_FP32_retry','seed':seed,'epoch':epoch,
+                        'step':step+1,'amp_skipped_steps':amp_retries,
+                        'effective_examples':sum(len(b['target']) for b in pending_batches),
+                        'optimizer_update_succeeded':True}),flush=True)
+                optimizer.zero_grad(set_to_none=True)
                 updates += 1
+                pending_batches, group_original_loss = [], 0.
             if (step+1) % 100 == 0:
                 print(json.dumps({'stage': 'M2_training', 'seed': seed, 'epoch': epoch,
                     'step': step+1, 'steps': len(loader), 'seconds': time.monotonic()-started,
@@ -389,11 +444,13 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
                'effective_batch': 64, 'accumulation': accumulation, 'identity_examples': seen,
                'epoch_gpu_seconds': time.monotonic()-epoch_start,
                'elapsed_seconds': time.monotonic()-started, 'peak_vram_bytes': peak,
-               'optimizer_updates': updates}
+               'optimizer_updates': updates, 'amp_fp32_retries':amp_retries}
         history.append(row); write_json(root/f'seed_{seed}_history.json', history)
         torch.save({'state_dict':raw.state_dict(), 'optimizer':optimizer.state_dict(),
             'scaler':scaler.state_dict(), 'completed_epoch':epoch, 'seed':seed,
-            'bits':bits.tolist(), 'optimizer_updates':updates}, root/f'seed_{seed}_last_complete.pt')
+            'bits':bits.tolist(), 'optimizer_updates':updates, 'amp_fp32_retries':amp_retries,
+            'torch_cpu_rng_state':torch.get_rng_state(),
+            'torch_cuda_rng_states':torch.cuda.get_rng_state_all()}, root/f'seed_{seed}_last_complete.pt')
         print(json.dumps({k:v for k,v in row.items() if k != 'development'} | {
             'development_bce': result['bce'], 'seed': seed}), flush=True)
         if result['bce'] < best:

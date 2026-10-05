@@ -1,0 +1,168 @@
+{
+  "source": "complete actual Kaggle Download logs text",
+  "binary_checkpoints_audited": false,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_bce": 0.4401718776987957,
+      "learning_rate": 0.00005,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 126.2434489039997,
+      "elapsed_seconds": 134.28167699699952,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 1875,
+      "development_bce": 0.37432053685188293,
+      "seed": 20261004
+    },
+    {
+      "epoch": 2,
+      "train_bce": 0.36980585805373817,
+      "learning_rate": 0.0001,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 123.35157770100068,
+      "elapsed_seconds": 258.41492624500006,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 3750,
+      "development_bce": 0.3627035319805145,
+      "seed": 20261004
+    },
+    {
+      "epoch": 3,
+      "train_bce": 0.35940909029698687,
+      "learning_rate": 0.00009924038765061042,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 124.41691392899975,
+      "elapsed_seconds": 383.74330954299967,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 5625,
+      "development_bce": 0.35129040479660034,
+      "seed": 20261004
+    },
+    {
+      "epoch": 4,
+      "train_bce": 0.34995077954372206,
+      "learning_rate": 0.00009698463103929542,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 125.38911810399986,
+      "elapsed_seconds": 510.0245648479995,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 7500,
+      "development_bce": 0.3422224223613739,
+      "seed": 20261004
+    },
+    {
+      "epoch": 5,
+      "train_bce": 0.34190045668740265,
+      "learning_rate": 0.00009330127018922194,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 122.76530618699962,
+      "elapsed_seconds": 633.682941522,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 9375,
+      "development_bce": 0.33354735374450684,
+      "seed": 20261004
+    },
+    {
+      "epoch": 6,
+      "train_bce": 0.33455592898848086,
+      "learning_rate": 0.0000883022221559489,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 123.5961968240008,
+      "elapsed_seconds": 758.2126561609994,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 11250,
+      "development_bce": 0.32635101675987244,
+      "seed": 20261004
+    },
+    {
+      "epoch": 7,
+      "train_bce": 0.3277853399487083,
+      "learning_rate": 0.00008213938048432697,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 125.10624468300011,
+      "elapsed_seconds": 884.2221155419993,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 13125,
+      "development_bce": 0.319970965385437,
+      "seed": 20261004
+    },
+    {
+      "epoch": 8,
+      "train_bce": 0.32147967023697743,
+      "learning_rate": 0.00007500000000000001,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 124.97009627999978,
+      "elapsed_seconds": 1010.1150869919993,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 15000,
+      "development_bce": 0.3138618469238281,
+      "seed": 20261004
+    },
+    {
+      "epoch": 9,
+      "train_bce": 0.3155788855380999,
+      "learning_rate": 0.00006710100716628344,
+      "physical_batch": 64,
+      "effective_batch": 64,
+      "accumulation": 1,
+      "identity_examples": 119977,
+      "epoch_gpu_seconds": 125.17820544299957,
+      "elapsed_seconds": 1136.2054977709995,
+      "peak_vram_bytes": [
+        618000384,
+        434075136
+      ],
+      "optimizer_updates": 16875,
+      "development_bce": 0.3091285228729248,
+      "seed": 20261004
+    }
+  ]
+}

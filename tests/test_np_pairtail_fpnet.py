@@ -1,6 +1,52 @@
 import numpy as np
 
 
+def test_fp32_retry_preserves_entire_accumulation_group_dropout_and_rng():
+    import copy
+    import torch
+    from casmi_ml.np_pairtail_fpnet import retry_effective_batch_fp32
+    class Tiny(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.drop=torch.nn.Dropout(.3); self.head=torch.nn.Linear(3,1)
+        def forward(self,peaks,mask,meta):
+            return self.head(self.drop(torch.cat([peaks[:,0],meta],dim=1)))
+    torch.manual_seed(7)
+    direct=Tiny(); retry=copy.deepcopy(direct)
+    batches=[{'peaks':torch.randn(n,1,2),'mask':torch.ones(n,1,dtype=torch.bool),
+              'meta':torch.randn(n,1),'target':torch.ones(n,1)} for n in (3,2)]
+    cpu_rng=torch.get_rng_state(); loss=torch.nn.BCEWithLogitsLoss()
+    direct_opt=torch.optim.SGD(direct.parameters(),lr=.1)
+    for batch in batches:
+        (loss(direct(batch['peaks'],batch['mask'],batch['meta']),batch['target'])*len(batch['target'])/5).backward()
+    direct_opt.step()
+    after_rng=torch.get_rng_state().clone()
+    retry_opt=torch.optim.SGD(retry.parameters(),lr=.1)
+    retry_effective_batch_fp32(retry,retry_opt,batches,np.array([0]),loss,torch.device('cpu'),cpu_rng)
+    for a,b in zip(direct.parameters(),retry.parameters()):assert torch.allclose(a,b)
+    assert torch.equal(after_rng,torch.get_rng_state())
+
+
+def test_fp32_retry_rejects_nonfinite_gradient_before_any_weight_update():
+    import torch
+    from casmi_ml.np_pairtail_fpnet import retry_effective_batch_fp32
+    class CorruptGradient(torch.autograd.Function):
+        @staticmethod
+        def forward(ctx,x):return x
+        @staticmethod
+        def backward(ctx,grad):return torch.full_like(grad,float('inf'))
+    class Bad(torch.nn.Module):
+        def __init__(self):super().__init__();self.weight=torch.nn.Parameter(torch.tensor(1.))
+        def forward(self,peaks,mask,meta):return CorruptGradient.apply(self.weight*meta)
+    model=Bad();opt=torch.optim.SGD(model.parameters(),lr=.1)
+    batch={'peaks':torch.zeros(2,1,1),'mask':torch.ones(2,1,dtype=torch.bool),
+           'meta':torch.ones(2,1),'target':torch.ones(2,1)}
+    import pytest
+    with pytest.raises(FloatingPointError,match='gradient'):
+        retry_effective_batch_fp32(model,opt,[batch],np.array([0]),
+            torch.nn.BCEWithLogitsLoss(),torch.device('cpu'),torch.get_rng_state())
+    assert model.weight.item()==1.
+
+
 def test_scoped_mass_pool_preserves_every_query_candidate_without_identity_labels():
     from casmi_ml.np_pairtail_fpnet import query_window_mask
     centers=np.array([157.,157.002,500.,1159.,np.nan])
