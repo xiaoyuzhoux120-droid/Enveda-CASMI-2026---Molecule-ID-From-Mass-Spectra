@@ -10,8 +10,10 @@
     "asset_hashes": "runtime_asset_manifest.json",
     "creation_failure_preserved": "release CDN import internal error; stable commit-pinned raw GitHub import succeeded"
   },
-  "tests": "31 passed",
+  "tests": "55 targeted tests passed",
   "acceptance_opened": false,
   "competition_submitted": false,
-  "public_score": null
+  "public_score": null,
+  "gated_acceptance_entry": "prepared_not_executed",
+  "inference_only_entry": "prepared_not_executed"
 }

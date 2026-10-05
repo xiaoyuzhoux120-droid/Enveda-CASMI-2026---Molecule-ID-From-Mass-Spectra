@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1];DEST=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 from kaggle_release_np_pairtail.build_foundation import SOURCES
 EXTRA=('np_pairtail_fpnet','np_pairtail_fusion','np_pairtail_structures','np_pairtail_ranker',
-       'np_pairtail_learning_runtime','np_pairtail_fp_inference','np_pairtail_m3')
+       'np_pairtail_learning_runtime','np_pairtail_fp_inference','np_pairtail_policy','np_pairtail_m3','np_pairtail_acceptance','np_pairtail_deployment')
 
 def build():
     names=(*SOURCES,*(f'casmi_ml/{n}.py' for n in EXTRA))
@@ -24,6 +24,7 @@ def build():
     bootstrap=''.join(template['cells'][1]['source'])
     bootstrap=bootstrap[bootstrap.index('SUMS_SHA256 = '):]
     bootstrap=bootstrap[:bootstrap.index('from casmi_ml.np_pairtail_foundation import run')]
+    bootstrap='import time\nM3_PREPARATION_STARTED=time.monotonic()\n'+bootstrap
     bootstrap=f'CODE_BASE64 = {base64.b64encode(payload).decode()!r}\nCODE_SHA256 = {digest!r}\n'+bootstrap
     bootstrap+='''\n# LOTUS/LightGBM assets must match full query-independent prepared universe.
 assets=json.loads((code_dir/'runtime_asset_manifest.json').read_text())
@@ -41,7 +42,8 @@ subprocess.run([sys.executable,'-m','pip','install','--no-index','--no-deps',str
 # Avoid loading native CPU OpenMP and CUDA runtimes into a single process.
 subprocess.run([sys.executable,'-c',"import lightgbm; assert lightgbm.__version__=='4.7.0'; print('LightGBM',lightgbm.__version__)"],check=True)
 '''
-    runner='''import pandas as pd
+    runner='''import shutil
+import pandas as pd
 from casmi_ml.np_pairtail_m3 import run
 foundation=unique([p.parent for p in INPUT.rglob('development_foundation_results.json') if (p.parent/'split_manifest.json').exists()],'completed foundation')
 models=unique([p.parent for p in INPUT.rglob('M2_training_summary.json') if (p.parent/'M2_development_candidate_gate.json').exists()],'completed three-seed FPNet')
@@ -63,13 +65,22 @@ for row in pd.read_parquet(oldpool,columns=['normalized_smiles','identity']).ite
     if row.normalized_smiles in mapping and mapping[row.normalized_smiles]!=row.identity:raise ValueError('Identity cache collision')
     mapping[row.normalized_smiles]=row.identity
 root=WORKING/'np_pairtail_ranker';root.mkdir(exist_ok=True)
+# Preserve immutable inference weights so the next self-output version has all
+# required runtime artifacts without mounting two versions of one notebook.
+frozen_models=root/'frozen_fpnet';frozen_models.mkdir(exist_ok=True)
+for name in ['M2_training_summary.json','M2_development_candidate_gate.json','run_status.json',
+             'train_fitted_statistics.json','data_manifest.json']+[f'fpnet_seed_{seed}.pt' for seed in (20261004,20261005,20261006)]:
+    shutil.copyfile(models/name,frozen_models/name)
+
+reference_mapping=root/'reference_identity_map.json';shutil.copyfile(mapping_file,reference_mapping)
 merged_mapping=root/'structure_identity_map.json';merged_mapping.write_text(json.dumps(mapping,sort_keys=True))
 (root/'data_manifest.json').write_text(json.dumps({'embedded_source_sha256':CODE_SHA256,'M2_data_manifest_sha256':sha256(models/'data_manifest.json'),
     'foundation_data_sha256':m2manifest['foundation_file_sha256'],'original_identity_cache_sha256':sha256(mapping_file),
     'canonical_alias_cache_pool_sha256':sha256(oldpool),'acceptance_opened':False},indent=2))
 protocol=json.loads((code_dir/'protocol_ranker_20261005.json').read_text())
 run(foundation,models,cache,TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,merged_mapping,
-    lotus,lotus.with_suffix('.manifest.json'),protocol,root/'base_structure_pool.parquet',root)
+    lotus,lotus.with_suffix('.manifest.json'),protocol,root/'base_structure_pool.parquet',root,
+    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED,reference_mapping_path=reference_mapping)
 print('M3 finished. One sealed acceptance and inference-only release remain mandatory.',flush=True)
 '''
     cells=[]

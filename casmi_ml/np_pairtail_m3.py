@@ -19,6 +19,7 @@ from casmi_ml.np_pairtail_ranker import (FEATURES,StructureIndex,CandidateFeatur
     select_negative_rows,labeled_group,isolated_booster_fit)
 from casmi_ml.np_pairtail_fusion import local_module_gate,pairtail,reciprocal_fusion
 from casmi_ml.np_pairtail_structures import sha256
+from casmi_ml.np_pairtail_policy import deploy_policy
 
 
 def cpu_or_gpu_worker(command,deadline):
@@ -146,26 +147,25 @@ def ranking_policy(cases,ranker_cases,k,alpha,strategy,thresholds):
     output={'unknown':[],'known':[]}
     for case in cases:
         mode,key=case['mode'],case['identity']
-        proposed,_=reciprocal_fusion(primary[mode][key],case['fp_ranking'],k,alpha)
-        if case['confidence']>=.5:proposed=primary[mode][key]
-        ranking=pairtail(case['c0_baseline'],proposed,strategy,
-            independent_tops=[('fingerprint',case['fp_ranking'][0]),('spectrum_analog',case['analog_ranking'][0])],
-            margins=[case['fp_margin'],case['analog_margin']],thresholds=thresholds,
-            compatible=[True,True])
+        ranking=deploy_policy(case['c0_baseline'],case['baseline'],primary[mode][key],
+            case['fp_ranking'],case['analog_ranking'],case['fp_margin'],case['analog_margin'],case['confidence'],
+            {'K':k,'alpha':alpha,'strategy':strategy,'thresholds':thresholds})
         output[mode].append(evaluate_order(key,ranking))
     return output
 
 
 def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_path,
-        mapping_path,lotus_path,lotus_manifest,protocol,pool_path,root):
+        mapping_path,lotus_path,lotus_manifest,protocol,pool_path,root,preparation_seconds=0.,reference_mapping_path=None):
     root=Path(root);root.mkdir(parents=True,exist_ok=True);foundation=Path(foundation);models=Path(models)
+    reference_mapping_path=reference_mapping_path or mapping_path
     m2=json.loads((models/'run_status.json').read_text())
     if m2['stage']!='M2_complete':raise ValueError('M2 gate incomplete; M3 forbidden')
-    prior=float(m2['cumulative_seconds']);progress=Progress(root,prior_seconds=prior,total=protocol['total_research_seconds'])
-    started=time.monotonic();deadline=min(started+protocol['ranker_module_seconds'],
+    prior=float(m2['cumulative_seconds'])+float(preparation_seconds);progress=Progress(root,prior_seconds=prior,total=protocol['total_research_seconds'])
+    started=time.monotonic();deadline=min(started+protocol['ranker_module_seconds']-float(preparation_seconds),
         started+protocol['total_research_seconds']-prior)
     write_json(root/'protocol_ranker_20261005.json',protocol)
     try:
+        if time.monotonic()>=deadline:raise TimeoutError('M3 preparation exhausted module/research budget')
         # No acceptance reader, even metadata, in the M3 entry.
         train=pd.read_parquet(foundation/'train.parquet');dev=pd.read_parquet(foundation/'development.parquet')
         split=json.loads((foundation/'split_manifest.json').read_text())
@@ -192,7 +192,8 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
         mapping=json.loads(Path(mapping_path).read_text())
         coconut=pd.read_parquet(coconut_path,columns=['inchikey','canonical_smiles','exact_mass']);catalog=pd.read_parquet(catalog_path)
         rules=load_rules(dictionary_path)
-        records,metadata=reference_scan(train_path,{'train':training,'development':dev},mapping,root,progress,deadline)
+        reference_mapping=json.loads(Path(reference_mapping_path).read_text()) if reference_mapping_path else mapping
+        records,metadata=reference_scan(train_path,{'train':training,'development':dev},reference_mapping,root,progress,deadline)
         afix=json.loads((foundation/'M1_afix_selection.json').read_text())['threshold_ppm']
         # Freeze exact C0 known cohort from the completed foundation evaluator.
         old_known=json.loads((foundation/'C0_known_cases.json').read_text())
@@ -321,7 +322,7 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
             'C3_routing':protocol['C3_routing'],'forward_enabled':False,'popularity_enabled':False,
             'acceptance_opened':False,'competition_submission_allowed':False,
             'input_sha256':{str(Path(path).name):sha256(path) for path in
-                [train_path,coconut_path,catalog_path,dictionary_path,mapping_path,lotus_path,lotus_manifest,pool_path]},
+                [train_path,coconut_path,catalog_path,dictionary_path,mapping_path,reference_mapping_path,lotus_path,lotus_manifest,pool_path]},
             'protocol_sha256':sha256(root/'protocol_ranker_20261005.json'),
             'data_manifest_sha256':sha256(root/'data_manifest.json'),
             'all_packaged_sources_sha256':{str(p.relative_to(Path(__file__).parents[1])):sha256(p)
@@ -336,7 +337,8 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
         report['selected_policy']=policy;report['decision']='frozen for one sealed acceptance only'
         write_json(root/'M3_development_results.json',report)
         progress.emit('M3_development_complete',acceptance_opened=False,competition_submission_allowed=False,
-                      candidate_freeze_sha256=sha256(root/'candidate_freeze.json'))
+                      candidate_freeze_sha256=sha256(root/'candidate_freeze.json'),
+                      cumulative_seconds=prior+time.monotonic()-started)
         return report
     except Exception as exc:
         write_json(root/'run_status.json',{'stage':'M3_failed','error_type':type(exc).__name__,'error':str(exc),

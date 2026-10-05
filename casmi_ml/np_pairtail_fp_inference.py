@@ -96,6 +96,16 @@ def frozen_predict(models_root,dataset,selected_view,output):
 
 
 def main():
+    if sys.argv[1]=='--runtime':
+        import pandas as pd
+        models,parquet,view,output=sys.argv[2:]
+        preprocessing=json.loads((Path(models)/'train_fitted_statistics.json').read_text())['preprocessing']
+        frame=pd.read_parquet(parquet)
+        required={'molecule_id','record_id','ms2_mzs','ms2_normalized_intensities',
+                  'precursor_mz','adduct','ionization_mode','instrument_type','collision_energy_ev'}
+        if not required<=set(frame):raise ValueError('Runtime spectrum schema incomplete')
+        frozen_predict(models,RuntimeViews(frame.loc[:,sorted(required)],preprocessing),view,output)
+        return
     models,cache,key_file,view,output=sys.argv[1:]
     keys=json.loads(Path(key_file).read_text())
     frozen_predict(models,InputViews(cache,keys),view,output)

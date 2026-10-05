@@ -1,0 +1,10 @@
+{
+  "stage": "prepared_not_executed",
+  "embedded_source_sha256": "8ad926ba261a7366067fa202b775970d359a3d4614493db012543ff00b60afb7",
+  "notebooks_sha256": {
+    "np_gated_inference.ipynb": "fe3af6a2c7f0eb036220c71c6a1f1e0c9b394e02411073ee3208728401a72a7f",
+    "np_gated_acceptance.ipynb": "9debc4690d8a9853ce5af3e40e44d59085d6f6a40a40d54126110e8fd8ea4260"
+  },
+  "acceptance_opened": false,
+  "competition_submitted": false
+}

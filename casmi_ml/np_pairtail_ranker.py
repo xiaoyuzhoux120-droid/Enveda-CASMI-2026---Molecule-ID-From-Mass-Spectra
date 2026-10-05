@@ -134,6 +134,7 @@ class CandidateFeatures:
     def __init__(self, index, bits, rules=()):
         self.index, self.bits, self.rules = index, np.asarray(bits), tuple(rules)
         self.fragments = {}
+        self.reference_fingerprints = {}
 
     def build(self, group, rows, logits, library, library_metadata=None):
         if len(logits) != len(self.bits) or not np.isfinite(logits).all():
@@ -151,8 +152,11 @@ class CandidateFeatures:
         lib = {key: (i, float(score)) for i, (key, _, score) in enumerate(library)}
         reference = []
         for key, smi, score in library[:25]:
-            _, fp = canonical_target(smi, key)
-            reference.append((fp[self.bits], score))
+            cache_key=(smi,key)
+            if cache_key not in self.reference_fingerprints:
+                _, fp = canonical_target(smi,key)
+                self.reference_fingerprints[cache_key]=fp[self.bits]
+            reference.append((self.reference_fingerprints[cache_key], score))
         if reference and len(fps):
             rf = np.array([r[0] for r in reference], np.float32)
             intersection = fps @ rf.T

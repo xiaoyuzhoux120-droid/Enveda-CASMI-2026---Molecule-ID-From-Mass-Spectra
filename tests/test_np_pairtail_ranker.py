@@ -166,3 +166,62 @@ def test_disconnected_fragment_domain_is_missing_without_candidate_removal():
     from casmi_ml.np_pairtail_ranker import fragment_masses
     one,two,total=fragment_masses('CCO.C')
     assert one is None and two is None and np.isfinite(total)
+
+
+def test_inference_projection_drops_dummy_answers_and_preserves_dynamic_ids(tmp_path):
+    from casmi_ml.np_pairtail_deployment import runtime_frame
+    rows=pd.DataFrame([{'molecule_id':i,'ms2_mzs':[50.,80.],'ms2_normalized_intensities':[.2,1.],
+        'precursor_mz':181.,'adduct':'[M+H]+','ionization_mode':'positive',
+        'instrument_type':'Orbitrap','collision_energy_ev':[10.],
+        'normalized_smiles':'MUST_NOT_READ','inchikey14':'MUST_NOT_READ','molecular_formula':'MUST_NOT_READ'} for i in range(37)])
+    path=tmp_path/'queries.parquet';rows.to_parquet(path,index=False)
+    loaded=runtime_frame(path)
+    assert loaded.molecule_id.tolist()==list(range(37))
+    assert not {'normalized_smiles','inchikey14','molecular_formula'}&set(loaded)
+    changed=rows.assign(molecule_id=rows.molecule_id.map(lambda i:1000-i));changed.to_parquet(path,index=False)
+    remapped=runtime_frame(path)
+    assert loaded.binned_signature.tolist()==remapped.binned_signature.tolist()
+    assert loaded.record_id.tolist()==remapped.record_id.tolist()
+
+
+def test_submission_canonical_duplicates_cannot_be_hidden_by_smiles_aliases():
+    from casmi_ml.np_pairtail_deployment import validate_submission
+    from casmi_ml.np_pairtail_structures import canonical_record
+    key,_=canonical_record('CCO')
+    output=pd.DataFrame({'molecule_id':['runtime-id'],'smiles':['CCO;OCC']})
+    with pytest.raises(ValueError,match='duplicate canonical'):
+        validate_submission(output,['runtime-id'],{'runtime-id':[key,key]})
+    output.smiles=['CCO']
+    assert validate_submission(output,['runtime-id'],{'runtime-id':[key]})['rows']==1
+
+
+def test_frozen_deployment_uses_measurement_guard_and_actual_c0_top1():
+    from casmi_ml.np_pairtail_policy import deploy_policy
+    policy={'K':3,'alpha':.6,'strategy':'tail_only','thresholds':[.1,.1]}
+    result=deploy_policy(['old-top','old-tail'],['afix-top','old-top'],['learned','afix-top'],
+        ['fingerprint','learned','old-top'],['analog','learned'],.5,.5,.8,policy)
+    assert result==['old-top','afix-top']
+    result=deploy_policy(['old-top','old-tail'],['afix-top','old-top'],['learned','afix-top'],
+        ['fingerprint','learned','old-top'],['analog','learned'],.5,.5,.2,policy)
+    assert result[0]=='old-top' and 'learned' in result
+
+
+def test_library_fp_cache_preserves_features_and_keys_complete_alias(monkeypatch):
+    import casmi_ml.np_pairtail_ranker as module
+    from casmi_ml.np_pairtail_structures import canonical_record
+    key,smi=canonical_record('CCO')
+    pool=pd.DataFrame([{'identity':key,'normalized_smiles':smi,'mass':46.041864812,'sources':'LOTUS'}])
+    index=StructureIndex(pool);builder=module.CandidateFeatures(index,np.arange(2048))
+    group=pd.DataFrame([{'precursor_mz':47.04914,'adduct':'[M+H]+','ionization_mode':'positive',
+        'instrument_type':'Orbitrap','collision_energy_ev':[10.],
+        'ms2_mzs':[17.],'ms2_normalized_intensities':[1.]}])
+    calls=[];original=module.canonical_target
+    def counted(*args,**kwargs):calls.append(args);return original(*args,**kwargs)
+    monkeypatch.setattr(module,'canonical_target',counted)
+    before=builder.build(group,pool,np.zeros(2048),[(key,smi,.5)])
+    previous=len(calls)
+    after=builder.build(group,pool,np.zeros(2048),[(key,smi,.5)])
+    assert len(calls)==previous
+    np.testing.assert_array_equal(feature_matrix(before),feature_matrix(after))
+    builder.build(group,pool,np.zeros(2048),[(key,'OCC',.5)])
+    assert len(calls)==previous+1

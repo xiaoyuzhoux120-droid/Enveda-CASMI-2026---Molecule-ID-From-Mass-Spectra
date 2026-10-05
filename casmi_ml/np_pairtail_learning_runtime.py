@@ -52,7 +52,7 @@ def reference_scan(train_path,query_frames,mapping,root,progress,deadline):
             # own .006 Da floor. No arbitrary union-wide mass expansion.
             if distance>mass*35e-6:continue
             ident=mapping.get(row['normalized_smiles'])
-            if not ident:raise ValueError('Reference structure missing frozen official identity map')
+            if not ident:continue  # Exact foundation reference-identity eligibility.
             _,signature,vector=spectrum_signature(row)
             if not vector:continue
             records.append((mass,str(row['inchikey14']),row['normalized_smiles'],vector))
