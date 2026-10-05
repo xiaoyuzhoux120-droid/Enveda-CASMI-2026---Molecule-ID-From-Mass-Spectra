@@ -1,5 +1,5 @@
 {
-  "stage": "M3_v5_failed_repair_prepared",
+  "stage": "M3_repaired_actual_running",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -31,11 +31,11 @@
     "audit": "feature_runtime_equivalence.json"
   },
   "remaining_research_seconds_before_M3_preparation": 2369.8501735180016,
-  "version": 5,
-  "script_version_id": 355588043,
-  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355588043",
-  "source_commit": "a8d6c38",
-  "embedded_source_sha256": "7656fc5c09dcbc0afc4a629be809a0702bf55a1184b6928f7f3e004a904fd0bc",
+  "version": 6,
+  "script_version_id": 355588750,
+  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355588750",
+  "source_commit": "38a64ce",
+  "embedded_source_sha256": "45de8e5dcfba736b9617a156b1907a77082bf4218ff31c7272cefae37a926c34",
   "self_model_input_version": 4,
   "editor_cells_exact_match": true,
   "failure": {
@@ -52,5 +52,6 @@
     "development_acceptance_inference_unchanged": true,
     "failure_seconds_carried": 151.5,
     "tests": "26 passed"
-  }
+  },
+  "remaining_research_seconds_before_current_preparation": 1918.3501735180016
 }
