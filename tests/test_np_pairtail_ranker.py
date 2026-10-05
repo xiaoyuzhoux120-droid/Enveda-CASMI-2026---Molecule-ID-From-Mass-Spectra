@@ -4,6 +4,22 @@ import numpy as np
 import pandas as pd
 import pytest
 
+
+def test_training_retrieval_domain_never_uses_truth_or_backfills_identities():
+    from casmi_ml.np_pairtail_learning_runtime import supported_training_measurements, center_mass
+    frame = pd.DataFrame({'identity':['a','a','b','c'],
+        'precursor_mz':[201.007276466621, 100., 100., np.nan],
+        'adduct':['[M+H]+','[M+2H]2+','unknown','[M+H]+'],
+        'molecular_formula':['C999','C999','C999','C999']})
+    kept, audit = supported_training_measurements(frame)
+    assert kept.index.tolist() == [0]
+    assert np.isclose(center_mass(kept), 200.)
+    assert audit['unsupported_only_identities'] == ['b','c']
+    assert audit['dropped_rows'] == 3 and not audit['identity_backfill']
+    assert not audit['query_truth_mass_used']
+    with pytest.raises(ValueError, match='Unsupported'):
+        center_mass(frame)  # Evaluation retains its strict existing behavior.
+
 from casmi_ml.np_pairtail_ranker import (FEATURES, StructureIndex, feature_matrix,
     fit_boosters, fragment_masses, labeled_group, peak_coverage, score_boosters,
     select_negative_rows)

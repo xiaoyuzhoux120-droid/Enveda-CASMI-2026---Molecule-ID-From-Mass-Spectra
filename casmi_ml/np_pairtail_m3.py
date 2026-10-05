@@ -13,7 +13,7 @@ import pandas as pd
 from casmi_ml.data import write_json
 from casmi_ml.chemical_priors import load_rules
 from casmi_ml.np_pairtail_foundation import order,Progress
-from casmi_ml.np_pairtail_learning_runtime import (reference_scan,build_retrieval,
+from casmi_ml.np_pairtail_learning_runtime import (reference_scan,build_retrieval,supported_training_measurements,
     candidate_union,center_mass,prediction_metrics,evaluate_order)
 from casmi_ml.np_pairtail_ranker import (FEATURES,StructureIndex,CandidateFeatures,
     select_negative_rows,labeled_group,isolated_booster_fit)
@@ -173,6 +173,8 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
         split=json.loads((foundation/'split_manifest.json').read_text())
         training_keys=sorted(set(train.identity),key=lambda k:(order(k,'ranker-query'),k))[:protocol['training_query_cap']]
         training=train[train.identity.isin(training_keys)].copy()
+        training, domain_audit = supported_training_measurements(training)
+        write_json(root/'training_measurement_domain_audit.json', domain_audit)
         train_keys=sorted(training_keys);dev_keys=sorted(set(dev.identity))
         if set(train_keys)&set(dev_keys):raise ValueError('Ranker train/development identity leakage')
         write_json(root/'ranker_training_identities.json',train_keys)

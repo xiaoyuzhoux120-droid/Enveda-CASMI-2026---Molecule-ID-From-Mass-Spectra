@@ -28,6 +28,27 @@ def center_mass(group):
     return float(np.median(values))
 
 
+def supported_training_measurements(frame):
+    """Restrict retrieval fitting to its existing charge-1 measurement domain.
+
+    Never use formula/SMILES to reconstruct a query mass. Keep the preselected
+    identity cohort; unsupported-only identities are not replaced or backfilled.
+    Evaluation remains strict and unchanged.
+    """
+    neutral = frame.precursor_mz-frame.adduct.map(ADDUCT_MASS)
+    keep = np.isfinite(neutral) & (neutral > 0)
+    dropped = frame.loc[~keep]
+    retained = frame.loc[keep].copy()
+    audit = {'input_rows': len(frame), 'retained_rows': len(retained),
+             'dropped_rows': len(dropped),
+             'unsupported_adduct_counts': dropped.adduct.fillna('<missing>').value_counts().to_dict(),
+             'unsupported_only_identities': sorted(set(frame.identity)-set(retained.identity)),
+             'identity_backfill': False, 'query_truth_mass_used': False}
+    if retained.empty:
+        raise ValueError('No supported charge-1 training measurements')
+    return retained, audit
+
+
 def _in_scope(mass,targets):
     if not len(targets):return False
     pos=np.searchsorted(targets,mass)

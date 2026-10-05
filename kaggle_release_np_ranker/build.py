@@ -78,11 +78,13 @@ merged_mapping=root/'structure_identity_map.json';merged_mapping.write_text(json
     'foundation_data_sha256':m2manifest['foundation_file_sha256'],'original_identity_cache_sha256':sha256(mapping_file),
     'canonical_alias_cache_pool_sha256':sha256(oldpool),
     'unneeded_draft_startup':{'budget_allowance_seconds':300.,'actual_worker_seconds':None,'code_executed':False,'session_stopped':True},
+    'prior_M3_failure':{'version':5,'script_version_id':355588043,'worker_seconds':151.5,
+        'reason':'unsupported training query adduct','budget_charge_seconds':151.5},
     'acceptance_opened':False},indent=2))
 protocol=json.loads((code_dir/'protocol_ranker_20261005.json').read_text())
 run(foundation,models,cache,TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,merged_mapping,
     lotus,lotus.with_suffix('.manifest.json'),protocol,root/'base_structure_pool.parquet',root,
-    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED+300.,reference_mapping_path=reference_mapping)
+    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED+300.+151.5,reference_mapping_path=reference_mapping)
 print('M3 finished. One sealed acceptance and inference-only release remain mandatory.',flush=True)
 '''
     cells=[]

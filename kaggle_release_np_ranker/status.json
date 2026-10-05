@@ -1,5 +1,5 @@
 {
-  "stage": "M3_prepared_not_executed",
+  "stage": "M3_v5_failed_repair_prepared",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -30,5 +30,27 @@
     "real_experiment_gain_measured": false,
     "audit": "feature_runtime_equivalence.json"
   },
-  "remaining_research_seconds_before_M3_preparation": 2369.8501735180016
+  "remaining_research_seconds_before_M3_preparation": 2369.8501735180016,
+  "version": 5,
+  "script_version_id": 355588043,
+  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355588043",
+  "source_commit": "a8d6c38",
+  "embedded_source_sha256": "7656fc5c09dcbc0afc4a629be809a0702bf55a1184b6928f7f3e004a904fd0bc",
+  "self_model_input_version": 4,
+  "editor_cells_exact_match": true,
+  "failure": {
+    "version": 5,
+    "script_version_id": 355588043,
+    "seconds": 151.5,
+    "reason": "training contains unsupported charge-1 query adducts; evaluation domain already filtered",
+    "acceptance_opened": false
+  },
+  "engineering_repair": {
+    "training_only_supported_measurements": true,
+    "identity_selection_unchanged_no_backfill": true,
+    "no_truth_mass_fallback": true,
+    "development_acceptance_inference_unchanged": true,
+    "failure_seconds_carried": 151.5,
+    "tests": "26 passed"
+  }
 }
