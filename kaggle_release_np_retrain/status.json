@@ -1,5 +1,5 @@
 {
-  "stage": "M2_three_seed_training_finished_development_gate_running",
+  "stage": "M2_complete_independently_verified",
   "version": 4,
   "script_version_id": 355568739,
   "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355568739",
@@ -32,8 +32,8 @@
   "experiment_prior_budget_seconds": 3456.8,
   "historical_worker_seconds_separate": 10528.1,
   "new_experiment_total_budget_seconds": 14400,
-  "all_seeds_complete": "pending_downloaded_binary_and_summary_verification",
-  "M2_development_gate_complete": false,
+  "all_seeds_complete": true,
+  "M2_development_gate_complete": true,
   "acceptance_opened": false,
   "competition_submitted": false,
   "public_score": null,
@@ -158,5 +158,59 @@
     "total": 1930,
     "cached_fingerprints": 7444,
     "worker_log_seconds": 5178.9
-  }
+  },
+  "worker_seconds": 8603.7,
+  "cumulative_seconds": 12030.149826481998,
+  "selected_models": [
+    {
+      "seed": 20261004,
+      "completed_epochs": 19,
+      "selected_epoch": 19,
+      "selected_updates": 35625,
+      "selected_bce": 0.28790706396102905,
+      "last_completed_updates": 35625,
+      "checkpoint_sha256": "cd8b8f71142ad63cd6559a62801f9897788b391533e3ba1344589cfdadcc2cb3"
+    },
+    {
+      "seed": 20261005,
+      "completed_epochs": 20,
+      "selected_epoch": 20,
+      "selected_updates": 37500,
+      "selected_bce": 0.2886069715023041,
+      "last_completed_updates": 37500,
+      "checkpoint_sha256": "114b4f2187a75369e13c2a4f2207952700f3cb1d3991e710f110bf8f986c419e"
+    },
+    {
+      "seed": 20261006,
+      "completed_epochs": 20,
+      "selected_epoch": 19,
+      "selected_updates": 35625,
+      "selected_bce": 0.28647443652153015,
+      "last_completed_updates": 37500,
+      "checkpoint_sha256": "760624a597d3cd301d1de46f7d3f26b8e7e41ac477c4a3b9369032b4e7cb7dae"
+    }
+  ],
+  "gate": {
+    "conditional_fused_vs_random": {
+      "difference": 0.4992470854917024,
+      "ci95": [
+        0.4801517145717654,
+        0.517342501649246
+      ],
+      "molecules": 1912,
+      "repeats": 10000,
+      "seed": 20261004
+    },
+    "selected_vs_random": {
+      "difference": 0.4992470854917024,
+      "ci95": [
+        0.4801517145717654,
+        0.517342501649246
+      ],
+      "molecules": 1912,
+      "repeats": 10000,
+      "seed": 20261004
+    }
+  },
+  "selected_view": "fused"
 }

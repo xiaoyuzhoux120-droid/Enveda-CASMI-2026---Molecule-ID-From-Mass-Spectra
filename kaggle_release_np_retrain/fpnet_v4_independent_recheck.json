@@ -1,0 +1,72 @@
+{
+  "phase": "independent_retained_M2_output_check",
+  "passed": true,
+  "source_sha256": "68e67aad2ac6e24a832f807e62357a1ac40021e911025be79531b0b4876b21eb",
+  "source_files_exact": 10,
+  "selected_models": [
+    {
+      "seed": 20261004,
+      "completed_epochs": 19,
+      "selected_epoch": 19,
+      "selected_updates": 35625,
+      "selected_bce": 0.28790706396102905,
+      "last_completed_updates": 35625,
+      "checkpoint_sha256": "cd8b8f71142ad63cd6559a62801f9897788b391533e3ba1344589cfdadcc2cb3"
+    },
+    {
+      "seed": 20261005,
+      "completed_epochs": 20,
+      "selected_epoch": 20,
+      "selected_updates": 37500,
+      "selected_bce": 0.2886069715023041,
+      "last_completed_updates": 37500,
+      "checkpoint_sha256": "114b4f2187a75369e13c2a4f2207952700f3cb1d3991e710f110bf8f986c419e"
+    },
+    {
+      "seed": 20261006,
+      "completed_epochs": 20,
+      "selected_epoch": 19,
+      "selected_updates": 35625,
+      "selected_bce": 0.28647443652153015,
+      "last_completed_updates": 37500,
+      "checkpoint_sha256": "760624a597d3cd301d1de46f7d3f26b8e7e41ac477c4a3b9369032b4e7cb7dae"
+    }
+  ],
+  "ensemble_logits_exact_average": true,
+  "all_selected_weights_and_logits_finite": true,
+  "candidate_rankings_and_random_orders_exact": true,
+  "queries": 1930,
+  "conditional_truth_present": 1912,
+  "selected_view": "fused",
+  "paired_comparisons": {
+    "conditional_fused_vs_random": {
+      "difference": 0.4992470854917024,
+      "ci95": [
+        0.4801517145717654,
+        0.517342501649246
+      ],
+      "molecules": 1912,
+      "repeats": 10000,
+      "seed": 20261004
+    },
+    "selected_vs_random": {
+      "difference": 0.4992470854917024,
+      "ci95": [
+        0.4801517145717654,
+        0.517342501649246
+      ],
+      "molecules": 1912,
+      "repeats": 10000,
+      "seed": 20261004
+    }
+  },
+  "bce_gate": {
+    "ensemble": 0.28146469593048096,
+    "constant": 0.5708246827125549
+  },
+  "cumulative_seconds": 12030.149826481998,
+  "acceptance_opened": false,
+  "limitations": "No reconstruction of raw training rows or full candidate pool; hashes bind those immutable inputs.",
+  "competition_submitted": false,
+  "public_score": null
+}
