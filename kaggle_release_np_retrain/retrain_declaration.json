@@ -1,0 +1,15 @@
+{
+  "experiment": "np-cache-retrain-20261005-v1",
+  "authorization": "user: \u91cd\u65b0\u8bad\u7ec3\u5e76\u63d0\u4ea4kaggle",
+  "new_experiment_budget_seconds": 14400,
+  "historical_worker_seconds": 10528.1,
+  "failed_input_script_version": 355386045,
+  "failed_embedded_source_sha256": "e77ab46e968c298b2504726fc639bc5292bea8446f104100907832eef22ef85e",
+  "failed_fpnet_source_sha256": "b256662a344a67135b282d21e96a1887b1a4cdd3fcf0bb12df6b6e0678560ba3",
+  "expected_pool_sha256": "98add466d604fc6574c046aa7eaa600e8beff2a207a331d20d139bc3937abece",
+  "scientific_protocol_unchanged": true,
+  "all_three_seeds_from_scratch": true,
+  "old_weights_reused": false,
+  "old_budget_erased": false,
+  "acceptance_opened": false
+}

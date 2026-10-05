@@ -1,0 +1,16 @@
+{
+  "stage": "prepared_not_executed",
+  "embedded_source_sha256": "f2bab9ecd8c83cb56cf0ae757d486a55b5fe08b9d7eda0c8fcab5f53f64a9afb",
+  "source_files": {
+    "baseline.py": "8b391a36ce565fe3e86ca2498f60f427f22147aefce8519583c764905fdea42c",
+    "hybrid.py": "31aceb88d728a43936a327204c405bfe778d86633d8cb5c1a5c818c2503fc3cc",
+    "casmi_ml/__init__.py": "2846e0d884c10437752b006de2ba55158698576006aefeb2c76ee46f0cd1b73c",
+    "casmi_ml/data.py": "28bbdcff19ca470264e98cac757872c967f4397cd4089a95da9061079a617cda",
+    "casmi_ml/chemical_priors.py": "768dd08154af9190bddfd4c20796ebcfc113c33a57d367146925117fc1dec74c",
+    "casmi_ml/hybrid_chemistry.py": "520c73f719b6e1a896024fba0b724807e08110a3a8ac4af0727025d4b0f6287e",
+    "casmi_ml/v1_routing.py": "439e5ea09d06cde58fa05454e18171246950cecbcccceece2ca6a3caf40ff185",
+    "casmi_ml/np_pairtail_foundation.py": "6fb516bb0382a2eb95596b9c3654d5855387b129063a1798684deb248beb9d92",
+    "casmi_ml/np_pairtail_fpnet.py": "55bd3098ea9446451dacac7e868de19a532a817a71014a7d46ec36e27dbee558"
+  },
+  "scientific_protocol_sha256": "ff38b739aef598a235d5638fa4bda88196bed4c06a4260d1d45691593bb2ba55"
+}

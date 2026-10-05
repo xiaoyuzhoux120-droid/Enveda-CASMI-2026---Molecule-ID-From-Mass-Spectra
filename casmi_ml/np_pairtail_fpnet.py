@@ -538,17 +538,113 @@ def development_candidate_gate(frame, pool, bits, ensemble, single, root, deadli
     return report
 
 
-def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.):
+def verified_cached_views(cache_root, parquet, training=False):
+    """Reuse frozen views without rebuilding them; verify provenance and layout."""
+    cache_root, parquet = Path(cache_root), Path(parquet)
+    cached = CachedViews(cache_root, training=training)
+    if cached.layout['source_sha256'] != sha256(parquet):
+        raise ValueError('Cached views do not match the frozen source parquet')
+    identities = cached.layout['identities']
+    views = cached.layout['views']
+    if not identities or identities != sorted(set(identities)) or len(views) != len(identities):
+        raise ValueError('Invalid cached identity ordering')
+    n = len(cached.arrays['owner'])
+    if cached.arrays['target'].shape != (len(identities), 2048):
+        raise ValueError('Invalid cached target dimensions')
+    if cached.arrays['peaks'].shape != (n, MAX_PEAKS, 19) or cached.arrays['mask'].shape != (n, MAX_PEAKS):
+        raise ValueError('Invalid cached peak dimensions')
+    if len(cached.arrays['meta']) != n:
+        raise ValueError('Invalid cached metadata dimensions')
+    seen = np.zeros(n, bool)
+    for owner, group in enumerate(views):
+        for category in ('single', 'merged'):
+            ids = np.asarray(group[category], dtype=np.int64)
+            if not len(ids) or np.any(ids < 0) or np.any(ids >= n):
+                raise ValueError('Invalid cached view index')
+            if len(np.unique(ids)) != len(ids) or seen[ids].any() or np.any(cached.arrays['owner'][ids] != owner):
+                raise ValueError('Cached view ownership or uniqueness mismatch')
+            seen[ids] = True
+    if not seen.all():
+        raise ValueError('Unassigned cached views')
+    for start in range(0, n, 8192):
+        for key in ('peaks', 'meta'):
+            if not np.isfinite(cached.arrays[key][start:start+8192]).all():
+                raise ValueError('Nonfinite cached features')
+        if not cached.arrays['mask'][start:start+8192].any(1).all():
+            raise ValueError('Empty cached mask')
+    if not np.isin(cached.arrays['target'], [0, 1]).all():
+        raise ValueError('Nonbinary cached fingerprints')
+    audit = {'source_sha256':cached.layout['source_sha256'], 'identities':len(identities), 'views':n,
+        'files':{name:sha256(cache_root/name) for name in
+                 ['layout.json','peaks.npy','mask.npy','meta.npy','owner.npy','target.npy','canonical_targets.parquet']}}
+    return cached, audit
+
+
+def cuda_amp_recovery_preflight(train, bits, weights, root):
+    """Bounded real-architecture GPU transaction check before fresh seeds."""
+    import copy
+    started = time.monotonic()
+    device = torch.device('cuda:0')
+    torch.manual_seed(0); torch.cuda.manual_seed_all(0)
+    train.set_epoch(0)
+    batches = list(DataLoader(torch.utils.data.Subset(train, range(min(64, len(train)))), batch_size=32))
+    raw = FPNet(train.arrays['meta'].shape[1], len(bits)).to(device)
+    direct_raw = copy.deepcopy(raw)
+    wrap = lambda m: nn.DataParallel(m) if torch.cuda.device_count() > 1 else m
+    model, direct = wrap(raw), wrap(direct_raw)
+    optimizer = torch.optim.AdamW(raw.parameters(), lr=1e-4, weight_decay=1e-4)
+    direct_optimizer = torch.optim.AdamW(direct_raw.parameters(), lr=1e-4, weight_decay=1e-4)
+    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(weights, dtype=torch.float32, device=device))
+    scaler = torch.amp.GradScaler('cuda')
+    cpu_rng, cuda_rng = torch.get_rng_state(), torch.cuda.get_rng_state_all()
+    for batch in batches:
+        with torch.autocast('cuda', dtype=torch.float16):
+            logits = model(*(batch[k].to(device) for k in ['peaks','mask','meta']))
+            loss = criterion(logits, batch['target'][:,bits].to(device).float())
+        if not torch.isfinite(loss):raise FloatingPointError('GPU preflight AMP loss nonfinite')
+        scaler.scale(loss/len(batches)).backward()
+    # Deliberately exercise GradScaler's protection, never a training example skip.
+    next(p for p in raw.parameters() if p.grad is not None).grad.view(-1)[0] = math.inf
+    previous_scale = scaler.get_scale()
+    scaler.step(optimizer); scaler.update()
+    skipped = scaler.get_scale() < previous_scale and not optimizer.state
+    unchanged = all(torch.equal(a,b) for a,b in zip(raw.parameters(),direct_raw.parameters()))
+    if not skipped or not unchanged:raise ValueError('GPU preflight AMP skip did not preserve weights')
+    retry_effective_batch_fp32(model, optimizer, batches, bits, criterion, device, cpu_rng, cuda_rng)
+    retry_effective_batch_fp32(direct, direct_optimizer, batches, bits, criterion, device, cpu_rng, cuda_rng)
+    difference = max(float((a-b).detach().abs().max()) for a,b in zip(raw.parameters(),direct_raw.parameters()))
+    if not all(torch.allclose(a,b,rtol=1e-4,atol=1e-5) for a,b in zip(raw.parameters(),direct_raw.parameters())):
+        raise ValueError('GPU preflight FP32 replay parity failed')
+    if not all(float(s['step']) == 1 for s in optimizer.state.values()):
+        raise ValueError('GPU preflight optimizer did not update exactly once')
+    report = {'passed':True,'torch_version':torch.__version__,'devices':[torch.cuda.get_device_name(i)
+        for i in range(torch.cuda.device_count())], 'real_architecture':True,'effective_examples':sum(len(b['target']) for b in batches),
+        'forced_overflow_skipped':skipped,'skipped_weights_unchanged':unchanged,
+        'successful_recovery_updates':1,'fp32_replay_max_absolute_difference':difference,
+        'seconds':time.monotonic()-started,'preflight_weights_used_for_training':False}
+    write_json(Path(root)/'gpu_amp_preflight.json',report)
+    print(json.dumps({'stage':'M2_GPU_AMP_preflight',**report}),flush=True)
+    del model, direct, raw, direct_raw, optimizer, direct_optimizer
+    torch.cuda.empty_cache()
+    return report
+
+
+def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.,
+        cache_root=None, experiment_prior_seconds=None, historical_worker_seconds=0.):
     foundation, root = Path(foundation), Path(root)
     root.mkdir(parents=True, exist_ok=True); started = time.monotonic()
     runtime = json.loads((foundation/'runtime_profile.json').read_text())
     prior_seconds = float(runtime[-1]['elapsed_seconds'])+float(preparation_seconds)
+    if experiment_prior_seconds is not None:
+        # Explicit new user-authorized experiment; preserve lifetime costs separately.
+        prior_seconds = float(experiment_prior_seconds)+float(preparation_seconds)
     state = json.loads((foundation/'run_status.json').read_text())
     if state['stage'] != 'M1_foundation_complete':
         raise ValueError('Foundation did not finish; M2 forbidden')
     if rdBase.rdkitVersion != protocol['rdkit_version']:
         raise ValueError('M2 target RDKit version mismatch')
-    status = {'stage':'M2_preparing', 'acceptance_opened':False, 'competition_submission_allowed':False}
+    status = {'stage':'M2_preparing', 'acceptance_opened':False, 'competition_submission_allowed':False,
+              'historical_worker_seconds':float(historical_worker_seconds), 'training_restart':'all seeds from scratch'}
     write_json(root/'run_status.json', status)
     try:
         if prior_seconds >= protocol['total_research_budget_seconds']:
@@ -556,10 +652,25 @@ def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.)
         if not torch.cuda.is_available():
             raise RuntimeError('M2 requires GPU; no CPU training fallback')
         deadline = started+protocol['total_research_budget_seconds']-prior_seconds
-        train_cache, preprocessing = build_cache(foundation/'train.parquet', root/'train_cache', deadline=deadline)
-        dev, _ = build_cache(foundation/'development.parquet', root/'development_cache', preprocessing, deadline=deadline)
-        train = CachedViews(root/'train_cache', training=True)
+        if cache_root is None:
+            train_cache, preprocessing = build_cache(foundation/'train.parquet', root/'train_cache', deadline=deadline)
+            dev, _ = build_cache(foundation/'development.parquet', root/'development_cache', preprocessing, deadline=deadline)
+            train = CachedViews(root/'train_cache', training=True)
+        else:
+            train, train_audit = verified_cached_views(Path(cache_root)/'train_cache', foundation/'train.parquet', True)
+            dev, dev_audit = verified_cached_views(Path(cache_root)/'development_cache', foundation/'development.parquet')
+            preprocessing = train.layout['preprocessing']
+            if preprocessing != dev.layout['preprocessing']:
+                raise ValueError('Cached train/dev preprocessing mismatch')
+            if set(train.layout['identities']) & set(dev.layout['identities']):
+                raise ValueError('Cached train/dev identity leakage')
+            write_json(root/'cache_reuse_audit.json', {'train':train_audit, 'development':dev_audit,
+                'rebuilt':False, 'weights_reused':False, 'acceptance_file_read':False})
+            print(json.dumps({'stage':'M2_verified_cache_reuse','train':len(train),
+                'development':len(dev.layout['identities']), 'seconds':time.monotonic()-started}),flush=True)
         bits, frequencies, weights = fit_target_statistics(train.arrays['target'])
+        if cache_root is not None:
+            cuda_amp_recovery_preflight(train, bits, weights, root)
         write_json(root/'train_fitted_statistics.json', {'bits':bits.tolist(),
             'frequencies':frequencies.tolist(), 'pos_weights':weights.tolist(),
             'pos_weight_cap':POS_WEIGHT_CAP, 'identity_weighting':'uniform; one view/identity/epoch',
