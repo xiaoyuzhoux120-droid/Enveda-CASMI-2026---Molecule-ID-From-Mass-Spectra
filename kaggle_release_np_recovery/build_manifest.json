@@ -1,0 +1,34 @@
+{
+  "embedded_source_sha256": "68e67aad2ac6e24a832f807e62357a1ac40021e911025be79531b0b4876b21eb",
+  "source_files": {
+    "baseline.py": "8b391a36ce565fe3e86ca2498f60f427f22147aefce8519583c764905fdea42c",
+    "hybrid.py": "31aceb88d728a43936a327204c405bfe778d86633d8cb5c1a5c818c2503fc3cc",
+    "casmi_ml/__init__.py": "2846e0d884c10437752b006de2ba55158698576006aefeb2c76ee46f0cd1b73c",
+    "casmi_ml/data.py": "28bbdcff19ca470264e98cac757872c967f4397cd4089a95da9061079a617cda",
+    "casmi_ml/chemical_priors.py": "768dd08154af9190bddfd4c20796ebcfc113c33a57d367146925117fc1dec74c",
+    "casmi_ml/hybrid_chemistry.py": "520c73f719b6e1a896024fba0b724807e08110a3a8ac4af0727025d4b0f6287e",
+    "casmi_ml/v1_routing.py": "439e5ea09d06cde58fa05454e18171246950cecbcccceece2ca6a3caf40ff185",
+    "casmi_ml/np_pairtail_foundation.py": "6fb516bb0382a2eb95596b9c3654d5855387b129063a1798684deb248beb9d92",
+    "casmi_ml/np_pairtail_fpnet.py": "d7d08e9aa773b739de2a0387edc4a17375f3022739ff9839e15a6ba24e988198",
+    "casmi_ml/np_pairtail_seed_recovery.py": "f071fe557a206f55923e891a50b5b10ad4cd6027d88c01f8376006fa553b357c"
+  },
+  "completed_seed_recovery": {
+    "source_script_version": 355536163,
+    "embedded_source_sha256": "2b5a5490cbb46371090cac737aa61f49ec6606df0898848eff1b2632ddaaf466",
+    "source_module_sha256": "55bd3098ea9446451dacac7e868de19a532a817a71014a7d46ec36e27dbee558",
+    "files_sha256": {
+      "seed_20261004_history.json": "b10f661f8f130fa2b2de00f621f1f9387b31462bc8d40ae2a168c936f2628b83",
+      "fpnet_seed_20261004.pt": "cd8b8f71142ad63cd6559a62801f9897788b391533e3ba1344589cfdadcc2cb3",
+      "seed_20261004_single_logits.npy": "4d51e69a6b99837ea911713ca7e6f2d99e82743066fc8a4272cb03159217b40f",
+      "seed_20261004_fused_logits.npy": "0a12ee143ae8c0f4a0dc191668454795edb244f3b87ff80e0ebf5a7d1ea72415",
+      "train_fitted_statistics.json": "bd7066158496a95fb5dbda03159602820d7558195eae6cc028ca3a472e3c1ba1",
+      "data_manifest.json": "e1f897d117e1a12b514a68732fb7ffec81b0367d6b2821541859a19a0c916870",
+      "run_status.json": "ebbd4334ebe8d417a22f12e588c1aecbf9ae01e95870a3c2e571876e3377b5a8"
+    },
+    "prior_budget_charge_seconds": 3456.8,
+    "checkpoint_selected_epoch": 19,
+    "completed_epochs": 19,
+    "partial_epoch_20_used": false
+  },
+  "stage": "prepared_not_executed"
+}

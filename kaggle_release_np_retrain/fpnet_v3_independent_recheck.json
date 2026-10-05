@@ -1,0 +1,14 @@
+{
+  "script_version": 355536163,
+  "source_module_sha256": "55bd3098ea9446451dacac7e868de19a532a817a71014a7d46ec36e27dbee558",
+  "model_sha256": "cd8b8f71142ad63cd6559a62801f9897788b391533e3ba1344589cfdadcc2cb3",
+  "selected_epoch": 19,
+  "completed_epochs": 19,
+  "selected_updates": 35625,
+  "all_saved_weights_finite": true,
+  "all_saved_logits_finite": true,
+  "training_identity_examples_every_epoch": 119977,
+  "AMP_FP32_retries": 8,
+  "GPU_binary_replay": "pending required in recovery execution",
+  "competition_submission_allowed": false
+}

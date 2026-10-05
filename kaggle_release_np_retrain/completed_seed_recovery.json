@@ -1,0 +1,18 @@
+{
+  "source_script_version": 355536163,
+  "embedded_source_sha256": "2b5a5490cbb46371090cac737aa61f49ec6606df0898848eff1b2632ddaaf466",
+  "source_module_sha256": "55bd3098ea9446451dacac7e868de19a532a817a71014a7d46ec36e27dbee558",
+  "files_sha256": {
+    "seed_20261004_history.json": "b10f661f8f130fa2b2de00f621f1f9387b31462bc8d40ae2a168c936f2628b83",
+    "fpnet_seed_20261004.pt": "cd8b8f71142ad63cd6559a62801f9897788b391533e3ba1344589cfdadcc2cb3",
+    "seed_20261004_single_logits.npy": "4d51e69a6b99837ea911713ca7e6f2d99e82743066fc8a4272cb03159217b40f",
+    "seed_20261004_fused_logits.npy": "0a12ee143ae8c0f4a0dc191668454795edb244f3b87ff80e0ebf5a7d1ea72415",
+    "train_fitted_statistics.json": "bd7066158496a95fb5dbda03159602820d7558195eae6cc028ca3a472e3c1ba1",
+    "data_manifest.json": "e1f897d117e1a12b514a68732fb7ffec81b0367d6b2821541859a19a0c916870",
+    "run_status.json": "ebbd4334ebe8d417a22f12e588c1aecbf9ae01e95870a3c2e571876e3377b5a8"
+  },
+  "prior_budget_charge_seconds": 3456.8,
+  "checkpoint_selected_epoch": 19,
+  "completed_epochs": 19,
+  "partial_epoch_20_used": false
+}

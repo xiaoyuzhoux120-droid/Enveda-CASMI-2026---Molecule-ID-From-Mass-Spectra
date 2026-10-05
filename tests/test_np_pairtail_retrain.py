@@ -61,3 +61,14 @@ def test_retrain_artifact_keeps_scientific_protocol_and_old_failure_freeze():
     assert old['embedded_source_sha256']=='e77ab46e968c298b2504726fc639bc5292bea8446f104100907832eef22ef85e'
     runner=''.join(notebook['cells'][2]['source'])
     assert 'prepare_base_structure_pool(' not in runner and "experiment_prior_seconds=declaration['prior_failed_mount_budget_charge_seconds']" in runner
+
+
+def test_seed_time_cap_exits_only_after_minimum_complete_epochs():
+    from casmi_ml.np_pairtail_fpnet import should_finish_seed_at_boundary
+    history=[{'epoch_gpu_seconds':139.}]*19
+    assert should_finish_seed_at_boundary(history,6,2631.4,2700.)
+    assert not should_finish_seed_at_boundary(history[:5],6,2699.,2700.)
+    assert not should_finish_seed_at_boundary(history[:6],6,800.,2700.)
+    # Validation quality must not influence a time-based exit.
+    altered=[row|{'development':{'bce':float('nan')}} for row in history]
+    assert should_finish_seed_at_boundary(altered,6,2631.4,2700.)

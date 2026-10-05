@@ -361,6 +361,17 @@ def retry_effective_batch_fp32(model, optimizer, batches, bits, criterion, devic
     return total_loss
 
 
+def should_finish_seed_at_boundary(history, minimum_epochs, elapsed, budget):
+    """Reserve one observed epoch plus 10 seconds; preserve the 45-min cap.
+
+    Budget exit uses time and completed rounds only, never validation quality.
+    It cannot qualify a seed below the minimum completed epoch count.
+    """
+    if len(history)<minimum_epochs:return False
+    expected=max(float(row['epoch_gpu_seconds']) for row in history[-3:])+10.
+    return float(budget)-float(elapsed)<expected
+
+
 def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.):
     torch.manual_seed(seed); np.random.seed(seed); torch.cuda.manual_seed_all(seed)
     torch.set_num_threads(4)
@@ -381,7 +392,14 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
             raise TimeoutError(f'Seed {seed} exceeded frozen 45-minute budget')
         if prior_seconds+elapsed > protocol['total_research_budget_seconds']:
             raise TimeoutError('Cumulative four-hour research budget exceeded')
+    stop_reason='maximum_epochs_or_patience'
     for epoch in range(1, max_epochs+1):
+        if should_finish_seed_at_boundary(history,min_epochs,time.monotonic()-started,per_seed_budget):
+            stop_reason='45_minute_budget_completed_epoch_boundary'
+            print(json.dumps({'stage':'M2_seed_budget_stop','seed':seed,
+                'completed_epochs':len(history),'selected_bce':best,
+                'actual_optimizer_updates':updates,'seconds':time.monotonic()-started}),flush=True)
+            break
         check_budget(); train.seed = seed; train.set_epoch(epoch)
         # Two cards: batch64 split32/card; one card: batch32 and accumulate2.
         batch_size = 64 if torch.cuda.device_count() > 1 else 32
@@ -469,7 +487,7 @@ def train_seed(seed, train, dev, root, bits, weights, protocol, prior_seconds=0.
     if len(history) < min_epochs:
         raise ValueError('Seed did not complete the minimum six epochs')
     return {'seed':seed, 'completed_epochs':len(history), 'selected_bce':best,
-            'actual_optimizer_updates':updates, 'seconds':time.monotonic()-started,
+            'actual_optimizer_updates':updates, 'seconds':time.monotonic()-started, 'stop_reason':stop_reason,
             'checkpoint_sha256':sha256(root/f'fpnet_seed_{seed}.pt')}
 
 
@@ -630,7 +648,7 @@ def cuda_amp_recovery_preflight(train, bits, weights, root):
 
 
 def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.,
-        cache_root=None, experiment_prior_seconds=None, historical_worker_seconds=0.):
+        cache_root=None, experiment_prior_seconds=None, historical_worker_seconds=0., completed_seed_root=None, completed_seed_declaration=None):
     foundation, root = Path(foundation), Path(root)
     root.mkdir(parents=True, exist_ok=True); started = time.monotonic()
     runtime = json.loads((foundation/'runtime_profile.json').read_text())
@@ -644,7 +662,7 @@ def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.,
     if rdBase.rdkitVersion != protocol['rdkit_version']:
         raise ValueError('M2 target RDKit version mismatch')
     status = {'stage':'M2_preparing', 'acceptance_opened':False, 'competition_submission_allowed':False,
-              'historical_worker_seconds':float(historical_worker_seconds), 'training_restart':'all seeds from scratch'}
+              'historical_worker_seconds':float(historical_worker_seconds), 'training_restart':'all seeds from scratch' if completed_seed_root is None else 'recover current experiment completed seed; remaining seeds fresh'}
     write_json(root/'run_status.json', status)
     try:
         if prior_seconds >= protocol['total_research_budget_seconds']:
@@ -680,7 +698,11 @@ def run(foundation, root, protocol, candidate_pool=None, preparation_seconds=0.,
         results = []
         for seed in SEEDS:
             prior = prior_seconds+time.monotonic()-started
-            results.append(train_seed(seed, train, dev, root, bits, weights, protocol, prior))
+            if seed==SEEDS[0] and completed_seed_root is not None:
+                from casmi_ml.np_pairtail_seed_recovery import recover_completed_seed
+                results.append(recover_completed_seed(completed_seed_root,root,train,dev,bits,weights,protocol,completed_seed_declaration))
+            else:
+                results.append(train_seed(seed, train, dev, root, bits, weights, protocol, prior))
         ensemble = np.mean([np.load(root/f'seed_{s}_fused_logits.npy') for s in SEEDS], axis=0)
         single = np.mean([np.load(root/f'seed_{s}_single_logits.npy') for s in SEEDS], axis=0)
         loss = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(weights, dtype=torch.float32))

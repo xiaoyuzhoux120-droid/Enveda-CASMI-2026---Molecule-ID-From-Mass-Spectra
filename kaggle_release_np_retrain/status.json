@@ -1,5 +1,5 @@
 {
-  "stage": "M2_version1_failed_before_execution",
+  "stage": "M2_actual_training_running",
   "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-cache-retrain-20261005?scriptVersionId=355524627",
   "script_version_id": 355524627,
   "source_commit": "6359a5b",
@@ -44,5 +44,40 @@
     "input_manifest_verified": true
   },
   "next_recovery_environment": "Reuse original FPNet Notebook pinned environment 2026-06-30; exact source/caches, fresh seeds; existing failed versions remain intact.",
-  "prior_failed_launch_budget_charge_seconds": 616.8
+  "prior_failed_launch_budget_charge_seconds": 616.8,
+  "active_run": {
+    "notebook": "CASMI NP PairTail FPNet 20261004",
+    "version": 3,
+    "script_version_id": 355536163,
+    "url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355536163",
+    "source_commit": "2e16df4",
+    "embedded_source_sha256": "2b5a5490cbb46371090cac737aa61f49ec6606df0898848eff1b2632ddaaf466",
+    "status": "failed_per_seed_time_budget",
+    "environment": "pinned 2026-06-30",
+    "python": "3.12",
+    "torch": "2.10.0+cu128",
+    "devices": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "actual_cache_verification_seconds": 74.91172577100002,
+    "cache_train_identities": 119977,
+    "cache_development_identities": 1930,
+    "actual_gpu_preflight_passed": true,
+    "gpu_preflight_seconds": 10.53308801999998,
+    "gpu_preflight_replay_max_absolute_difference": 0.0,
+    "actual_training_started": true,
+    "latest_verified_seed": 20261004,
+    "latest_verified_epoch": 1,
+    "latest_verified_optimizer_updates": 1100,
+    "acceptance_opened": false,
+    "competition_submitted": false,
+    "public_score": null,
+    "worker_seconds": 2840.0,
+    "completed_epochs": 19,
+    "last_completed_optimizer_updates": 35625,
+    "AMP_FP32_retries": 8,
+    "checkpoint_independently_verified": false
+  },
+  "recovery_budget_prior_seconds": 3456.8
 }
