@@ -23,7 +23,7 @@ def verify_candidate(ranker,models,inputs):
     source=Path(__file__).parents[1]
     for name,expected in freeze['all_packaged_sources_sha256'].items():
         if sha256(source/name)!=expected:raise ValueError('Frozen implementation mismatch: '+name)
-    if sha256(ranker/freeze['ranker']/'ranker_manifest.json')!=freeze['ranker_manifest_sha256']:raise ValueError('Frozen ranker manifest changed')
+    if freeze['ranker_enabled'] and sha256(ranker/freeze['ranker']/'ranker_manifest.json')!=freeze['ranker_manifest_sha256']:raise ValueError('Frozen ranker manifest changed')
     for name,expected in freeze['selected_boosters_sha256'].items():
         if sha256(ranker/freeze['ranker']/name)!=expected:raise ValueError('Frozen booster changed')
     if sha256(models/'M2_training_summary.json')!=freeze['model_manifest_sha256']:raise ValueError('FPNet selection changed')
@@ -88,8 +88,12 @@ def run(foundation,models,ranker,train_path,coconut_path,catalog_path,dictionary
             for c in current:c['offset']+=offset
             offset+=len(features);parts.append(features);cases.extend(current);del engine
         features=pd.concat(parts,ignore_index=True);features.to_parquet(root/'frozen_features.parquet',index=False)
-        cpu_or_gpu_worker(['-c',_C4_WORKER,str(ranker/freeze['ranker']),str(root/'frozen_features.parquet'),str(root/'ranker_scores.npy')],deadline)
-        primary=ranked_cases(cases,np.load(root/'ranker_scores.npy'));bind_c0_rankings(cases,c0)
+        if freeze['ranker_enabled']:
+            cpu_or_gpu_worker(['-c',_C4_WORKER,str(ranker/freeze['ranker']),str(root/'frozen_features.parquet'),str(root/'ranker_scores.npy')],deadline)
+            primary=ranked_cases(cases,np.load(root/'ranker_scores.npy'))
+        else:
+            primary={m:[evaluate_order(c['identity'],c['baseline']) for c in cases if c['mode']==m] for m in ('unknown','known')}
+        bind_c0_rankings(cases,c0)
         p=freeze['policy'];candidate=ranking_policy(cases,primary,p['K'],p['alpha'],p['strategy'],p['thresholds'])
         write_json(root/'C0_acceptance_cases.json',c0);write_json(root/'candidate_acceptance_cases.json',candidate)
         gate=independent_acceptance_gate({m:{r['identity']:r for r in rs} for m,rs in c0.items()},

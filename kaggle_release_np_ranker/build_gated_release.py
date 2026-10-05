@@ -23,9 +23,10 @@ for name in ['candidate_freeze.json','data_manifest.json','run_status.json','pro
              'structure_identity_map.json','reference_identity_map.json','base_structure_pool.parquet']:
     shutil.copyfile(ranker/name,carry/name)
 shutil.copytree(models,carry/'frozen_fpnet',dirs_exist_ok=True)
-(carry/freeze['ranker']).mkdir(exist_ok=True)
-for name in ['ranker_manifest.json']+list(freeze['selected_boosters_sha256']):
-    shutil.copyfile(ranker/freeze['ranker']/name,carry/freeze['ranker']/name)
+if freeze['ranker_enabled']:
+    (carry/freeze['ranker']).mkdir(exist_ok=True)
+    for name in ['ranker_manifest.json']+list(freeze['selected_boosters_sha256']):
+        shutil.copyfile(ranker/freeze['ranker']/name,carry/freeze['ranker']/name)
 (root/'release_source_manifest.json').write_text(json.dumps({'embedded_source_sha256':CODE_SHA256,
     'candidate_freeze_sha256':sha256(ranker/'candidate_freeze.json'),'acceptance_repeated':False}))
 run(foundation,models,ranker,TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,

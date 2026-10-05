@@ -61,5 +61,6 @@
     "rdkit": "2026.03.3",
     "lightgbm": "4.7.0",
     "GPU_container": "2026-06-30"
-  }
+  },
+  "C3_failure_fallback": "PRD 10: retain C1, disable C4 requiring a qualified learned ranker, continue the exact frozen C6 FPNet/PairTail grid; no failed ranker weights used"
 }

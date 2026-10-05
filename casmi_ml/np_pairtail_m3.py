@@ -248,47 +248,51 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
             'C1':base_metrics,'C3':selected['metrics'] if selected else base_metrics,'acceptance_opened':False,
             'competition_submission_allowed':False}
         write_json(root/'M3_development_results.json',report)
+        # PRD section 10 requires fallback to the previous qualified
+        # module and continued C6 evaluation, not abandonment at C3.
         if selected is None:
-            write_json(root/'run_status.json',{'stage':'M3_ranker_rejected','cumulative_seconds':prior+time.monotonic()-started,
-                'reason':'All ranker configurations failed frozen local development protection','acceptance_opened':False,
-                'competition_submission_allowed':False})
-            return report
-        # C4 is solely the LOTUS candidate/source increment, using C3 weights.
-        lm=json.loads(Path(lotus_manifest).read_text())
-        if lm['scope']!='full source, no query window or label inputs' or lm['sha256']!=sha256(lotus_path):
-            raise ValueError('Unqualified LOTUS artifact')
-        lotus=pd.read_parquet(lotus_path)
-        union=pd.concat([pool,lotus[['identity','normalized_smiles','mass','sources']]],ignore_index=True)
-        c4index=StructureIndex(union);c4builder=CandidateFeatures(c4index,bits,rules)
-        c4parts=[];c4cases=[];offset=0
-        for mode,frame in [('unknown',dev),('known',dknown)]:
-            engine=build_retrieval(records,metadata,coconut,catalog,rules,mapping,dev,'development',mode,afix)
-            features,cases=query_features(frame,engine,c4index,c4builder,dev_logits,'C4_'+mode,root,progress,deadline)
-            for c in cases:c['offset']+=offset;c['mode']=mode
-            offset+=len(features);c4parts.append(features);c4cases.extend(cases);del engine
-        # CPU-only worker loads selected boosters; never fits a new NP-specific
-        # model against held-out labels or changes the four-seed training freeze.
-        c4frame=pd.concat(c4parts,ignore_index=True);c4frame.to_parquet(root/'C4_features.parquet',index=False)
-        cpu_or_gpu_worker(['-c',_C4_WORKER,str(root/selected['name']),str(root/'C4_features.parquet'),str(root/'C4_scores.npy')],deadline)
-        c4ranked=ranked_cases(c4cases,np.load(root/'C4_scores.npy'));c4metrics=metrics(c4ranked)
-        c4gate=local_module_gate(selected['metrics'],c4metrics)
-        # Slice membership is identical in both arms and fixed by the union
-        # source-record count, never by whether the candidate predicted truth.
-        rare_before=np_slice_metrics(cases,selected['cases'],union)
-        rare_after=np_slice_metrics(c4cases,c4ranked,union)
-        rare_checks={mode:(rare_before[mode] is None or
-            rare_after[mode]['mrr25']-rare_before[mode]['mrr25']>=-.002)
-            for mode in ('unknown','known')}
-        c4gate['checks']['NP_low_frequency']=all(rare_checks.values())
-        c4gate['passed']=all(c4gate['checks'].values())
-        c4gate['NP_low_frequency_proxy']={'before':rare_before,'after':rare_after,'checks':rare_checks}
-        write_json(root/'C4_development_cases.json',c4ranked)
-        report.update(C4=c4metrics,C4_gate=c4gate,
-            candidate_funnel_C3=candidate_funnel(dev_cases),candidate_funnel_C4=candidate_funnel(c4cases))
-        chosen_cases,chosen_ranked=(c4cases,c4ranked) if c4gate['passed'] else (dev_cases,selected['cases'])
+            report['C4']={'enabled':False,'reason':'No qualified learned ranker; retain C1 and continue frozen C6'}
+            report['C4_gate']={'passed':False,'executed':False,'fallback':'C1'}
+            chosen_cases,chosen_ranked=dev_cases,base
+            lotus_enabled=False
+        else:
+            # C4 is solely the LOTUS candidate/source increment, using C3 weights.
+            lm=json.loads(Path(lotus_manifest).read_text())
+            if lm['scope']!='full source, no query window or label inputs' or lm['sha256']!=sha256(lotus_path):
+                raise ValueError('Unqualified LOTUS artifact')
+            lotus=pd.read_parquet(lotus_path)
+            union=pd.concat([pool,lotus[['identity','normalized_smiles','mass','sources']]],ignore_index=True)
+            c4index=StructureIndex(union);c4builder=CandidateFeatures(c4index,bits,rules)
+            c4parts=[];c4cases=[];offset=0
+            for mode,frame in [('unknown',dev),('known',dknown)]:
+                engine=build_retrieval(records,metadata,coconut,catalog,rules,mapping,dev,'development',mode,afix)
+                features,cases=query_features(frame,engine,c4index,c4builder,dev_logits,'C4_'+mode,root,progress,deadline)
+                for c in cases:c['offset']+=offset;c['mode']=mode
+                offset+=len(features);c4parts.append(features);c4cases.extend(cases);del engine
+            # CPU-only worker loads selected boosters; never fits a new NP-specific
+            # model against held-out labels or changes the four-seed training freeze.
+            c4frame=pd.concat(c4parts,ignore_index=True);c4frame.to_parquet(root/'C4_features.parquet',index=False)
+            cpu_or_gpu_worker(['-c',_C4_WORKER,str(root/selected['name']),str(root/'C4_features.parquet'),str(root/'C4_scores.npy')],deadline)
+            c4ranked=ranked_cases(c4cases,np.load(root/'C4_scores.npy'));c4metrics=metrics(c4ranked)
+            c4gate=local_module_gate(selected['metrics'],c4metrics)
+            # Slice membership is identical in both arms and fixed by the union
+            # source-record count, never by whether the candidate predicted truth.
+            rare_before=np_slice_metrics(cases,selected['cases'],union)
+            rare_after=np_slice_metrics(c4cases,c4ranked,union)
+            rare_checks={mode:(rare_before[mode] is None or
+                rare_after[mode]['mrr25']-rare_before[mode]['mrr25']>=-.002)
+                for mode in ('unknown','known')}
+            c4gate['checks']['NP_low_frequency']=all(rare_checks.values())
+            c4gate['passed']=all(c4gate['checks'].values())
+            c4gate['NP_low_frequency_proxy']={'before':rare_before,'after':rare_after,'checks':rare_checks}
+            write_json(root/'C4_development_cases.json',c4ranked)
+            report.update(C4=c4metrics,C4_gate=c4gate,
+                candidate_funnel_C3=candidate_funnel(dev_cases),candidate_funnel_C4=candidate_funnel(c4cases))
+            chosen_cases,chosen_ranked=(c4cases,c4ranked) if c4gate['passed'] else (dev_cases,selected['cases'])
+            lotus_enabled=c4gate['passed']
         # Unqualified external forward assets remain disabled, explicitly.
         report['C5']={'enabled':False,'eligible_queries':None,'scored_queries':0,
-            'reason':protocol['forward'],'fallback':'C4' if c4gate['passed'] else 'C3'}
+            'reason':protocol['forward'],'fallback':('C4' if lotus_enabled else 'C3') if selected else 'C1'}
         thresholds=[float(np.median([c[name] for c in training_cases if c[name]>0]))
                     if any(c[name]>0 for c in training_cases) else float('inf')
                     for name in ['fp_margin','analog_margin']]
@@ -316,8 +320,9 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
                 'acceptance_opened':False,'competition_submission_allowed':False})
             return report
         policy={key:value for key,value in winner.items() if key!='cases'}
-        freeze={'ranker':selected['name'],'ranker_manifest_sha256':sha256(root/selected['name']/'ranker_manifest.json'),
-            'fp_view':selection,'afix':afix,'LOTUS_enabled':c4gate['passed'],'policy':policy,
+        freeze={'ranker_enabled':selected is not None,'ranker':selected['name'] if selected else None,
+            'ranker_manifest_sha256':sha256(root/selected['name']/'ranker_manifest.json') if selected else None,
+            'fp_view':selection,'afix':afix,'LOTUS_enabled':lotus_enabled,'policy':policy,
             'model_manifest_sha256':sha256(models/'M2_training_summary.json'),'features':list(FEATURES),
             'C3_routing':protocol['C3_routing'],'forward_enabled':False,'popularity_enabled':False,
             'acceptance_opened':False,'competition_submission_allowed':False,
@@ -330,7 +335,7 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
             'source_sha256':{p.name:sha256(p) for p in Path(__file__).parent.glob('np_pairtail*.py')},
             'reference_files_sha256':{name:sha256(root/name) for name in
                 ['reference_rows.parquet','reference_metadata.parquet','reference_spectra.npz']},
-            'selected_boosters_sha256':{p.name:sha256(p) for p in (root/selected['name']).glob('booster_*.txt')}}
+            'selected_boosters_sha256':{p.name:sha256(p) for p in (root/selected['name']).glob('booster_*.txt')} if selected else {}}
         if time.monotonic()>=deadline:raise TimeoutError('Budget exhausted before candidate freeze')
         write_json(root/'candidate_freeze.json',freeze)
         write_json(root/'selected_development_cases.json',winner['cases'])

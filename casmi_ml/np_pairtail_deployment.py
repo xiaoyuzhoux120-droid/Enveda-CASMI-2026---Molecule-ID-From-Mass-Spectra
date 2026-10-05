@@ -92,10 +92,13 @@ def run(models,ranker,acceptance,train_path,test_path,coconut_path,catalog_path,
         features.append(f);offset+=len(f)
         if n%25==0:progress.emit('M6_inference_features',queries=n,total=len(original_ids),candidate_rows=offset)
     pd.concat(features,ignore_index=True).to_parquet(root/'runtime_features.parquet',index=False)
-    cpu_or_gpu_worker(['-c',_C4_WORKER,str(ranker/freeze['ranker']),str(root/'runtime_features.parquet'),str(root/'ranker_scores.npy')],deadline)
-    scores=np.load(root/'ranker_scores.npy');predictions={};identity_rows={}
+    if freeze['ranker_enabled']:
+        cpu_or_gpu_worker(['-c',_C4_WORKER,str(ranker/freeze['ranker']),str(root/'runtime_features.parquet'),str(root/'ranker_scores.npy')],deadline)
+        scores=np.load(root/'ranker_scores.npy')
+    else:scores=None
+    predictions={};identity_rows={}
     for case in cases:
-        ranked=ranked_identities(case['ids'],scores[case['offset']:case['offset']+case['count']])
+        ranked=ranked_identities(case['ids'],scores[case['offset']:case['offset']+case['count']]) if scores is not None else case['c1']
         final=deploy_policy(case['c0'],case['c1'],ranked,case['fp'],case['analog'],
             case['fp_margin'],case['analog_margin'],case['confidence'],freeze['policy'])
         strings=[canonical_target(case['smiles'][key],key)[0] for key in final]
