@@ -15,5 +15,11 @@
   "competition_submitted": false,
   "public_score": null,
   "gated_acceptance_entry": "prepared_not_executed",
-  "inference_only_entry": "prepared_not_executed"
+  "inference_only_entry": "prepared_not_executed",
+  "unneeded_draft_startup": {
+    "budget_allowance_seconds": 300.0,
+    "actual_worker_seconds": null,
+    "code_executed": false,
+    "session_stopped": true
+  }
 }

@@ -22,10 +22,10 @@
     "same_experiment_completed_seed_reused": true
   },
   "latest_visible_training": {
-    "seed": 20261005,
-    "epoch_in_progress": 11,
-    "latest_actual_optimizer_updates": 20350,
-    "worker_log_seconds": 1451.6
+    "seed": 20261006,
+    "epoch_in_progress": 18,
+    "latest_actual_optimizer_updates": 32875,
+    "worker_log_seconds": 4774.2
   },
   "old_scientific_experiment_weights_reused": false,
   "experiment_prior_budget_seconds": 3456.8,
@@ -143,5 +143,12 @@
       "GPU_preflight_passed": true,
       "competition_submission_allowed": false
     }
+  },
+  "second_seed_complete_visible": {
+    "seed": 20261005,
+    "completed_epochs": 20,
+    "optimizer_updates": 37500,
+    "development_bce": 0.2886069715023041,
+    "seed_elapsed_seconds": 2489.486487101
   }
 }
