@@ -1,0 +1,65 @@
+{
+  "experiment": "np-cache-retrain-20261005-v1",
+  "training_identity_sampling": "first 4000 actual M2 train identities by existing order(identity, ranker-query), no result or candidate-label selection",
+  "training_query_cap": 4000,
+  "training_known_and_unknown": true,
+  "training_reference_scope": "frozen training identities only; exclude all selected query binned signatures; unknown additionally removes all selected query identities",
+  "development_reference_scope": "exact original foundation development mass-scan scope and query-signature removal",
+  "negative_selection": "label-blind union high library/high FP/random; at most 256 total proposals; never inject truth",
+  "ranker_seeds": [
+    20261004,
+    20261005,
+    20261006,
+    20261007
+  ],
+  "ranker_depth": [
+    5,
+    6
+  ],
+  "ranker_min_leaf": [
+    50,
+    100
+  ],
+  "ranker_trees": 800,
+  "ranker_learning_rate": 0.03,
+  "ranker_module_seconds": 2700,
+  "total_research_seconds": 14400,
+  "fragment_approximation": "all one-bond cuts, all two-bond cuts for <=24 bonds; larger two-cut feature missing, with explicit indicator; original H counts, no chemical product capping",
+  "source_flags": [
+    "train/library",
+    "COCONUT",
+    "LOTUS",
+    "ChEBI",
+    "LIPID_MAPS"
+  ],
+  "LOTUS_increment": "C4 only; full query-independent official-identity asset, no acceptance windows used in development",
+  "forward": "disabled unless full source/license/identity/energy/instrument qualification passes; current assets unqualified; do not fabricate forward scores or coverage",
+  "pairtail_grid": [
+    "tail_only",
+    "consensus_unlock",
+    "free_rerank"
+  ],
+  "consensus": "FPNet and independent spectrum/library-analog procedure agree; margins must exceed the training-only strictly positive numeric score-gap median; model domains and finite margins required",
+  "rrf_K": [
+    3,
+    10
+  ],
+  "rrf_alpha": [
+    0.3,
+    0.6
+  ],
+  "popularity_enabled": false,
+  "PubChem_enabled": false,
+  "NPAtlas_enabled": false,
+  "acceptance_opened": false,
+  "competition_submission_allowed": false,
+  "model_runtime_process_isolation": "GPU fingerprint predictions and CPU LightGBM worker separate; no native OpenMP override",
+  "C3_routing": "inherit V1 measurement-based confidence >=0.5 protection for the complete selected C1 ranking; ranker handles lower-confidence queries; no additional threshold search",
+  "NP_low_frequency_slice": "evaluation only: NP-source true structures represented by at most one preserved source/alias pool row; explicit source-record proxy",
+  "fragment_missing_domain": "Disconnected valid source structures retained; one/two/neutral-loss coverage NaN with one/two missing indicators; no hard candidate filter",
+  "runtime_versions": {
+    "rdkit": "2026.03.3",
+    "lightgbm": "4.7.0",
+    "GPU_container": "2026-06-30"
+  }
+}

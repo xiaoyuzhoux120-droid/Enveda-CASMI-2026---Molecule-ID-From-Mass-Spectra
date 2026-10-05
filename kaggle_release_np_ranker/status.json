@@ -1,0 +1,17 @@
+{
+  "stage": "M3_prepared_not_executed",
+  "M2_required_version": 355568739,
+  "M2_current_status": "running",
+  "LOTUS_dataset": {
+    "url": "https://www.kaggle.com/datasets/xiaoyuzhoux120/casmi-np-lotus-ranker-assets-20261005",
+    "version": 1,
+    "visibility": "private",
+    "visible_unpacked_bytes_display": "17.78 MB",
+    "asset_hashes": "runtime_asset_manifest.json",
+    "creation_failure_preserved": "release CDN import internal error; stable commit-pinned raw GitHub import succeeded"
+  },
+  "tests": "31 passed",
+  "acceptance_opened": false,
+  "competition_submitted": false,
+  "public_score": null
+}

@@ -1,0 +1,19 @@
+{
+  "source_sha256": "a7224f20e88018c50a03982ec579d6d0cf129ecd6fec70744ea7368ad2dbfd05",
+  "source_version": "LOTUS v11 2026-04-13",
+  "source_url": "https://zenodo.org/records/19360665",
+  "license": "CC BY 4.0",
+  "authors": [
+    "Adriano Rutz",
+    "Jonathan Bisson",
+    "Pierre-Marie Allard"
+  ],
+  "rdkit_version": "2026.03.3",
+  "charged_excluded": 901,
+  "rows": 150947,
+  "identities": 149436,
+  "scope": "full source, no query window or label inputs",
+  "sha256": "1993ff64a3c279468e3db9d980812c246f475646d3ae058050dc3feb8c045e1e",
+  "seconds": 1569.8714474999579,
+  "query_labels_used": false
+}

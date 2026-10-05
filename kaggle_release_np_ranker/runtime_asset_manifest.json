@@ -1,0 +1,11 @@
+{
+  "files_sha256": {
+    "ATTRIBUTION.md": "1e4fcca5d730cc4622455d98dc508f4636c119cd619b22f208f32c1444b660c1",
+    "lotus_official_pool.manifest.json": "925ded3f7e28f1d05e9a5ad047b455514b52565f1390858dcd177c47fa59a030",
+    "lotus_official_pool.parquet": "1993ff64a3c279468e3db9d980812c246f475646d3ae058050dc3feb8c045e1e",
+    "wheels/lightgbm-4.7.0-py3-none-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl": "d23e922acd891e77212e4d0fbcee9ba973c96dee479491341d05ba595357ebb7"
+  },
+  "scope": "query-independent public natural-product structures and offline package only",
+  "acceptance_labels_used": false,
+  "lightgbm_version": "4.7.0"
+}

@@ -45,7 +45,8 @@
   },
   "next_recovery_environment": "Reuse original FPNet Notebook pinned environment 2026-06-30; exact source/caches, fresh seeds; existing failed versions remain intact.",
   "prior_failed_launch_budget_charge_seconds": 616.8,
-  "active_run": {
+  "recovery_budget_prior_seconds": 3456.8,
+  "prior_run": {
     "notebook": "CASMI NP PairTail FPNet 20261004",
     "version": 3,
     "script_version_id": 355536163,
@@ -79,5 +80,29 @@
     "AMP_FP32_retries": 8,
     "checkpoint_independently_verified": false
   },
-  "recovery_budget_prior_seconds": 3456.8
+  "active_run": {
+    "notebook": "CASMI NP PairTail FPNet 20261004",
+    "version": 4,
+    "script_version_id": 355568739,
+    "source_commit": "05f2095",
+    "url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355568739",
+    "status": "actual_GPU_training",
+    "recovered_seed": 20261004,
+    "completed_recovered_epochs": 19,
+    "selected_epoch": 19,
+    "selected_weight_updates": 35625,
+    "GPU_prediction_replay_max_difference": {
+      "single": 0.0,
+      "fused": 0.0
+    },
+    "recomputed_BCE": 0.28790709376335144,
+    "optimizer_resume": false,
+    "partial_epoch_20_used": false,
+    "remaining_seeds_fresh": [
+      20261005,
+      20261006
+    ],
+    "GPU_preflight_passed": true,
+    "competition_submission_allowed": false
+  }
 }
