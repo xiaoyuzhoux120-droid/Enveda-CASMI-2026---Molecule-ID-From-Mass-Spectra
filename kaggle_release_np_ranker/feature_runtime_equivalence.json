@@ -1,0 +1,11 @@
+{
+  "original_source_commit": "c9d61f5",
+  "original_module_sha256": "a4576efd4be7d16f634bd9e95df822ffb7e51f7aef7e2d6d06bd621022ab91a6",
+  "optimized_module_sha256": "bfe7c73ede5eb0883164bb481c1fac41fa99cad7c0f44fa3fe4a44ef34e924a4",
+  "full_evaluation_features_exactly_equal": true,
+  "columns": 43,
+  "candidate_rows": 6,
+  "mixed_adducts_and_missing_metadata_checked": true,
+  "training_only_proposal_test": "600 full rows to same selected 256 rows; selected feature matrices exactly equal; omitted truth not inserted",
+  "real_M3_experiment_run": false
+}

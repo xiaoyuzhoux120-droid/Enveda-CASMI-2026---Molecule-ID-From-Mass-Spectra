@@ -10,7 +10,7 @@
     "asset_hashes": "runtime_asset_manifest.json",
     "creation_failure_preserved": "release CDN import internal error; stable commit-pinned raw GitHub import succeeded"
   },
-  "tests": "55 targeted tests passed",
+  "tests": "56 targeted tests passed",
   "acceptance_opened": false,
   "competition_submitted": false,
   "public_score": null,
@@ -21,5 +21,13 @@
     "actual_worker_seconds": null,
     "code_executed": false,
     "session_stopped": true
+  },
+  "pre_run_feature_optimization": {
+    "training_proposal_unchanged": true,
+    "selected_features_exact_parity": true,
+    "full_evaluation_features_exact_parity": true,
+    "query_constants_hoisted": true,
+    "real_experiment_gain_measured": false,
+    "audit": "feature_runtime_equivalence.json"
   }
 }

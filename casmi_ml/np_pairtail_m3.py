@@ -46,18 +46,20 @@ def query_features(frame,engine,index,builder,logits,mode,root,progress,deadline
         baseline,library,meta,audit=engine.score(group)
         rows=candidate_union(index.query(center_mass(group)),baseline,index)
         if not len(rows):raise ValueError('Empty deployment candidate universe')
-        features=builder.build(group,rows,logits[truth],library,meta)
+        token=hashlib.sha256('|'.join(sorted(group.binned_signature)).encode()).hexdigest()
+        features=builder.build(group,rows,logits[truth],library,meta,
+            training_token=token if mode.startswith('train_') else None)
         ids=rows.identity.tolist();baseline_ids=[r['identity'] for r in baseline]
         fp=np.lexsort((np.array(ids),-features.fp_dot.to_numpy()))
         analog=np.lexsort((np.array(ids),-features.analog_weighted.to_numpy()))
-        token=hashlib.sha256('|'.join(sorted(group.binned_signature)).encode()).hexdigest()
         cases.append({'identity':truth,'mode':mode,'offset':offset,'count':len(rows),
             'candidate_identities':ids,'candidate_smiles':rows.normalized_smiles.tolist(),
             'candidate_sources':rows.sources.tolist(),'baseline':baseline_ids,
             'fp_ranking':[ids[i] for i in fp],'analog_ranking':[ids[i] for i in analog],
             'fp_margin':float(features.fp_dot.iloc[fp[0]]-features.fp_dot.iloc[fp[1]]) if len(fp)>1 else 0.,
             'analog_margin':float(features.analog_weighted.iloc[analog[0]]-features.analog_weighted.iloc[analog[1]]) if len(analog)>1 else 0.,
-            'measurement_token':token,'confidence':audit['confidence']})
+            'measurement_token':token,'confidence':audit['confidence'],
+            'training_explanation_rows':features.attrs['training_explanation_rows']})
         parts.append(features);offset+=len(rows)
         if n%25==0:progress.emit('M3_'+mode+'_features',completed=n,total=int(frame.identity.nunique()),
             candidate_rows=offset,fingerprint_cache=len(index.fingerprints),fragment_cache=len(builder.fragments))

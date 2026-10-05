@@ -225,3 +225,34 @@ def test_library_fp_cache_preserves_features_and_keys_complete_alias(monkeypatch
     np.testing.assert_array_equal(feature_matrix(before),feature_matrix(after))
     builder.build(group,pool,np.zeros(2048),[(key,'OCC',.5)])
     assert len(calls)==previous+1
+
+
+def test_training_only_explanations_preserve_selected_features_and_proposals(monkeypatch):
+    import casmi_ml.np_pairtail_ranker as module
+    rng=np.random.default_rng(7)
+    pool=pd.DataFrame([{'identity':str(i),'normalized_smiles':f'[{i+1}CH3]O',
+        'mass':100.,'sources':'COCONUT'} for i in range(600)])
+    vectors=rng.integers(0,2,(600,32)).astype(np.float32)
+    def make_builder():
+        index=StructureIndex(pool)
+        index.fingerprints={str(i):(f'[{i+1}CH3]O',vectors[i]) for i in range(600)}
+        return module.CandidateFeatures(index,np.arange(32))
+    group=pd.DataFrame([{'precursor_mz':101.007276,'adduct':'[M+H]+','ionization_mode':'positive',
+        'instrument_type':'Orbitrap','collision_energy_ev':[10.],
+        'ms2_mzs':[17.,31.],'ms2_normalized_intensities':[.2,1.]}])
+    logits=rng.normal(size=32).astype(np.float32)
+    calls=[];original=module.fragment_masses
+    def counted(smi):calls.append(smi);return original(smi)
+    monkeypatch.setattr(module,'fragment_masses',counted)
+    full=make_builder().build(group,pool,logits,[])
+    assert len(calls)==600
+    calls.clear()
+    fast=make_builder().build(group,pool,logits,[],training_token='fixed-measurements')
+    selected=select_negative_rows(full,'fixed-measurements')
+    np.testing.assert_array_equal(selected,select_negative_rows(fast,'fixed-measurements'))
+    np.testing.assert_array_equal(selected,fast.attrs['training_explanation_rows'])
+    assert len(calls)==256
+    np.testing.assert_array_equal(feature_matrix(full.iloc[selected]),feature_matrix(fast.iloc[selected]))
+    omitted=next(i for i in range(600) if i not in selected)
+    _,labels=labeled_group(fast,pool.identity.tolist(),str(omitted),selected)
+    assert labels.sum()==0

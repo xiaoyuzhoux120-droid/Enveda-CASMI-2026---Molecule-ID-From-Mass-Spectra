@@ -136,7 +136,7 @@ class CandidateFeatures:
         self.fragments = {}
         self.reference_fingerprints = {}
 
-    def build(self, group, rows, logits, library, library_metadata=None):
+    def build(self, group, rows, logits, library, library_metadata=None, training_token=None):
         if len(logits) != len(self.bits) or not np.isfinite(logits).all():
             raise ValueError('Fingerprint prediction does not match frozen bits')
         neutral = group.precursor_mz-group.adduct.map(ADDUCT_MASS)
@@ -150,6 +150,12 @@ class CandidateFeatures:
         rank = np.empty(len(dot), float)
         rank[np.lexsort((rows.identity.to_numpy(), -dot))] = np.arange(len(dot))/max(len(dot)-1, 1)
         lib = {key: (i, float(score)) for i, (key, _, score) in enumerate(library)}
+        # The fixed training proposal uses only these two inexpensive scores.
+        # Preserve full-pool normalization/ranking, but explain only rows that
+        # can actually enter fitting. Evaluation/inference always explains all.
+        explanation_rows = None if training_token is None else set(select_negative_rows(
+            pd.DataFrame({'library_score':[lib.get(key,(len(library),0.))[1]
+                for key in rows.identity], 'fp_dot':dot}), training_token).tolist())
         reference = []
         for key, smi, score in library[:25]:
             cache_key=(smi,key)
@@ -172,19 +178,35 @@ class CandidateFeatures:
         features = []
         library_metadata = library_metadata or {}
         instruments = group.instrument_type.fillna('<missing>').astype(str).str.lower()
+        query_constants = {
+            'query_spectra':len(group),
+            'positive_fraction':float(group.ionization_mode.eq('positive').mean()),
+            'same_adduct':float(group.adduct.nunique()==1),
+            'adduct_missing_fraction':float(group.adduct.isna().mean()),
+            'ce_missing_fraction':float(np.mean([not np.isfinite(v).any() for v in energies])),
+            'ce_mean_ev':float(finite_energies.mean()) if len(finite_energies) else math.nan,
+            'instrument_orbitrap':float(instruments.str.contains('orbitrap',regex=False).mean()),
+            'instrument_qtof':float(instruments.str.contains('qtof',regex=False).mean()),
+            'instrument_timstof':float(instruments.str.contains('timstof',regex=False).mean()),
+            'instrument_missing':float(instruments.eq('<missing>').mean())}
+        measurements = []
+        for query in group.itertuples():
+            mz, intensity = np.asarray(query.ms2_mzs, float), np.asarray(query.ms2_normalized_intensities, float)
+            keep = np.isfinite(mz) & np.isfinite(intensity) & (intensity > 0) & (mz > 0)
+            measurements.append((mz[keep], intensity[keep], ADDUCT_MASS[query.adduct], query.precursor_mz))
         for i, row in enumerate(rows.itertuples()):
             smi = self.index.fingerprints[row.identity][0]
-            if smi not in self.fragments: self.fragments[smi] = fragment_masses(smi)
-            one, two, total = self.fragments[smi]
+            explain = explanation_rows is None or i in explanation_rows
+            if explain:
+                if smi not in self.fragments: self.fragments[smi] = fragment_masses(smi)
+                one, two, total = self.fragments[smi]
+            else:
+                one, two, total = None, None, math.nan
             one_cov, two_cov, loss_cov = [], [], []
-            for query in group.itertuples():
-                mz, intensity = np.asarray(query.ms2_mzs, float), np.asarray(query.ms2_normalized_intensities, float)
-                keep = np.isfinite(mz) & np.isfinite(intensity) & (intensity > 0) & (mz > 0)
-                mz, intensity = mz[keep], intensity[keep]
-                offset = ADDUCT_MASS[query.adduct]
+            for mz, intensity, offset, precursor in measurements if explain else ():
                 if one is not None:one_cov.append(peak_coverage(one+offset, mz, intensity))
                 if two is not None: two_cov.append(peak_coverage(two+offset, mz, intensity))
-                if one is not None:loss_cov.append(peak_coverage(total-one, query.precursor_mz-mz, intensity))
+                if one is not None:loss_cov.append(peak_coverage(total-one, precursor-mz, intensity))
             source = set(row.sources.split(';'))
             library_rank, library_score = lib.get(row.identity, (len(library), 0.))
             mass_error = abs(row.mass-center)/center*1e6
@@ -194,11 +216,7 @@ class CandidateFeatures:
                 'fp_z':float(z[i]), 'fp_rank_fraction':float(rank[i]), 'fp_on_bits':float(fps[i].sum()),
                 'fragment_one_coverage':max(one_cov) if one_cov else math.nan, 'fragment_two_coverage':max(two_cov) if two_cov else math.nan,
                 'neutral_loss_coverage':max(loss_cov) if loss_cov else math.nan, 'fragment_one_missing':float(one is None), 'fragment_two_missing':float(two is None),
-                'chemistry_support':chemistry.get(row.identity,0.), 'query_spectra':len(group),
-                'positive_fraction':float(group.ionization_mode.eq('positive').mean()),
-                'same_adduct':float(group.adduct.nunique()==1), 'adduct_missing_fraction':float(group.adduct.isna().mean()),
-                'ce_missing_fraction':float(np.mean([not np.isfinite(v).any() for v in energies])),
-                'ce_mean_ev':float(finite_energies.mean()) if len(finite_energies) else math.nan,
+                'chemistry_support':chemistry.get(row.identity,0.),
                 'precursor_mass':center, 'source_count':len(source), 'np_source':float(bool(source & {'COCONUT','LOTUS'})),
                 'fp_library_agreement':float(z[i])*library_score, 'fp_analog_agreement':float(z[i])*float(analog[i]),
                 'source_mass_interaction':len(source)*mass_error}
@@ -208,14 +226,12 @@ class CandidateFeatures:
                 'library_multispectrum_mean':float(lm.get('multispectrum_mean',math.nan)),
                 'library_shifted_similarity':float(lm.get('shifted_similarity',math.nan)),
                 'library_adduct_match':float(lm.get('adduct_match',math.nan)),
-                'library_instrument_match':float(lm.get('instrument_match',math.nan)),
-                'instrument_orbitrap':float(instruments.str.contains('orbitrap',regex=False).mean()),
-                'instrument_qtof':float(instruments.str.contains('qtof',regex=False).mean()),
-                'instrument_timstof':float(instruments.str.contains('timstof',regex=False).mean()),
-                'instrument_missing':float(instruments.eq('<missing>').mean())})
+                'library_instrument_match':float(lm.get('instrument_match',math.nan))})
+            value.update(query_constants)
             value.update({'source_'+s:float(s in source) for s in SOURCES})
             features.append(value)
         output = pd.DataFrame(features, columns=FEATURES)
+        output.attrs['training_explanation_rows'] = None if explanation_rows is None else sorted(explanation_rows)
         feature_matrix(output)
         return output
 
