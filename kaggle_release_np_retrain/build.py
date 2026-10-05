@@ -18,7 +18,10 @@ def build():
         'old_weights_reused':False,'old_budget_erased':False,'acceptance_opened':False,
         'cache_dataset':'xiaoyuzhoux120/casmi-np-frozen-fpnet-view-cache-20261005',
         'failed_retrain_script_version':355524627,
-        'prior_failed_mount_budget_charge_seconds':600.,
+        'prior_failed_mount_budget_charge_seconds':616.8,
+        'abi_failed_retrain_script_version':355532778,
+        'abi_failed_worker_seconds':16.8,
+        'required_container_environment_date':'2026-06-30',
         'mount_failure_charge_basis':'conservative budget allowance, not a claim of measured worker time'}
     names=(*SOURCES,'casmi_ml/np_pairtail_fpnet.py')
     buffer=io.BytesIO()

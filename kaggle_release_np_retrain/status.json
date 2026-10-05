@@ -27,5 +27,22 @@
   "cache_dataset_visible_bytes": "5.27 GB",
   "cache_dataset_ready": true,
   "prior_failed_mount_budget_charge_seconds": 600.0,
-  "prior_failed_mount_actual_worker_seconds": null
+  "prior_failed_mount_actual_worker_seconds": null,
+  "recovery_run": {
+    "version": 2,
+    "script_version_id": 355532778,
+    "url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-cache-retrain-20261005?scriptVersionId=355532778",
+    "source_commit": "301cdc9",
+    "embedded_source_sha256": "29df66dd58840f3a9a9b0b3beacbd50bc1a2d52caced1f7018e853086aeb564c",
+    "status": "Failed",
+    "actual_training_started": false,
+    "actual_gpu_preflight_passed": false,
+    "acceptance_opened": false,
+    "competition_submitted": false,
+    "actual_worker_seconds": 16.8,
+    "error": "Python ABI mismatch: actual Python 3.13.15; frozen wheel requires CPython 3.12",
+    "input_manifest_verified": true
+  },
+  "next_recovery_environment": "Reuse original FPNet Notebook pinned environment 2026-06-30; exact source/caches, fresh seeds; existing failed versions remain intact.",
+  "prior_failed_launch_budget_charge_seconds": 616.8
 }

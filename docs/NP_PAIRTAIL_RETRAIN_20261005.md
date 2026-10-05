@@ -24,3 +24,9 @@
 通过 Kaggle Output → New dataset 服务器端转存，私有数据集 [CASMI NP Frozen FPNet View Cache 20261005](https://www.kaggle.com/datasets/xiaoyuzhoux120/casmi-np-frozen-fpnet-view-cache-20261005) Version 1 已就绪，Data Explorer 显示 5.27 GB；自动同步关闭，来源保留原 Notebook。未经过本地下载/上传，不修改浏览器权限。下一版换用该数据集，仍在执行时逐文件核验缓存；页面可用不等于二进制核验已完成。
 
 因 Version 1 精确 worker 时间不可得，后续预算保守预留 600 秒给该次挂载失败，明确这不是实际测量值。新的 14400 秒预算不再从零启动；旧 10528.1 秒另行保留。科学参数及模型源不变，重打包只更新恢复声明和预算来源。
+
+## 第二次启动：环境不兼容，实际 16.8 秒
+
+缓存重训 Notebook Version 2（355532778）已成功挂载私有数据集并校验 7 个化学输入文件，但新 Notebook 的初始容器为 Python 3.13.15。它无法安装冻结的 CPython 3.12 RDKit 2026.03.3 wheel，故在训练前停止。页面实际 worker 耗时 16.8 秒，零训练 seed、无 GPU 预检、无验收或比赛提交。此前页面的约十分钟 Running 包含等待启动，不能当作模型训练耗时。
+
+原 FPNet Notebook 编辑器明确保留 `Pin to original environment (2026-06-30)`。恢复将在该 Notebook 保存新版本，复用原 Python 3.12 环境和私有缓存，保留原失败 Version 2 与独立缓存 Notebook 两次失败。模型与科学参数保持一致；实验预算扣除保守挂载预留 600 秒与实际 ABI 启动失败 16.8 秒，共 616.8 秒。
