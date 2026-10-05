@@ -15,7 +15,11 @@ def build():
         'failed_fpnet_source_sha256':'b256662a344a67135b282d21e96a1887b1a4cdd3fcf0bb12df6b6e0678560ba3',
         'expected_pool_sha256':'98add466d604fc6574c046aa7eaa600e8beff2a207a331d20d139bc3937abece',
         'scientific_protocol_unchanged':True,'all_three_seeds_from_scratch':True,
-        'old_weights_reused':False,'old_budget_erased':False,'acceptance_opened':False}
+        'old_weights_reused':False,'old_budget_erased':False,'acceptance_opened':False,
+        'cache_dataset':'xiaoyuzhoux120/casmi-np-frozen-fpnet-view-cache-20261005',
+        'failed_retrain_script_version':355524627,
+        'prior_failed_mount_budget_charge_seconds':600.,
+        'mount_failure_charge_basis':'conservative budget allowance, not a claim of measured worker time'}
     names=(*SOURCES,'casmi_ml/np_pairtail_fpnet.py')
     buffer=io.BytesIO()
     with zipfile.ZipFile(buffer,'w',zipfile.ZIP_DEFLATED) as archive:
@@ -55,7 +59,7 @@ root.mkdir(exist_ok=True)
 (root/'retrain_declaration.json').write_text(json.dumps(declaration,indent=2))
 (root/'data_manifest.json').write_text(json.dumps(manifest | {'embedded_source_sha256':CODE_SHA256,'cache_origin_source_sha256':manifest['embedded_source_sha256'],'cache_input_path':str(cached),'old_weights_reused':False},indent=2))
 run(foundation,root,protocol,pool,preparation_seconds=time.monotonic()-started,
-    cache_root=cached,experiment_prior_seconds=0.,historical_worker_seconds=declaration['historical_worker_seconds'])
+    cache_root=cached,experiment_prior_seconds=declaration['prior_failed_mount_budget_charge_seconds'],historical_worker_seconds=declaration['historical_worker_seconds'])
 print('M2 finished. Acceptance and competition release still require downstream frozen gates.',flush=True)
 '''
     cells=[]

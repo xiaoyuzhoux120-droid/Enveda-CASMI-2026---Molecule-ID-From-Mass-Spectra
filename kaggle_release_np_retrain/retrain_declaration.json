@@ -11,5 +11,9 @@
   "all_three_seeds_from_scratch": true,
   "old_weights_reused": false,
   "old_budget_erased": false,
-  "acceptance_opened": false
+  "acceptance_opened": false,
+  "cache_dataset": "xiaoyuzhoux120/casmi-np-frozen-fpnet-view-cache-20261005",
+  "failed_retrain_script_version": 355524627,
+  "prior_failed_mount_budget_charge_seconds": 600.0,
+  "mount_failure_charge_basis": "conservative budget allowance, not a claim of measured worker time"
 }

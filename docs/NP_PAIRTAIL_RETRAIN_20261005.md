@@ -14,3 +14,13 @@
 6. 验收与推理格式通过后实际提交比赛，直到具体记录 Succeeded 和公榜出分再报告新成绩。训练启动或 Notebook 成功均不等于比赛提交成功。
 
 本地 36 项相关测试通过。正式 GPU 预检及重新训练尚未完成；初始发布状态为 prepared_not_executed。
+
+## 实际 Version 1 启动失败（355524627）
+
+已正式保存 GPU T4 x2 / Internet OFF，页面代码逐字核验 67581 字符与冻结源一致。Kaggle 在运行代码前报告 `ERRORED_MOUNTING_DATASET`：失败 FPNet Version 2 输出经 30 次挂载重试仍失败。未执行缓存核验、GPU 预检或任何 seed。此记录不归因于模型，也不计为已完成训练。正在通过 Kaggle Output 的 New dataset 功能尝试服务器端转存缓存，避免本地传输及冷重建。页面未提供这次失败的精确 worker 耗时，不能杜撰秒数。
+
+## 缓存转存成功
+
+通过 Kaggle Output → New dataset 服务器端转存，私有数据集 [CASMI NP Frozen FPNet View Cache 20261005](https://www.kaggle.com/datasets/xiaoyuzhoux120/casmi-np-frozen-fpnet-view-cache-20261005) Version 1 已就绪，Data Explorer 显示 5.27 GB；自动同步关闭，来源保留原 Notebook。未经过本地下载/上传，不修改浏览器权限。下一版换用该数据集，仍在执行时逐文件核验缓存；页面可用不等于二进制核验已完成。
+
+因 Version 1 精确 worker 时间不可得，后续预算保守预留 600 秒给该次挂载失败，明确这不是实际测量值。新的 14400 秒预算不再从零启动；旧 10528.1 秒另行保留。科学参数及模型源不变，重打包只更新恢复声明和预算来源。

@@ -60,4 +60,4 @@ def test_retrain_artifact_keeps_scientific_protocol_and_old_failure_freeze():
     old=json.loads((root/'kaggle_release_np_pairtail/fpnet_build_manifest.json').read_text())
     assert old['embedded_source_sha256']=='e77ab46e968c298b2504726fc639bc5292bea8446f104100907832eef22ef85e'
     runner=''.join(notebook['cells'][2]['source'])
-    assert 'prepare_base_structure_pool(' not in runner and 'experiment_prior_seconds=0.' in runner
+    assert 'prepare_base_structure_pool(' not in runner and "experiment_prior_seconds=declaration['prior_failed_mount_budget_charge_seconds']" in runner
