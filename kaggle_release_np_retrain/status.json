@@ -1,5 +1,5 @@
 {
-  "stage": "M2_actual_training_running",
+  "stage": "M2_three_seed_training_finished_development_gate_running",
   "version": 4,
   "script_version_id": 355568739,
   "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355568739",
@@ -23,15 +23,16 @@
   },
   "latest_visible_training": {
     "seed": 20261006,
-    "epoch_in_progress": 18,
-    "latest_actual_optimizer_updates": 32875,
-    "worker_log_seconds": 4774.2
+    "completed_epochs": 20,
+    "latest_actual_optimizer_updates": 37500,
+    "worker_log_seconds": 5082.6,
+    "last_development_bce": 0.2864888608455658
   },
   "old_scientific_experiment_weights_reused": false,
   "experiment_prior_budget_seconds": 3456.8,
   "historical_worker_seconds_separate": 10528.1,
   "new_experiment_total_budget_seconds": 14400,
-  "all_seeds_complete": false,
+  "all_seeds_complete": "pending_downloaded_binary_and_summary_verification",
   "M2_development_gate_complete": false,
   "acceptance_opened": false,
   "competition_submitted": false,
@@ -150,5 +151,12 @@
     "optimizer_updates": 37500,
     "development_bce": 0.2886069715023041,
     "seed_elapsed_seconds": 2489.486487101
+  },
+  "all_seeds_complete_visible": true,
+  "M2_development_gate_progress": {
+    "completed": 25,
+    "total": 1930,
+    "cached_fingerprints": 7444,
+    "worker_log_seconds": 5178.9
   }
 }
