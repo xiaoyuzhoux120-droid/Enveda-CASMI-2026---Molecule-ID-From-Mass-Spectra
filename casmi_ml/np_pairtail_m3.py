@@ -162,9 +162,15 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
     reference_mapping_path=reference_mapping_path or mapping_path
     m2=json.loads((models/'run_status.json').read_text())
     if m2['stage']!='M2_complete':raise ValueError('M2 gate incomplete; M3 forbidden')
-    prior=float(m2['cumulative_seconds'])+float(preparation_seconds);progress=Progress(root,prior_seconds=prior,total=protocol['total_research_seconds'])
-    started=time.monotonic();deadline=min(started+protocol['ranker_module_seconds']-float(preparation_seconds),
-        started+protocol['total_research_seconds']-prior)
+    restart_seconds=float(protocol.get('restart_additional_research_seconds',0.))
+    prior=float(m2['cumulative_seconds'])+float(protocol.get('restart_prior_m3_seconds',0.))+float(preparation_seconds)
+    if restart_seconds:
+        progress=Progress(root,prior_seconds=prior,total=prior+restart_seconds)
+        started=time.monotonic();deadline=started+restart_seconds-float(preparation_seconds)
+    else:
+        progress=Progress(root,prior_seconds=prior,total=protocol['total_research_seconds'])
+        started=time.monotonic();deadline=min(started+protocol['ranker_module_seconds']-float(preparation_seconds),
+            started+protocol['total_research_seconds']-prior)
     write_json(root/'protocol_ranker_20261005.json',protocol)
     try:
         if time.monotonic()>=deadline:raise TimeoutError('M3 preparation exhausted module/research budget')

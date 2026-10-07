@@ -65,6 +65,19 @@ for row in pd.read_parquet(oldpool,columns=['normalized_smiles','identity']).ite
     if row.normalized_smiles in mapping and mapping[row.normalized_smiles]!=row.identity:raise ValueError('Identity cache collision')
     mapping[row.normalized_smiles]=row.identity
 root=WORKING/'np_pairtail_ranker';root.mkdir(exist_ok=True)
+# Reuse only the completed, hash-bound Version 7 structure pool. Failed-run
+# model/ranking outputs are never reused, and acceptance remained sealed.
+ranker_pools=[]
+for candidate in INPUT.rglob('base_structure_pool.parquet'):
+    manifest_path=candidate.with_suffix('.manifest.json')
+    if not manifest_path.is_file():continue
+    manifest=json.loads(manifest_path.read_text())
+    if manifest.get('scope')=='ranker train/development deployment mass-window union' and manifest.get('sha256')==sha256(candidate):
+        ranker_pools.append((candidate,manifest_path))
+if ranker_pools:
+    cached_pool,cached_manifest=unique(ranker_pools,'completed Version 7 ranker structure pool')
+    shutil.copyfile(cached_pool,root/'base_structure_pool.parquet')
+    shutil.copyfile(cached_manifest,root/'base_structure_pool.manifest.json')
 # Preserve immutable inference weights so the next self-output version has all
 # required runtime artifacts without mounting two versions of one notebook.
 frozen_models=root/'frozen_fpnet';frozen_models.mkdir(exist_ok=True)
@@ -77,14 +90,17 @@ merged_mapping=root/'structure_identity_map.json';merged_mapping.write_text(json
 (root/'data_manifest.json').write_text(json.dumps({'embedded_source_sha256':CODE_SHA256,'M2_data_manifest_sha256':sha256(models/'data_manifest.json'),
     'foundation_data_sha256':m2manifest['foundation_file_sha256'],'original_identity_cache_sha256':sha256(mapping_file),
     'canonical_alias_cache_pool_sha256':sha256(oldpool),
+    'reused_ranker_pool_sha256':sha256(root/'base_structure_pool.parquet') if (root/'base_structure_pool.parquet').is_file() else None,
+    'prior_M3_failures':[
+        {'version':5,'script_version_id':355588043,'worker_seconds':151.5,'reason':'unsupported training query adduct'},
+        {'version':6,'script_version_id':355588750,'worker_seconds':1932.3,'reason':'structure pool audit exhausted carried budget'},
+        {'version':7,'script_version_id':355967631,'worker_seconds':1930.8,'reason':'reference scan exhausted incorrectly carried budget'}],
     'unneeded_draft_startup':{'budget_allowance_seconds':300.,'actual_worker_seconds':None,'code_executed':False,'session_stopped':True},
-    'prior_M3_failure':{'version':5,'script_version_id':355588043,'worker_seconds':151.5,
-        'reason':'unsupported training query adduct','budget_charge_seconds':151.5},
     'acceptance_opened':False},indent=2))
 protocol=json.loads((code_dir/'protocol_ranker_20261005.json').read_text())
 run(foundation,models,cache,TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,merged_mapping,
     lotus,lotus.with_suffix('.manifest.json'),protocol,root/'base_structure_pool.parquet',root,
-    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED+300.+151.5,reference_mapping_path=reference_mapping)
+    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED,reference_mapping_path=reference_mapping)
 print('M3 finished. One sealed acceptance and inference-only release remain mandatory.',flush=True)
 '''
     cells=[]

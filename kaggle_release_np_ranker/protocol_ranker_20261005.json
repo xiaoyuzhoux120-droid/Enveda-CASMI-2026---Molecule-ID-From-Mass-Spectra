@@ -24,6 +24,10 @@
   "ranker_learning_rate": 0.03,
   "ranker_module_seconds": 2700,
   "total_research_seconds": 14400,
+  "restart_authorization": "User explicitly requested a fresh restart after Version 7; previous failures remain recorded but do not consume this new M3 allowance",
+  "restart_prior_m3_seconds": 4314.6,
+  "restart_additional_research_seconds": 7200,
+  "restart_cache_policy": "reuse only a hash-valid full train/development mass-window pool produced by Version 7; no acceptance/test-derived cache",
   "fragment_approximation": "all one-bond cuts, all two-bond cuts for <=24 bonds; larger two-cut feature missing, with explicit indicator; original H counts, no chemical product capping",
   "source_flags": [
     "train/library",

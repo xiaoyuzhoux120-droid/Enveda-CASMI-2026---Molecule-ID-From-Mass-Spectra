@@ -1,5 +1,5 @@
 {
-  "stage": "M3_restart_prepared",
+  "stage": "M3_fresh_budget_cache_restart_prepared",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -14,7 +14,7 @@
   "acceptance_opened": false,
   "competition_submitted": false,
   "public_score": null,
-  "failure": {
+  "failure_v6": {
     "version": 6,
     "script_version_id": 355588750,
     "observed_elapsed_seconds": 1932.3,
@@ -48,7 +48,7 @@
   "embedded_source_sha256": "45de8e5dcfba736b9617a156b1907a77082bf4218ff31c7272cefae37a926c34",
   "self_model_input_version": 4,
   "editor_cells_exact_match": true,
-  "failure": {
+  "failure_v5": {
     "version": 5,
     "script_version_id": 355588043,
     "seconds": 151.5,
@@ -65,14 +65,19 @@
   },
   "remaining_research_seconds_before_current_preparation": 1918.3501735180016
   ,"restart": {
-    "reason": "user requested restart after Version6 budget failure",
-    "optimization": "threaded RDKit canonicalization with deterministic ordered map",
+    "reason": "user explicitly requested a fresh restart after Version7",
+    "optimization": "reuse Version7 hash-valid completed pool; do not repeat structure audit",
     "scientific_parameters_changed": false,
-    "tests": "29 relevant tests passed",
-    "new_run_started": true,
-    "version": 7,
-    "script_version_id": 355967631,
-    "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355967631",
-    "source_commit": "38fefb0"
+    "tests": "25 relevant tests passed",
+    "new_run_started": false,
+    "fresh_M3_allowance_seconds": 7200,
+    "previous_failure_seconds_preserved_separately": 4314.6,
+    "version7_reusable_pool": {
+      "file": "np_pairtail_ranker/base_structure_pool.parquet",
+      "visible_size": "24.86 MB",
+      "pool_audit_completed": "134019/134019",
+      "reference_scan_progress": "819200 rows",
+      "acceptance_opened": false
+    }
   }
 }
