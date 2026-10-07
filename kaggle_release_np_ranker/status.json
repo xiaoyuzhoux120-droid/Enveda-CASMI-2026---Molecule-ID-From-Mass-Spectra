@@ -1,5 +1,5 @@
 {
-  "stage": "M3_repaired_failed_budget",
+  "stage": "M3_restart_prepared",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -64,4 +64,11 @@
     "tests": "26 passed"
   },
   "remaining_research_seconds_before_current_preparation": 1918.3501735180016
+  ,"restart": {
+    "reason": "user requested restart after Version6 budget failure",
+    "optimization": "threaded RDKit canonicalization with deterministic ordered map",
+    "scientific_parameters_changed": false,
+    "tests": "29 relevant tests passed",
+    "new_run_started": false
+  }
 }

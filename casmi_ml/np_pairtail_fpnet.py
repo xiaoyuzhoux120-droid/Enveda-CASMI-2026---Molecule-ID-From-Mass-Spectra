@@ -236,7 +236,10 @@ def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping,
     """
     if time.monotonic() > deadline:
         raise TimeoutError('Research budget exhausted before structure pool preparation')
-    from concurrent.futures import ProcessPoolExecutor
+    # RDKit parsing/canonicalization spends most time in C++; threads avoid
+    # repeatedly importing the large RDKit runtime in short-lived processes.
+    from concurrent.futures import ThreadPoolExecutor
+    import os
     from baseline import formula_mass
     metadata_frame = pd.read_parquet(train_path, columns=['normalized_smiles','molecular_formula'])
     metadata_frame = metadata_frame.drop_duplicates(['normalized_smiles','molecular_formula'])
@@ -261,8 +264,9 @@ def prepare_base_structure_pool(train_path, coconut_path, catalog_path, mapping,
     smiles = sorted(set(frame.normalized_smiles)-set(mapping))
     identities = dict(mapping); canonical = {}
     started = time.monotonic()
-    with ProcessPoolExecutor(max_workers=4) as pool:
-        for number,(original,result) in enumerate(zip(smiles,pool.map(_canonical_pool_smiles,smiles,chunksize=64)),1):
+    workers = max(2, min(8, (os.cpu_count() or 4)))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for number,(original,result) in enumerate(zip(smiles,pool.map(_canonical_pool_smiles,smiles)),1):
             if time.monotonic() > deadline:
                 pool.shutdown(wait=False,cancel_futures=True)
                 raise TimeoutError('Research budget exhausted during structure pool identity audit')
