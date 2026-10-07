@@ -69,6 +69,10 @@
     "optimization": "threaded RDKit canonicalization with deterministic ordered map",
     "scientific_parameters_changed": false,
     "tests": "29 relevant tests passed",
-    "new_run_started": false
+    "new_run_started": true,
+    "version": 7,
+    "script_version_id": 355967631,
+    "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355967631",
+    "source_commit": "38fefb0"
   }
 }
