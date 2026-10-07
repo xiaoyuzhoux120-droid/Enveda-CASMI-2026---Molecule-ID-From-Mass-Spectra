@@ -1,5 +1,5 @@
 {
-  "stage": "M3_fresh_budget_cache_restart_prepared",
+  "stage": "M3_fresh_budget_cache_restart_running",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -22,7 +22,10 @@
     "candidate_freeze_created": false,
     "submission_csv_created": false,
     "acceptance_opened": false,
-    "last_visible_progress": {"completed": 48000, "total": 134019}
+    "last_visible_progress": {
+      "completed": 48000,
+      "total": 134019
+    }
   },
   "gated_acceptance_entry": "prepared_not_executed",
   "inference_only_entry": "prepared_not_executed",
@@ -41,12 +44,12 @@
     "audit": "feature_runtime_equivalence.json"
   },
   "remaining_research_seconds_before_M3_preparation": 2369.8501735180016,
-  "version": 6,
-  "script_version_id": 355588750,
-  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=355588750",
-  "source_commit": "38a64ce",
-  "embedded_source_sha256": "45de8e5dcfba736b9617a156b1907a77082bf4218ff31c7272cefae37a926c34",
-  "self_model_input_version": 4,
+  "version": 8,
+  "script_version_id": 356186436,
+  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=356186436",
+  "source_commit": "ab47cc6",
+  "embedded_source_sha256": "8dc27c5987ca30810c30b5f433ccc7c091903a39361893b1c6edaaac9f1a7c53",
+  "self_model_input_version": 7,
   "editor_cells_exact_match": true,
   "failure_v5": {
     "version": 5,
@@ -63,13 +66,13 @@
     "failure_seconds_carried": 151.5,
     "tests": "26 passed"
   },
-  "remaining_research_seconds_before_current_preparation": 1918.3501735180016
-  ,"restart": {
+  "remaining_research_seconds_before_current_preparation": 1918.3501735180016,
+  "restart": {
     "reason": "user explicitly requested a fresh restart after Version7",
     "optimization": "reuse Version7 hash-valid completed pool; do not repeat structure audit",
     "scientific_parameters_changed": false,
     "tests": "25 relevant tests passed",
-    "new_run_started": false,
+    "new_run_started": true,
     "fresh_M3_allowance_seconds": 7200,
     "previous_failure_seconds_preserved_separately": 4314.6,
     "version7_reusable_pool": {
@@ -78,6 +81,13 @@
       "pool_audit_completed": "134019/134019",
       "reference_scan_progress": "819200 rows",
       "acceptance_opened": false
-    }
+    },
+    "new_run_version": 8,
+    "new_run_script_version_id": 356186436,
+    "new_run_name": "M3 cached fresh budget ab47cc6",
+    "accelerator": "GPU T4 x2",
+    "internet": "OFF",
+    "environment": "2026-06-30",
+    "started_at": "2026-10-07T14:38:49-07:00"
   }
 }

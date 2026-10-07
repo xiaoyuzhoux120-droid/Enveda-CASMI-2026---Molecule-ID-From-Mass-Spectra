@@ -118,3 +118,12 @@ Version6实际运行约1932.3秒后按冻结研究预算停止，日志最后显
 Version7实际于1930.8秒失败。线程化身份审计有效：134019/134019全部完成，用时约1672.8秒；随后参考谱扫描达到819200行、保留754579条，在错误沿用的旧实验剩余额度处触发`Reference construction research/module budget exhausted`。没有拟合排序器、没有打开验收、没有submission.csv。失败输出保留完整24.86 MB `base_structure_pool.parquet`及其哈希清单、身份映射和三模型logits。
 
 用户随后明确要求继续。新封装只复用Version7中哈希有效、范围标记为训练/开发质量窗并且未接触验收/测试的结构池；其余失败运行的模型或排名输出均不复用。旧M3失败成本4314.6秒继续单独记录，新M3获得明确的7200秒独立额度。候选规则、模型、排序参数和验收门槛不变；25项相关测试通过。尚未启动新版本。
+
+### Version 8: cached fresh-budget restart
+
+- Started 2026-10-07 14:38:49 America/Los_Angeles as `M3 cached fresh budget ab47cc6`.
+- Kaggle scriptVersionId: `356186436`; T4 x2; Internet OFF; pinned 2026-06-30 environment.
+- Both editor code cells were copied back from the live editor and matched the generated notebook byte-for-byte before launch.
+- Self-notebook input reported no pending update and is expected to expose Version 7 outputs. The runner accepts only the complete ranker pool whose manifest scope and SHA-256 both match; it reuses no model, ranking, acceptance, or test output.
+- This run has a fresh independent 7200-second M3 allowance. The 4314.6 seconds spent in prior failed attempts remain in the cumulative audit only.
+- Status at launch: running; no acceptance or submission has been opened.
