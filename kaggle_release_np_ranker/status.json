@@ -1,5 +1,5 @@
 {
-  "stage": "M3_repaired_actual_running",
+  "stage": "M3_repaired_failed_budget",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -14,6 +14,16 @@
   "acceptance_opened": false,
   "competition_submitted": false,
   "public_score": null,
+  "failure": {
+    "version": 6,
+    "script_version_id": 355588750,
+    "observed_elapsed_seconds": 1932.3,
+    "reason": "research budget exhausted during structure pool identity audit",
+    "candidate_freeze_created": false,
+    "submission_csv_created": false,
+    "acceptance_opened": false,
+    "last_visible_progress": {"completed": 48000, "total": 134019}
+  },
   "gated_acceptance_entry": "prepared_not_executed",
   "inference_only_entry": "prepared_not_executed",
   "unneeded_draft_startup": {
