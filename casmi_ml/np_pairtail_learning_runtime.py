@@ -94,6 +94,24 @@ def reference_scan(train_path,query_frames,mapping,root,progress,deadline):
     return records,metadata
 
 
+def load_reference_cache(root):
+    """Load a completed label-blind reference scan from an earlier failed run."""
+    root = Path(root)
+    rows = pd.read_parquet(root/'reference_rows.parquet')
+    metadata = pd.read_parquet(root/'reference_metadata.parquet').to_dict('records')
+    matrix = sparse.load_npz(root/'reference_spectra.npz').tocsr()
+    if len(rows) != len(metadata) or matrix.shape[0] != len(rows):
+        raise ValueError('Reference cache row alignment differs')
+    records = []
+    for i, row in enumerate(rows.itertuples(index=False)):
+        start, stop = matrix.indptr[i], matrix.indptr[i+1]
+        vector = dict(zip(matrix.indices[start:stop].tolist(), matrix.data[start:stop].tolist()))
+        records.append((float(row.mass), str(row.raw_key), row.normalized_smiles, vector))
+    if not records:
+        raise ValueError('Empty completed reference cache')
+    return records, metadata
+
+
 class RuntimeRetrieval:
     def __init__(self,records,metadata,coconut,catalog,rules,mapping):
         self.engine=CachedRoutingHybrid(records,coconut,catalog,rules)

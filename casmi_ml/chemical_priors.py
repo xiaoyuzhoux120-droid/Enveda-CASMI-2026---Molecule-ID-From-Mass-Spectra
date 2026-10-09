@@ -138,19 +138,23 @@ def _patterns(smarts):
     return tuple(Chem.MolFromSmarts(s) for s in smarts)
 
 
-def candidate_scores(smiles_by_key, evidence, rules):
+def candidate_scores(smiles_by_key, evidence, rules, match_cache=None):
     """Score motif support in [0, 1]; neither absence nor mismatch is a hard filter."""
     rule_by_id = {r.id: r for r in rules}
     active = [(rule_by_id[e['rule_id']], float(e['strength'])) for e in evidence]
     total = sum(rule.weight for rule, _ in active)
     scores, supported = {}, {}
+    match_cache = {} if match_cache is None else match_cache
     for key, smiles in smiles_by_key.items():
         mol = Chem.MolFromSmiles(smiles) if isinstance(smiles, str) else None
         ids = []
         numerator = 0.
         if mol is not None and mol.GetNumAtoms():
             for rule, strength in active:
-                if any(mol.HasSubstructMatch(pattern) for pattern in _patterns(rule.smarts)):
+                cache_key = (key, rule.id)
+                if cache_key not in match_cache:
+                    match_cache[cache_key] = any(mol.HasSubstructMatch(pattern) for pattern in _patterns(rule.smarts))
+                if match_cache[cache_key]:
                     ids.append(rule.id)
                     numerator += rule.weight * strength
         scores[key] = numerator / total if total else 0.

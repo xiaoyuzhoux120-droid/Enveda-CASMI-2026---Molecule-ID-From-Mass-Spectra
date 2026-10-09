@@ -77,6 +77,19 @@ def test_no_evidence_no_filter_and_rank_ties_preserve_order():
     assert output.index('b') < output.index('c')
 
 
+def test_candidate_motif_cache_preserves_scores_and_is_reusable():
+    rules = load_rules(DICTIONARY)
+    evidence = extract_evidence([spectrum([184.0733209])], rules)
+    structures = {'pc': 'COP(=O)([O-])OCC[N+](C)(C)C', 'other': 'CCCC'}
+    expected = candidate_scores(structures, evidence, rules)
+    cache = {}
+    first = candidate_scores(structures, evidence, rules, cache)
+    snapshot = dict(cache)
+    second = candidate_scores(structures, evidence, rules, cache)
+    assert first == second == expected
+    assert cache == snapshot and cache
+
+
 def test_weak_peak_reduces_fusion_and_n_methyl_pe_is_not_141_loss():
     rules = load_rules(DICTIONARY)
     evidence = extract_evidence([spectrum([500.-141.0190946])], rules)

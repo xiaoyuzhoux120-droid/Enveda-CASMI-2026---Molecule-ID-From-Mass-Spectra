@@ -27,6 +27,11 @@ def canonical_target(smiles, expected_identity, enumerator=None):
     return Chem.MolToSmiles(mol), fp.GetFingerprintAsNumPy(mol)
 
 
+def validated_pool_target(smiles, expected_identity, enumerator=None):
+    """Exact pool fingerprint path with a reusable tautomer enumerator."""
+    return canonical_target(smiles, expected_identity, enumerator)
+
+
 def canonical_record(smiles):
     """Dataset preparation only, without any query or label input."""
     mol = Chem.MolFromSmiles(smiles)

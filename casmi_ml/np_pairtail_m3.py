@@ -13,7 +13,7 @@ import pandas as pd
 from casmi_ml.data import write_json
 from casmi_ml.chemical_priors import load_rules
 from casmi_ml.np_pairtail_foundation import order,Progress
-from casmi_ml.np_pairtail_learning_runtime import (reference_scan,build_retrieval,supported_training_measurements,
+from casmi_ml.np_pairtail_learning_runtime import (reference_scan,load_reference_cache,build_retrieval,supported_training_measurements,
     candidate_union,center_mass,prediction_metrics,evaluate_order)
 from casmi_ml.np_pairtail_ranker import (FEATURES,StructureIndex,CandidateFeatures,
     select_negative_rows,labeled_group,isolated_booster_fit)
@@ -157,7 +157,8 @@ def ranking_policy(cases,ranker_cases,k,alpha,strategy,thresholds):
 
 
 def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_path,
-        mapping_path,lotus_path,lotus_manifest,protocol,pool_path,root,preparation_seconds=0.,reference_mapping_path=None):
+        mapping_path,lotus_path,lotus_manifest,protocol,pool_path,root,preparation_seconds=0.,reference_mapping_path=None,
+        reference_cache_path=None):
     root=Path(root);root.mkdir(parents=True,exist_ok=True);foundation=Path(foundation);models=Path(models)
     reference_mapping_path=reference_mapping_path or mapping_path
     m2=json.loads((models/'run_status.json').read_text())
@@ -203,7 +204,16 @@ def run(foundation,models,cache,train_path,coconut_path,catalog_path,dictionary_
         coconut=pd.read_parquet(coconut_path,columns=['inchikey','canonical_smiles','exact_mass']);catalog=pd.read_parquet(catalog_path)
         rules=load_rules(dictionary_path)
         reference_mapping=json.loads(Path(reference_mapping_path).read_text()) if reference_mapping_path else mapping
-        records,metadata=reference_scan(train_path,{'train':training,'development':dev},reference_mapping,root,progress,deadline)
+        if reference_cache_path is None:
+            records,metadata=reference_scan(train_path,{'train':training,'development':dev},reference_mapping,root,progress,deadline)
+        else:
+            records,metadata=load_reference_cache(reference_cache_path)
+            for name in ('reference_rows.parquet','reference_metadata.parquet','reference_spectra.npz'):
+                source=Path(reference_cache_path)/name
+                if not source.is_file():raise ValueError('Incomplete reference cache: '+name)
+                import shutil
+                shutil.copyfile(source,root/name)
+            progress.emit('M3_reference_cache_loaded',records=len(records),source=str(reference_cache_path))
         afix=json.loads((foundation/'M1_afix_selection.json').read_text())['threshold_ppm']
         # Freeze exact C0 known cohort from the completed foundation evaluator.
         old_known=json.loads((foundation/'C0_known_cases.json').read_text())

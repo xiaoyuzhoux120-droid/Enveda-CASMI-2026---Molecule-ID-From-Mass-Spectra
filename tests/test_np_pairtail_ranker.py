@@ -114,6 +114,18 @@ def test_cpu_only_target_helper_matches_frozen_fpnet_definition():
     assert definition('casmi_ml/np_pairtail_structures.py')==definition('casmi_ml/np_pairtail_fpnet.py')
 
 
+def test_validated_pool_target_matches_full_canonical_target():
+    from casmi_ml.np_pairtail_structures import canonical_record, canonical_target, validated_pool_target
+    for raw in ('CCO', 'c1ccccc1O', 'CC(=O)OC1=CC=CC=C1C(=O)O'):
+        key, canonical = canonical_record(raw)
+        expected = canonical_target(canonical, key)
+        observed = validated_pool_target(canonical, key)
+        assert observed[0] == expected[0]
+        np.testing.assert_array_equal(observed[1], expected[1])
+    with pytest.raises(ValueError, match='identity'):
+        validated_pool_target('CCO', 'AAAAAAAAAAAAAA')
+
+
 def test_m3_tail_only_preserves_actual_c0_not_c1():
     from casmi_ml.np_pairtail_m3 import bind_c0_rankings, ranking_policy
     cases=[{'identity':'truth','mode':'unknown','baseline':['c1','truth'],

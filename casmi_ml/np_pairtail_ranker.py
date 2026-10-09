@@ -14,11 +14,12 @@ import numpy as np
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import rdMolDescriptors
+from rdkit.Chem.MolStandardize import rdMolStandardize
 
 from baseline import ADDUCT_MASS
 from casmi_ml.chemical_priors import candidate_scores, extract_evidence
 from casmi_ml.data import write_json
-from casmi_ml.np_pairtail_structures import canonical_target, sha256
+from casmi_ml.np_pairtail_structures import canonical_target, validated_pool_target, sha256
 from casmi_ml.np_pairtail_fusion import local_module_gate
 
 SOURCES = ('train/library', 'COCONUT', 'LOTUS', 'ChEBI', 'LIPID_MAPS')
@@ -58,6 +59,7 @@ class StructureIndex:
         for row in self.pool.itertuples():
             self.sources.setdefault(row.identity, set()).update(str(row.sources).split(';'))
         self.fingerprints = {}
+        self.enumerator = rdMolStandardize.TautomerEnumerator()
 
     def query(self, center):
         if not math.isfinite(center) or center <= 0:
@@ -75,7 +77,7 @@ class StructureIndex:
         result = []
         for row in rows.itertuples():
             if row.identity not in self.fingerprints:
-                canonical, vector = canonical_target(row.normalized_smiles, row.identity)
+                canonical, vector = validated_pool_target(row.normalized_smiles, row.identity, self.enumerator)
                 self.fingerprints[row.identity] = (canonical, vector)
             result.append(self.fingerprints[row.identity][1][bits])
         return np.asarray(result, dtype=np.float32).reshape(len(rows), len(bits))
@@ -135,6 +137,8 @@ class CandidateFeatures:
         self.index, self.bits, self.rules = index, np.asarray(bits), tuple(rules)
         self.fragments = {}
         self.reference_fingerprints = {}
+        self.chemical_match_cache = {}
+        self.enumerator = rdMolStandardize.TautomerEnumerator()
 
     def build(self, group, rows, logits, library, library_metadata=None, training_token=None):
         if len(logits) != len(self.bits) or not np.isfinite(logits).all():
@@ -160,7 +164,7 @@ class CandidateFeatures:
         for key, smi, score in library[:25]:
             cache_key=(smi,key)
             if cache_key not in self.reference_fingerprints:
-                _, fp = canonical_target(smi,key)
+                _, fp = canonical_target(smi,key,self.enumerator)
                 self.reference_fingerprints[cache_key]=fp[self.bits]
             reference.append((self.reference_fingerprints[cache_key], score))
         if reference and len(fps):
@@ -171,7 +175,12 @@ class CandidateFeatures:
             sim = tanimoto.max(1)
         else: analog = sim = np.zeros(len(rows))
         evidence = extract_evidence(group, self.rules) if self.rules else []
-        chemistry, _ = candidate_scores(dict(zip(rows.identity, rows.normalized_smiles)), evidence, self.rules)
+        # The frozen training proposal depends only on library_score/fp_dot.
+        # Compute chemistry evidence only for rows that can enter fitting; the
+        # full evaluation and inference paths still score every candidate.
+        chemistry_rows = rows if explanation_rows is None else rows.iloc[sorted(explanation_rows)]
+        chemistry, _ = candidate_scores(dict(zip(chemistry_rows.identity, chemistry_rows.normalized_smiles)),
+            evidence, self.rules, self.chemical_match_cache)
         energies = [np.asarray([] if v is None else v, float) for v in group.collision_energy_ev]
         finite_energies = np.concatenate(energies) if energies else np.array([])
         finite_energies = finite_energies[np.isfinite(finite_energies)]

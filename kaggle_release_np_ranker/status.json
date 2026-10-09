@@ -1,5 +1,5 @@
 {
-  "stage": "M3_fresh_budget_cache_restart_running",
+  "stage": "M3_version8_failed_version9_prepared",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -89,5 +89,33 @@
     "internet": "OFF",
     "environment": "2026-06-30",
     "started_at": "2026-10-07T14:38:49-07:00"
+  },
+  "failure_v8": {
+    "version": 8,
+    "script_version_id": 356186436,
+    "worker_seconds": 7220.0,
+    "reason": "M3 candidate feature budget exhausted",
+    "training_unknown_completed": 400,
+    "training_unknown_total": 3921,
+    "training_candidate_rows": 135005,
+    "reference_scan_completed": true,
+    "candidate_freeze_created": false,
+    "submission_csv_created": false,
+    "acceptance_opened": false
+  },
+  "version9_repair": {
+    "stage": "prepared_not_started",
+    "embedded_source_sha256": "ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a",
+    "reuse_from_version8": [
+      "reference_rows.parquet",
+      "reference_metadata.parquet",
+      "reference_spectra.npz"
+    ],
+    "reuse_partial_features_models_rankings": false,
+    "reusable_tautomer_enumerator": true,
+    "training_chemical_support_selected_rows_only": true,
+    "chemical_match_cache": true,
+    "scientific_parameters_changed": false,
+    "tests": "67 passed"
   }
 }

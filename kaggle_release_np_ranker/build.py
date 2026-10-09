@@ -78,6 +78,20 @@ if ranker_pools:
     cached_pool,cached_manifest=unique(ranker_pools,'completed Version 7 ranker structure pool')
     shutil.copyfile(cached_pool,root/'base_structure_pool.parquet')
     shutil.copyfile(cached_manifest,root/'base_structure_pool.manifest.json')
+# Version 8 completed the same frozen, label-blind reference scan before its
+# candidate-feature budget expired. Reuse only those three immutable scan
+# products from the exact failed source; no features, models or rankings.
+reference_caches=[]
+for candidate in INPUT.rglob('reference_rows.parquet'):
+    parent=candidate.parent;status=parent/'run_status.json';manifest=parent/'data_manifest.json'
+    required=[parent/'reference_metadata.parquet',parent/'reference_spectra.npz',status,manifest]
+    if not all(p.is_file() for p in required):continue
+    state=json.loads(status.read_text());data=json.loads(manifest.read_text())
+    if (state.get('stage')=='M3_failed' and state.get('error_type')=='TimeoutError' and
+        state.get('error')=='M3 candidate feature budget exhausted' and not state.get('acceptance_opened') and
+        data.get('embedded_source_sha256')=='8dc27c5987ca30810c30b5f433ccc7c091903a39361893b1c6edaaac9f1a7c53'):
+        reference_caches.append(parent)
+reference_cache=unique(reference_caches,'completed Version 8 reference scan') if reference_caches else None
 # Preserve immutable inference weights so the next self-output version has all
 # required runtime artifacts without mounting two versions of one notebook.
 frozen_models=root/'frozen_fpnet';frozen_models.mkdir(exist_ok=True)
@@ -100,7 +114,8 @@ merged_mapping=root/'structure_identity_map.json';merged_mapping.write_text(json
 protocol=json.loads((code_dir/'protocol_ranker_20261005.json').read_text())
 run(foundation,models,cache,TRAIN_PATH,COCONUT_PATH,CATALOG_PATH,DICTIONARY_PATH,merged_mapping,
     lotus,lotus.with_suffix('.manifest.json'),protocol,root/'base_structure_pool.parquet',root,
-    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED,reference_mapping_path=reference_mapping)
+    preparation_seconds=time.monotonic()-M3_PREPARATION_STARTED,reference_mapping_path=reference_mapping,
+    reference_cache_path=reference_cache)
 print('M3 finished. One sealed acceptance and inference-only release remain mandatory.',flush=True)
 '''
     cells=[]
@@ -108,7 +123,9 @@ print('M3 finished. One sealed acceptance and inference-only release remain mand
         cell={'cell_type':kind,'metadata':{},'source':content.splitlines(keepends=True)}
         if kind=='code':compile(content,'m3_notebook','exec');cell.update(execution_count=None,outputs=[])
         cells.append(cell)
-    (DEST/'np_ranker_development.ipynb').write_text(json.dumps(template|{'cells':cells},indent=2)+'\n')
+    notebook=template|{'cells':cells}
+    notebook.setdefault('metadata',{}).setdefault('kaggle',{})['accelerator']='gpu'
+    (DEST/'np_ranker_development.ipynb').write_text(json.dumps(notebook,indent=2)+'\n')
     manifest={'stage':'prepared_not_executed','embedded_source_sha256':digest,'source_files':{n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names},
               'ranker_protocol_sha256':hashlib.sha256((DEST/'protocol_ranker_20261005.json').read_bytes()).hexdigest(),
               'acceptance_opened':False,'competition_submission_allowed':False}

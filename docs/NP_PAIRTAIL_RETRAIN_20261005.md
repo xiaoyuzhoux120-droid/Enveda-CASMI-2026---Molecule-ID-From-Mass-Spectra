@@ -127,3 +127,11 @@ Version7实际于1930.8秒失败。线程化身份审计有效：134019/134019�
 - Self-notebook input reported no pending update and is expected to expose Version 7 outputs. The runner accepts only the complete ranker pool whose manifest scope and SHA-256 both match; it reuses no model, ranking, acceptance, or test output.
 - This run has a fresh independent 7200-second M3 allowance. The 4314.6 seconds spent in prior failed attempts remain in the cumulative audit only.
 - Status at launch: running; no acceptance or submission has been opened.
+
+### M3 Version 8 预算失败与 Version 9 工程修复
+
+Version 8 / `356186436` 已在独立 7,200 秒 M3 额度边界内失败，异常为 `TimeoutError: M3 candidate feature budget exhausted`；未打开验收集、未生成 `candidate_freeze.json`、未生成比赛提交。它没有命中预期的 Version 7 结构池挂载，因而重新完成了 558,889 行结构池及完整参考谱扫描；参考扫描后训练 unknown 特征仅完成 400/3,921 个身份、135,005 个候选。日志证明瓶颈是 CPU/RDKit 的候选标准化、指纹和化学特征，不是 T4 算力不足。旧页面显示的一万多秒是累计审计时间；实际新 worker 在 7,220 秒处按冻结预算退出。
+
+修复只改变确定性工程执行：从 Version 8 严格绑定的失败输出复用完整、标签盲的 `reference_rows.parquet`、`reference_metadata.parquet`、`reference_spectra.npz`；不复用任何部分特征、排序器或排名。候选池仍按哈希和 scope 检查。RDKit tautomer enumerator 在同一进程内复用，保持 `canonical_target` 结果逐位一致；训练候选的诊断离子/中性丢失 SMARTS 只为原本会进入最多 256 行标签盲训练提案的候选计算，并缓存 `(identity, rule_id)` 匹配，开发/验收/推理仍对全部候选计算。候选池、训练身份、标签盲选择、43 项特征、四种子 LambdaRank 网格、C0/C1/C3/C4/C6 规则和验收门槛均未改变。
+
+67 项相关测试通过；500 个真实池结构的共享 enumerator 基准保持与原 `canonical_target` 完全相同的指纹。新封装 SHA256 为 `ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a`。Version 9 尚未启动，仍须先把自身 Notebook 输入固定到已完成的 Version 8 输出并逐字核对两个代码单元。
