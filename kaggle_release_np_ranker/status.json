@@ -1,5 +1,5 @@
 {
-  "stage": "M3_version8_failed_version9_prepared",
+  "stage": "M3_version9_running",
   "M2_required_version": 355568739,
   "M2_current_status": "complete_independently_verified",
   "LOTUS_dataset": {
@@ -44,12 +44,12 @@
     "audit": "feature_runtime_equivalence.json"
   },
   "remaining_research_seconds_before_M3_preparation": 2369.8501735180016,
-  "version": 8,
-  "script_version_id": 356186436,
-  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=356186436",
-  "source_commit": "ab47cc6",
-  "embedded_source_sha256": "8dc27c5987ca30810c30b5f433ccc7c091903a39361893b1c6edaaac9f1a7c53",
-  "self_model_input_version": 7,
+  "version": 9,
+  "script_version_id": 356616700,
+  "notebook_url": "https://www.kaggle.com/code/xiaoyuzhoux120/casmi-np-pairtail-fpnet-20261004?scriptVersionId=356616700",
+  "source_commit": "a29408b",
+  "embedded_source_sha256": "ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a",
+  "self_model_input_version": 8,
   "editor_cells_exact_match": true,
   "failure_v5": {
     "version": 5,
@@ -104,7 +104,7 @@
     "acceptance_opened": false
   },
   "version9_repair": {
-    "stage": "prepared_not_started",
+    "stage": "running",
     "embedded_source_sha256": "ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a",
     "reuse_from_version8": [
       "reference_rows.parquet",
@@ -116,6 +116,17 @@
     "training_chemical_support_selected_rows_only": true,
     "chemical_match_cache": true,
     "scientific_parameters_changed": false,
-    "tests": "67 passed"
+    "tests": "67 passed",
+    "version": 9,
+    "script_version_id": 356616700,
+    "run_name": "M3 cached reference repair a29408b",
+    "source_commit": "a29408b",
+    "accelerator": "GPU T4 x2",
+    "internet": "OFF",
+    "environment": "2026-06-30",
+    "started_at": "2026-10-08T20:39:00-07:00",
+    "acceptance_opened": false,
+    "candidate_freeze_created": false,
+    "submission_csv_created": false
   }
 }

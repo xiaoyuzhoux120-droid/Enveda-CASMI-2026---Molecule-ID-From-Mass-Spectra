@@ -135,3 +135,10 @@ Version 8 / `356186436` 已在独立 7,200 秒 M3 额度边界内失败，异常
 修复只改变确定性工程执行：从 Version 8 严格绑定的失败输出复用完整、标签盲的 `reference_rows.parquet`、`reference_metadata.parquet`、`reference_spectra.npz`；不复用任何部分特征、排序器或排名。候选池仍按哈希和 scope 检查。RDKit tautomer enumerator 在同一进程内复用，保持 `canonical_target` 结果逐位一致；训练候选的诊断离子/中性丢失 SMARTS 只为原本会进入最多 256 行标签盲训练提案的候选计算，并缓存 `(identity, rule_id)` 匹配，开发/验收/推理仍对全部候选计算。候选池、训练身份、标签盲选择、43 项特征、四种子 LambdaRank 网格、C0/C1/C3/C4/C6 规则和验收门槛均未改变。
 
 67 项相关测试通过；500 个真实池结构的共享 enumerator 基准保持与原 `canonical_target` 完全相同的指纹。新封装 SHA256 为 `ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a`。Version 9 尚未启动，仍须先把自身 Notebook 输入固定到已完成的 Version 8 输出并逐字核对两个代码单元。
+
+### M3 Version 9 reference-cache repair started (2026-10-08)
+
+- Version 8 ended at 7,220 worker seconds with the sealed acceptance still unopened after 400/3,921 unknown-training identities. Its complete reference scan was retained; no partial candidate features, models, rankings, or acceptance artifacts are eligible for reuse.
+- Engineering repair commit `a29408b` loads only the exact Version 8 reference cache, reuses one exact RDKit tautomer enumerator, caches repeated diagnostic-rule matches, and delays training-only chemical evidence until after the frozen label-blind negative selection. Scientific parameters and all evaluation/inference features remain unchanged.
+- The relevant suite passed (`67 passed`), the notebook was regenerated with embedded source SHA-256 `ae00e0a8601aa9d625093f0e79323040d8f6dc6b40b7ee6d64d823b8969a8a1a`, and GitHub was updated before execution.
+- Formal Version 9 is running as `M3 cached reference repair a29408b`, scriptVersionId `356616700`, with GPU T4 x2, Internet OFF, pinned 2026-06-30 environment, and the latest self-input (Version 8). No acceptance or competition submission has been opened.
