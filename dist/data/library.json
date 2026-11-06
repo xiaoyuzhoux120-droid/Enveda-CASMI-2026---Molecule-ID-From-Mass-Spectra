@@ -1,0 +1,1173 @@
+{
+  "version": 1,
+  "pin": "c1c272f44837881d2f310a8171739a6c2223408f",
+  "description": "CC0 MassBank demonstration subset; no CASMI competition data.",
+  "library": [
+    {
+      "id": "kaempferol",
+      "name": "Kaempferol",
+      "formula": "C15H10O6",
+      "smiles": "OC1=CC=C(C=C1)C1=C(O)C(=O)C2=C(O)C=C(O)C=C2O1",
+      "mass": 286.04773804,
+      "image": "assets/kaempferol.svg",
+      "spectra": [
+        {
+          "id": "MSBNK-NaToxAq-NA002632",
+          "name": "Kaempferol",
+          "formula": "C15H10O6",
+          "smiles": "OC1=CC=C(C=C1)C1=C(O)C(=O)C2=C(O)C=C(O)C=C2O1",
+          "precursor": 287.055,
+          "adduct": "[M+H]+",
+          "energy": "30% (nominal)",
+          "peaks": [
+            [
+              287.055,
+              1.0
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA002632.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA002632.txt"
+        },
+        {
+          "id": "MSBNK-NaToxAq-NA003015",
+          "name": "Kaempferol",
+          "formula": "C15H10O6",
+          "smiles": "OC1=CC=C(C=C1)C1=C(O)C(=O)C2=C(O)C=C(O)C=C2O1",
+          "precursor": 287.055,
+          "adduct": "[M+H]+",
+          "energy": "55% (nominal)",
+          "peaks": [
+            [
+              111.0078,
+              0.027540108
+            ],
+            [
+              121.0285,
+              0.077803445
+            ],
+            [
+              153.0182,
+              0.153157949
+            ],
+            [
+              165.0182,
+              0.072105642
+            ],
+            [
+              213.0546,
+              0.047603205
+            ],
+            [
+              231.0653,
+              0.029494343
+            ],
+            [
+              241.05,
+              0.022419462
+            ],
+            [
+              258.0517,
+              0.041522076
+            ],
+            [
+              287.055,
+              1.0
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA003015.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA003015.txt"
+        }
+      ]
+    },
+    {
+      "id": "genistein",
+      "name": "Genistein",
+      "formula": "C15H10O5",
+      "smiles": "OC1=CC=C(C=C1)C1=COC2=CC(O)=CC(O)=C2C1=O",
+      "mass": 270.05282342,
+      "image": "assets/genistein.svg",
+      "spectra": [
+        {
+          "id": "MSBNK-UFZ-WANA049605070APH",
+          "name": "Genistein",
+          "formula": "C15H10O5",
+          "smiles": "OC1=CC=C(C=C1)C1=COC2=CC(O)=CC(O)=C2C1=O",
+          "precursor": 271.0601,
+          "adduct": "[M+H]+",
+          "energy": "30 % (nominal)",
+          "peaks": [
+            [
+              271.0606,
+              1.0
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Department of Effect-Directed Analysis, Helmholtz Centre for Environmental Research - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/UFZ/MSBNK-UFZ-WANA049605070APH.txt",
+          "raw": "data/records/MSBNK-UFZ-WANA049605070APH.txt"
+        },
+        {
+          "id": "MSBNK-UFZ-WANA049625AF82PH",
+          "name": "Genistein",
+          "formula": "C15H10O5",
+          "smiles": "OC1=CC=C(C=C1)C1=COC2=CC(O)=CC(O)=C2C1=O",
+          "precursor": 271.0601,
+          "adduct": "[M+H]+",
+          "energy": "90 % (nominal)",
+          "peaks": [
+            [
+              65.0387,
+              0.091981657
+            ],
+            [
+              67.0179,
+              0.060645799
+            ],
+            [
+              68.9972,
+              0.12922854
+            ],
+            [
+              69.0337,
+              0.029580344
+            ],
+            [
+              81.0338,
+              0.02543464
+            ],
+            [
+              91.0546,
+              1.0
+            ],
+            [
+              95.0129,
+              0.029656
+            ],
+            [
+              103.0546,
+              0.050037058
+            ],
+            [
+              107.0496,
+              0.08755014
+            ],
+            [
+              109.0286,
+              0.019964946
+            ],
+            [
+              115.0547,
+              0.131139571
+            ],
+            [
+              117.0701,
+              0.026072118
+            ],
+            [
+              118.0415,
+              0.014636757
+            ],
+            [
+              119.0496,
+              0.182883106
+            ],
+            [
+              121.0288,
+              0.090914058
+            ],
+            [
+              128.0624,
+              0.029957226
+            ],
+            [
+              129.0704,
+              0.017714861
+            ],
+            [
+              131.0495,
+              0.046907115
+            ],
+            [
+              135.0443,
+              0.024921857
+            ],
+            [
+              141.0704,
+              0.244526453
+            ],
+            [
+              145.029,
+              0.048661228
+            ],
+            [
+              149.0237,
+              0.066841237
+            ],
+            [
+              150.0318,
+              0.021314156
+            ],
+            [
+              152.0624,
+              0.01992992
+            ],
+            [
+              153.0188,
+              0.57222757
+            ],
+            [
+              155.0495,
+              0.041280503
+            ],
+            [
+              159.0445,
+              0.042517629
+            ],
+            [
+              168.0578,
+              0.034091721
+            ],
+            [
+              169.0654,
+              0.144949709
+            ],
+            [
+              173.0603,
+              0.032259149
+            ],
+            [
+              183.0445,
+              0.020351635
+            ],
+            [
+              185.0603,
+              0.018385964
+            ],
+            [
+              187.0759,
+              0.022442
+            ],
+            [
+              197.0602,
+              0.140198753
+            ],
+            [
+              215.0707,
+              0.069699377
+            ],
+            [
+              225.0544,
+              0.020676679
+            ],
+            [
+              243.0659,
+              0.023347078
+            ],
+            [
+              253.0508,
+              0.020311005
+            ],
+            [
+              271.0599,
+              0.014607335
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Department of Effect-Directed Analysis, Helmholtz Centre for Environmental Research - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/UFZ/MSBNK-UFZ-WANA049625AF82PH.txt",
+          "raw": "data/records/MSBNK-UFZ-WANA049625AF82PH.txt"
+        }
+      ]
+    },
+    {
+      "id": "daidzein",
+      "name": "Daidzein",
+      "formula": "C15H10O4",
+      "smiles": "c1cc(ccc1c2coc3cc(ccc3c2=O)O)O",
+      "mass": 254.0579088,
+      "image": "assets/daidzein.svg",
+      "spectra": [
+        {
+          "id": "MSBNK-NaToxAq-NA002499",
+          "name": "Daidzein",
+          "formula": "C15H10O4",
+          "smiles": "c1cc(ccc1c2coc3cc(ccc3c2=O)O)O",
+          "precursor": 255.0652,
+          "adduct": "[M+H]+",
+          "energy": "25% (nominal)",
+          "peaks": [
+            [
+              255.0651,
+              1.0
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA002499.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA002499.txt"
+        },
+        {
+          "id": "MSBNK-NaToxAq-NA002889",
+          "name": "Daidzein",
+          "formula": "C15H10O4",
+          "smiles": "c1cc(ccc1c2coc3cc(ccc3c2=O)O)O",
+          "precursor": 255.0652,
+          "adduct": "[M+H]+",
+          "energy": "35% (nominal)",
+          "peaks": [
+            [
+              199.0752,
+              0.006218624
+            ],
+            [
+              255.065,
+              1.0
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA002889.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA002889.txt"
+        }
+      ]
+    },
+    {
+      "id": "prenylnaringenin",
+      "name": "8-Prenylnaringenin",
+      "formula": "C20H20O5",
+      "smiles": "CC(=CCC1=C(C=C(C2=C1O[C@@H](CC2=O)C3=CC=C(C=C3)O)O)O)C",
+      "mass": 340.1310737399999,
+      "image": "assets/prenylnaringenin.svg",
+      "spectra": [
+        {
+          "id": "MSBNK-NaToxAq-NA002841",
+          "name": "8-Prenylnaringenin",
+          "formula": "C20H20O5",
+          "smiles": "CC(=CCC1=C(C=C(C2=C1O[C@@H](CC2=O)C3=CC=C(C=C3)O)O)O)C",
+          "precursor": 341.1384,
+          "adduct": "[M+H]+",
+          "energy": "45% (nominal)",
+          "peaks": [
+            [
+              107.0491,
+              0.021579317
+            ],
+            [
+              121.0648,
+              0.01676507
+            ],
+            [
+              123.0078,
+              0.009641788
+            ],
+            [
+              141.0178,
+              0.002077287
+            ],
+            [
+              147.0441,
+              0.026760767
+            ],
+            [
+              165.0183,
+              1.0
+            ],
+            [
+              179.0339,
+              0.019046977
+            ],
+            [
+              183.0288,
+              0.044678827
+            ],
+            [
+              191.034,
+              0.014102305
+            ],
+            [
+              197.0443,
+              0.006147605
+            ],
+            [
+              221.0809,
+              0.017012088
+            ],
+            [
+              225.0547,
+              0.003580774
+            ],
+            [
+              243.0649,
+              0.006927643
+            ],
+            [
+              267.0651,
+              0.006418696
+            ],
+            [
+              285.0759,
+              0.068222791
+            ],
+            [
+              341.1378,
+              0.012057355
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA002841.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA002841.txt"
+        },
+        {
+          "id": "MSBNK-NaToxAq-NA003220",
+          "name": "8-Prenylnaringenin",
+          "formula": "C20H20O5",
+          "smiles": "CC(=CCC1=C(C=C(C2=C1O[C@@H](CC2=O)C3=CC=C(C=C3)O)O)O)C",
+          "precursor": 341.1384,
+          "adduct": "[M+H]+",
+          "energy": "65% (nominal)",
+          "peaks": [
+            [
+              55.0177,
+              0.018866732
+            ],
+            [
+              68.9971,
+              0.006778942
+            ],
+            [
+              69.0336,
+              0.003328269
+            ],
+            [
+              79.018,
+              0.006317357
+            ],
+            [
+              81.0336,
+              0.006615581
+            ],
+            [
+              92.9973,
+              0.002896584
+            ],
+            [
+              97.0285,
+              0.004392063
+            ],
+            [
+              99.0078,
+              0.004554957
+            ],
+            [
+              107.0492,
+              0.035402803
+            ],
+            [
+              109.0286,
+              0.00220592
+            ],
+            [
+              119.0491,
+              0.007967165
+            ],
+            [
+              121.0649,
+              0.010941303
+            ],
+            [
+              123.0077,
+              0.05574944
+            ],
+            [
+              137.0233,
+              0.020366259
+            ],
+            [
+              141.0183,
+              0.019764984
+            ],
+            [
+              147.0441,
+              0.021040416
+            ],
+            [
+              165.0183,
+              1.0
+            ],
+            [
+              169.0652,
+              0.002477981
+            ],
+            [
+              171.0444,
+              0.003040946
+            ],
+            [
+              179.0339,
+              0.014541321
+            ],
+            [
+              183.0289,
+              0.04182045
+            ],
+            [
+              185.0596,
+              0.003040635
+            ],
+            [
+              191.0335,
+              0.004742301
+            ],
+            [
+              197.0444,
+              0.008059668
+            ],
+            [
+              197.0596,
+              0.003447558
+            ],
+            [
+              211.0756,
+              0.002158734
+            ],
+            [
+              213.0551,
+              0.004963438
+            ],
+            [
+              243.0655,
+              0.002664079
+            ],
+            [
+              267.0642,
+              0.00264617
+            ]
+          ],
+          "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+          "license": "CC0",
+          "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA003220.txt",
+          "raw": "data/records/MSBNK-NaToxAq-NA003220.txt"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "id": "MSBNK-NaToxAq-NA003753",
+      "name": "Kaempferol",
+      "formula": "C15H10O6",
+      "smiles": "OC1=CC=C(C=C1)C1=C(O)C(=O)C2=C(O)C=C(O)C=C2O1",
+      "precursor": 287.055,
+      "adduct": "[M+H]+",
+      "energy": "90% (nominal)",
+      "peaks": [
+        [
+          65.0385,
+          0.045256619
+        ],
+        [
+          67.018,
+          0.088712786
+        ],
+        [
+          68.9971,
+          0.290538646
+        ],
+        [
+          79.0543,
+          0.075509471
+        ],
+        [
+          93.0335,
+          0.045983809
+        ],
+        [
+          105.0334,
+          0.082969738
+        ],
+        [
+          107.0492,
+          0.164086457
+        ],
+        [
+          115.0539,
+          0.073542554
+        ],
+        [
+          121.0284,
+          0.574913701
+        ],
+        [
+          128.062,
+          0.066147996
+        ],
+        [
+          129.0701,
+          0.064842559
+        ],
+        [
+          137.0232,
+          0.110857033
+        ],
+        [
+          153.0182,
+          1.0
+        ],
+        [
+          157.065,
+          0.206232806
+        ],
+        [
+          165.0181,
+          0.058148907
+        ],
+        [
+          213.0544,
+          0.143637527
+        ],
+        [
+          229.0501,
+          0.053974137
+        ]
+      ],
+      "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+      "license": "CC0",
+      "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA003753.txt",
+      "raw": "data/records/MSBNK-NaToxAq-NA003753.txt",
+      "compoundId": "kaempferol"
+    },
+    {
+      "id": "MSBNK-UFZ-WANA0496213166PH",
+      "name": "Genistein",
+      "formula": "C15H10O5",
+      "smiles": "OC1=CC=C(C=C1)C1=COC2=CC(O)=CC(O)=C2C1=O",
+      "precursor": 271.0601,
+      "adduct": "[M+H]+",
+      "energy": "70 % (nominal)",
+      "peaks": [
+        [
+          65.0384,
+          0.011505688
+        ],
+        [
+          67.0177,
+          0.039062029
+        ],
+        [
+          68.997,
+          0.090805501
+        ],
+        [
+          81.0336,
+          0.010670086
+        ],
+        [
+          89.0385,
+          0.013943517
+        ],
+        [
+          91.0542,
+          0.527726812
+        ],
+        [
+          95.0127,
+          0.020127366
+        ],
+        [
+          103.0544,
+          0.009516009
+        ],
+        [
+          105.0336,
+          0.01914514
+        ],
+        [
+          107.0491,
+          0.047583199
+        ],
+        [
+          109.0284,
+          0.012055924
+        ],
+        [
+          111.0077,
+          0.035126816
+        ],
+        [
+          115.0542,
+          0.016627297
+        ],
+        [
+          117.0335,
+          0.007931518
+        ],
+        [
+          117.0701,
+          0.016945772
+        ],
+        [
+          118.0416,
+          0.004187076
+        ],
+        [
+          119.0492,
+          0.227865908
+        ],
+        [
+          121.0285,
+          0.075906953
+        ],
+        [
+          128.062,
+          0.011873037
+        ],
+        [
+          129.0698,
+          0.02388994
+        ],
+        [
+          131.0492,
+          0.064290509
+        ],
+        [
+          131.0855,
+          0.025762556
+        ],
+        [
+          133.0285,
+          0.011305853
+        ],
+        [
+          133.0646,
+          0.01163694
+        ],
+        [
+          135.0441,
+          0.029642981
+        ],
+        [
+          137.0233,
+          0.028129044
+        ],
+        [
+          141.0699,
+          0.14404675
+        ],
+        [
+          144.0572,
+          0.015482286
+        ],
+        [
+          145.0284,
+          0.144758194
+        ],
+        [
+          145.0648,
+          0.049904359
+        ],
+        [
+          147.0441,
+          0.046910381
+        ],
+        [
+          147.0804,
+          0.027368725
+        ],
+        [
+          149.0234,
+          0.250513087
+        ],
+        [
+          150.0311,
+          0.021184482
+        ],
+        [
+          152.0623,
+          0.011635364
+        ],
+        [
+          153.0183,
+          1.0
+        ],
+        [
+          155.0492,
+          0.018274064
+        ],
+        [
+          157.0647,
+          0.018715514
+        ],
+        [
+          159.0441,
+          0.111668354
+        ],
+        [
+          163.0391,
+          0.009180586
+        ],
+        [
+          165.0183,
+          0.087496596
+        ],
+        [
+          168.0566,
+          0.00579088
+        ],
+        [
+          169.0649,
+          0.253436512
+        ],
+        [
+          173.0598,
+          0.046976993
+        ],
+        [
+          175.0755,
+          0.025212714
+        ],
+        [
+          181.0647,
+          0.010566818
+        ],
+        [
+          183.0442,
+          0.037529172
+        ],
+        [
+          185.0599,
+          0.017469994
+        ],
+        [
+          187.0392,
+          0.038480655
+        ],
+        [
+          187.0754,
+          0.085028022
+        ],
+        [
+          191.0342,
+          0.014690829
+        ],
+        [
+          197.0597,
+          0.2566185
+        ],
+        [
+          200.0468,
+          0.037793648
+        ],
+        [
+          201.0547,
+          0.032682681
+        ],
+        [
+          213.0546,
+          0.023509584
+        ],
+        [
+          215.0703,
+          0.674436846
+        ],
+        [
+          225.0547,
+          0.056340859
+        ],
+        [
+          227.0702,
+          0.011370888
+        ],
+        [
+          229.05,
+          0.009482112
+        ],
+        [
+          242.0574,
+          0.019118732
+        ],
+        [
+          243.0652,
+          0.392056578
+        ],
+        [
+          253.0496,
+          0.208443679
+        ],
+        [
+          271.0601,
+          0.555706866
+        ]
+      ],
+      "authors": "Tobias Schulze, Martin Krauss, Department of Effect-Directed Analysis, Helmholtz Centre for Environmental Research - UFZ, Leipzig, Germany",
+      "license": "CC0",
+      "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/UFZ/MSBNK-UFZ-WANA0496213166PH.txt",
+      "raw": "data/records/MSBNK-UFZ-WANA0496213166PH.txt",
+      "compoundId": "genistein"
+    },
+    {
+      "id": "MSBNK-NaToxAq-NA003635",
+      "name": "Daidzein",
+      "formula": "C15H10O4",
+      "smiles": "c1cc(ccc1c2coc3cc(ccc3c2=O)O)O",
+      "precursor": 255.0652,
+      "adduct": "[M+H]+",
+      "energy": "90% (nominal)",
+      "peaks": [
+        [
+          65.0385,
+          0.079234542
+        ],
+        [
+          68.9973,
+          0.044921525
+        ],
+        [
+          81.0335,
+          0.105662829
+        ],
+        [
+          91.0542,
+          1.0
+        ],
+        [
+          105.0333,
+          0.037360584
+        ],
+        [
+          106.0414,
+          0.052769063
+        ],
+        [
+          115.0541,
+          0.055645983
+        ],
+        [
+          119.0492,
+          0.157981211
+        ],
+        [
+          121.0284,
+          0.061612038
+        ],
+        [
+          128.0621,
+          0.233201192
+        ],
+        [
+          129.0701,
+          0.095708466
+        ],
+        [
+          131.0493,
+          0.087709971
+        ],
+        [
+          134.0362,
+          0.068472891
+        ],
+        [
+          137.0234,
+          0.621524177
+        ],
+        [
+          141.0699,
+          0.042832202
+        ],
+        [
+          143.0857,
+          0.050762876
+        ],
+        [
+          145.0283,
+          0.027826273
+        ],
+        [
+          151.0541,
+          0.025769768
+        ],
+        [
+          152.0621,
+          0.475978262
+        ],
+        [
+          153.0699,
+          0.416293652
+        ],
+        [
+          157.065,
+          0.090453438
+        ],
+        [
+          169.0652,
+          0.040679435
+        ],
+        [
+          171.0806,
+          0.084388933
+        ],
+        [
+          181.0648,
+          0.630358401
+        ],
+        [
+          182.0725,
+          0.05294846
+        ],
+        [
+          184.052,
+          0.106691082
+        ],
+        [
+          197.0597,
+          0.09706926
+        ],
+        [
+          198.0675,
+          0.060971021
+        ],
+        [
+          199.0754,
+          0.282861431
+        ],
+        [
+          226.0626,
+          0.030541299
+        ],
+        [
+          227.0702,
+          0.09244431
+        ],
+        [
+          237.0549,
+          0.047910021
+        ],
+        [
+          255.0643,
+          0.039646806
+        ]
+      ],
+      "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+      "license": "CC0",
+      "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA003635.txt",
+      "raw": "data/records/MSBNK-NaToxAq-NA003635.txt",
+      "compoundId": "daidzein"
+    },
+    {
+      "id": "MSBNK-NaToxAq-NA003223",
+      "name": "8-Prenylnaringenin",
+      "formula": "C20H20O5",
+      "smiles": "CC(=CCC1=C(C=C(C2=C1O[C@@H](CC2=O)C3=CC=C(C=C3)O)O)O)C",
+      "precursor": 341.1384,
+      "adduct": "[M+H]+",
+      "energy": "80% (nominal)",
+      "peaks": [
+        [
+          55.0178,
+          0.034112202
+        ],
+        [
+          68.9971,
+          0.041714842
+        ],
+        [
+          69.0334,
+          0.016974047
+        ],
+        [
+          79.0178,
+          0.026294536
+        ],
+        [
+          81.0335,
+          0.053762114
+        ],
+        [
+          92.9971,
+          0.04248055
+        ],
+        [
+          97.0285,
+          0.016028563
+        ],
+        [
+          99.0077,
+          0.036455151
+        ],
+        [
+          107.0492,
+          0.04969309
+        ],
+        [
+          109.0283,
+          0.021852254
+        ],
+        [
+          119.0491,
+          0.014640105
+        ],
+        [
+          121.0648,
+          0.011632889
+        ],
+        [
+          123.0077,
+          0.079428417
+        ],
+        [
+          137.0234,
+          0.078137093
+        ],
+        [
+          141.0183,
+          0.023557962
+        ],
+        [
+          147.0075,
+          0.004707832
+        ],
+        [
+          147.044,
+          0.016929005
+        ],
+        [
+          157.0649,
+          0.012158506
+        ],
+        [
+          165.0183,
+          1.0
+        ],
+        [
+          169.0652,
+          0.006398657
+        ],
+        [
+          179.034,
+          0.00706449
+        ],
+        [
+          183.029,
+          0.033656302
+        ],
+        [
+          197.0452,
+          0.008226173
+        ],
+        [
+          197.0605,
+          0.005636082
+        ]
+      ],
+      "authors": "Tobias Schulze, Martin Krauss, Helmholtz Centre for Environmental Research GmbH - UFZ, Leipzig, Germany",
+      "license": "CC0",
+      "source": "https://github.com/MassBank/MassBank-data/blob/c1c272f44837881d2f310a8171739a6c2223408f/NaToxAq/MSBNK-NaToxAq-NA003223.txt",
+      "raw": "data/records/MSBNK-NaToxAq-NA003223.txt",
+      "compoundId": "prenylnaringenin"
+    }
+  ]
+}

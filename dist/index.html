@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore mass spectral library retrieval: search real open spectra, compare molecular candidates, and inspect neutral losses. A CASMI project demonstration by Zhenyu Wang.">
+  <meta name="theme-color" content="#182a2c">
+  <title>Spectra — Molecular Search Lab</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#workspace">Skip to search</a>
+<aside class="sidebar">
+  <a class="brand" href="#workspace" aria-label="Spectra home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 21h4v-8h4v13h4V6h4v20h4V13h4v8h4"/></svg><span>spectra<span class="brand-dot">.</span></span></a>
+  <p class="side-label">MOLECULAR SEARCH LAB</p>
+  <nav aria-label="Main navigation">
+    <a class="nav-link active" href="#workspace"><span aria-hidden="true">⌕</span> Spectrum search <span class="nav-arrow" aria-hidden="true">↗</span></a>
+    <a class="nav-link" href="#method"><span aria-hidden="true">≋</span> How it works</a>
+    <a class="nav-link" href="#about"><span aria-hidden="true">◈</span> Project & sources</a>
+  </nav>
+  <div class="side-art" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="atom atom-a"></span><span class="atom atom-b"></span><span class="atom atom-c"></span><p>A little signal.<br>A lot to discover.</p></div>
+  <div class="side-footer"><span class="avatar">ZW</span><div><strong>Zhenyu Wang</strong><span>CASMI research project</span></div></div>
+</aside>
+<main>
+  <header class="topbar"><span>Research workspace <span class="separator">/</span> <strong>Live demonstration</strong></span><a class="source-link repo-link" href="https://github.com/xiaoyuzhoux120-droid/Enveda-CASMI-2026---Molecule-ID-From-Mass-Spectra" target="_blank" rel="noopener">View source <span aria-hidden="true">↗</span></a></header>
+  <div class="page-content">
+    <section id="workspace" aria-labelledby="page-title">
+      <div class="intro"><div><div class="eyebrow"><span></span> FROM MASS SPECTRA TO MOLECULES</div><h1 id="page-title">Every fragment tells a story.</h1><p>Search a spectrum. Compare the evidence. Explore what it could be.</p></div><span class="local-badge"><span></span> Runs in your browser</span></div>
+      <div class="stats-strip"><div><span class="stat-icon" aria-hidden="true">⌬</span><strong>04</strong><span>compounds</span></div><div><span class="stat-icon" aria-hidden="true">≋</span><strong>08</strong><span>reference spectra</span></div><div><span class="stat-icon" aria-hidden="true">↗</span><strong>CC0</strong><span>open MassBank data</span></div><div class="stat-note">A small library. A real, interactive search.</div></div>
+      <div id="loading" class="notice" role="status">Loading the open spectral library…</div>
+      <div class="workspace-grid" id="search-ui" hidden>
+        <section class="panel query-panel" aria-labelledby="query-heading">
+          <div class="panel-heading"><div><span class="step">01</span><h2 id="query-heading">Your spectrum</h2></div><button type="button" id="reset" class="text-button">Reset ↺</button></div>
+          <p class="field-caption">START WITH A REAL EXAMPLE</p>
+          <div class="examples" id="examples" role="group" aria-label="Example spectra"></div>
+          <div class="query-origin" id="query-origin"></div>
+          <div class="input-row"><label>Precursor m/z<input id="precursor" type="number" min="1" step="any" required value="271.0601"></label><label>Ion / adduct<select id="adduct"><option>[M+H]+</option><option>[M+Na]+</option><option>[M+NH4]+</option></select></label></div>
+          <p class="adduct-note">Reference ions: [M+H]+. Other adducts are exploratory.</p>
+          <div class="peaks-label"><label for="peaks">Fragment peaks</label><button id="import" type="button" class="text-button">Import CSV ↗</button><input id="file-input" type="file" accept=".csv,.tsv,.txt" hidden></div>
+          <textarea id="peaks" spellcheck="false" aria-describedby="peak-help" placeholder="m/z, intensity&#10;153.0182, 100&#10;215.0703, 25"></textarea>
+          <div class="peak-help" id="peak-help"><span>Two columns: m/z, intensity</span><span id="peak-count"></span></div>
+          <div class="filter-box"><div class="filter-top"><label class="switch-label"><input id="mass-filter" type="checkbox" checked><span class="switch" aria-hidden="true"></span><span>Filter by neutral mass</span></label><div class="ppm-input"><input id="ppm" type="number" min="0.1" max="1000" step="0.1" value="35" aria-label="Mass tolerance in ppm"><span>ppm</span></div></div><p>Adduct-corrected mass · minimum window ±0.006 Da</p></div>
+          <div class="error" id="error" role="alert" hidden></div>
+          <button class="primary-button" type="button" id="search">Search library <span aria-hidden="true">→</span></button>
+          <p class="privacy-note">Your spectrum stays on this device.</p>
+        </section>
+        <div class="results-column">
+          <section class="panel chart-panel" aria-labelledby="chart-heading"><div class="panel-heading"><div><span class="step">02</span><h2 id="chart-heading">Read the signal</h2></div><span class="small-tag">MIRROR SPECTRUM</span></div><div class="chart-topline"><p id="chart-subtitle">Query vs. best reference</p><div class="legend"><span><i class="query-key"></i>Query</span><span><i class="reference-key"></i>Reference</span></div></div><svg id="spectrum-chart" viewBox="0 0 800 250" role="img" aria-label="Mirror chart of query peaks above the axis and reference peaks below it"></svg><div class="chart-foot"><span><span class="green-dot"></span> <span id="search-status" role="status" aria-live="polite"></span></span><span>0.1 Da bins · weighted cosine</span></div></section>
+          <section class="panel candidates-panel" aria-labelledby="candidate-heading"><div class="panel-heading"><div><span class="step">03</span><h2 id="candidate-heading">Follow the evidence</h2></div><button type="button" class="text-button" id="export" disabled>Export CSV ↓</button></div><div class="rank-caption"><span id="candidate-count">Candidate ranking</span><span>SIMILARITY ≠ PROBABILITY</span></div><div id="candidates"></div><div id="candidate-detail"></div></section>
+          <section class="chemistry-note"><span class="chemistry-icon" aria-hidden="true">✧</span><div><h3>Look beyond the score.</h3><p id="loss-summary">Inspect precursor-to-fragment mass differences for possible neutral losses.</p><div id="loss-tags"></div><p class="chemistry-caveat">Mass matches suggest possibilities, not unique functional groups. These annotations do not change the ranking.</p></div></section>
+        </div>
+      </div>
+    </section>
+    <section class="method-section" id="method" aria-labelledby="method-heading"><div class="section-heading"><span class="eyebrow">THE METHOD</span><h2 id="method-heading">A transparent path from peaks to candidates.</h2></div><div class="method-grid"><article><span>01 / NARROW THE SEARCH</span><h3>Start with molecular mass.</h3><p>Subtract the selected adduct from precursor m/z. Keep reference compounds within the chosen tolerance, with a 0.006 Da minimum window.</p></article><article><span>02 / COMPARE FRAGMENTS</span><h3>Find a spectral resemblance.</h3><p>Normalize intensities, keep up to 100 peaks above 1%, and bin at 0.1 Da. Compare vectors weighted by √intensity × √(m/z ÷ 100).</p></article><article><span>03 / INSPECT THE EVIDENCE</span><h3>Make the result explainable.</h3><p>Rank compounds by their best reference cosine score. Compare peaks, inspect candidate structures, and explore possible neutral losses.</p></article></div></section>
+    <section class="about-section" id="about" aria-labelledby="about-heading"><div><span class="eyebrow">PROJECT NOTES</span><h2 id="about-heading">Built to make the research tangible.</h2><p>This interactive companion to the Enveda CASMI 2026 project adapts the team's mass-filtered spectral retrieval baseline for the browser.</p><p><strong>My research contribution.</strong> I studied competition materials, investigated diagnostic fragment-ion and neutral-loss resources, and proposed exploring chemistry-informed approaches and domain-specific Transformer architectures in our team discussions.</p><p><strong>This demonstration.</strong> A newly built browser interface for spectral search, candidate comparison, peak visualization, and source inspection.</p><a class="inline-link repo-link" href="https://github.com/xiaoyuzhoux120-droid/Enveda-CASMI-2026---Molecule-ID-From-Mass-Spectra" target="_blank" rel="noopener">Explore the project on GitHub ↗</a></div><div class="scope-card"><h3>What this demo shows</h3><p>Real computation on a curated library of four compounds. Each example uses a different recorded spectrum from the eight reference spectra. They are not independent molecules or a validation benchmark.</p><p>It does not run the full CASMI pipeline, neural models, or de novo structure generation. A high match cannot establish a molecule's identity; compounds absent from this library cannot be identified.</p><p><strong>Data:</strong> MassBank records by Tobias Schulze and Martin Krauss, Helmholtz Centre for Environmental Research (UFZ), under CC0. Peaks are normalized for this interface. Structures are drawn from the records' SMILES.</p><a class="inline-link" href="sources.html">Record-level sources & credits ↗</a></div></section>
+    <footer class="footer"><span>spectra. <span class="footer-divider">/</span> A research demonstration by Zhenyu Wang</span><span>Open data. Visible methods. Better questions.</span></footer>
+  </div>
+</main>
+</body></html>

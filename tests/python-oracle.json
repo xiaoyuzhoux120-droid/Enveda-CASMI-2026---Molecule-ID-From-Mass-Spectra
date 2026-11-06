@@ -1,0 +1,121 @@
+{
+  "source": "Unmodified project baseline.py vectorize(), computed with Python/numpy",
+  "scores": [
+    {
+      "query": "MSBNK-NaToxAq-NA003753",
+      "compound": "kaempferol",
+      "score": 0.2917104197324117
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003753",
+      "compound": "genistein",
+      "score": 0.4551087535347667
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003753",
+      "compound": "daidzein",
+      "score": 0.0
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003753",
+      "compound": "prenylnaringenin",
+      "score": 0.1908399608207756
+    },
+    {
+      "query": "MSBNK-UFZ-WANA0496213166PH",
+      "compound": "kaempferol",
+      "score": 0.14849066559428462
+    },
+    {
+      "query": "MSBNK-UFZ-WANA0496213166PH",
+      "compound": "genistein",
+      "score": 0.7642809811580272
+    },
+    {
+      "query": "MSBNK-UFZ-WANA0496213166PH",
+      "compound": "daidzein",
+      "score": 0.0
+    },
+    {
+      "query": "MSBNK-UFZ-WANA0496213166PH",
+      "compound": "prenylnaringenin",
+      "score": 0.1493799826188149
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003635",
+      "compound": "kaempferol",
+      "score": 0.015730099036279005
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003635",
+      "compound": "genistein",
+      "score": 0.39994827881791717
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003635",
+      "compound": "daidzein",
+      "score": 0.11450618986420925
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003635",
+      "compound": "prenylnaringenin",
+      "score": 0.03955419963892107
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003223",
+      "compound": "kaempferol",
+      "score": 0.15214607854248807
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003223",
+      "compound": "genistein",
+      "score": 0.08635631541336915
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003223",
+      "compound": "daidzein",
+      "score": 0.0
+    },
+    {
+      "query": "MSBNK-NaToxAq-NA003223",
+      "compound": "prenylnaringenin",
+      "score": 0.9320487749126264
+    }
+  ],
+  "roundingPeaks": [
+    [
+      40.05,
+      1
+    ],
+    [
+      40.15,
+      0.8
+    ],
+    [
+      100.25,
+      0.5
+    ],
+    [
+      100.35,
+      0.7
+    ]
+  ],
+  "roundingVector": [
+    [
+      400,
+      0.4560797358572783
+    ],
+    [
+      402,
+      0.40843907556211756
+    ],
+    [
+      1002,
+      0.5102308445186792
+    ],
+    [
+      1004,
+      0.6040143056220385
+    ]
+  ]
+}
