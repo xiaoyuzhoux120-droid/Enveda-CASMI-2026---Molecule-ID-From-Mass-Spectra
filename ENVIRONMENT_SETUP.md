@@ -86,7 +86,7 @@ GPU 机器：`TORCH_INDEX=https://download.pytorch.org/whl/cu128 bash scripts/se
 
 ### Kaggle CLI / KaggleHub（MCP 的可靠替代）
 
-`kaggle` 2.2.5 与 `kagglehub` 1.0.3 已安装。CLI 支持 `KAGGLE_API_TOKEN` 环境变量、`~/.kaggle/access_token` 文件或 `kaggle auth login`（OAuth）。当前云端**没有配置任何 Kaggle 凭证**，所以认证类命令未能验证。
+`kaggle` 2.2.5 与 `kagglehub` 1.0.3 已安装。CLI 支持 `KAGGLE_API_TOKEN` 环境变量、`~/.kaggle/access_token` 文件或 `kaggle auth login`（OAuth）。2026-11-24 起 Default 云端环境已配置 `KAGGLE_API_TOKEN`（KGAT 格式），CLI 认证实测通过：`competitions files`、`competitions download`、`kernels list --mine`、`competitions submissions` 均正常（只做了读取和下载）。
 
 ### GitHub
 
@@ -113,18 +113,26 @@ GPU 机器：`TORCH_INDEX=https://download.pytorch.org/whl/cu128 bash scripts/se
 
 | # | 检查 | 结果 | 实测细节 |
 |---|---|---|---|
-| 1 | Kaggle MCP 可用 | 通过（匿名） | 76 个工具；读取到比赛截止时间与指标 |
-| 1b | Kaggle CLI 认证 | **未通过：未配置凭证** | 等你按第 8 节配置 |
-| 2 | 比赛数据合法获取 | **未验证** | 需要凭证 + 你本人在网页上接受规则；数据文件尚未下载 |
+| 1 | Kaggle MCP 可用 | 通过（仅匿名可用） | 76 个工具；读取到比赛截止时间与指标。带 token 的认证调用失败，见第 6.1 节 |
+| 1b | Kaggle CLI 认证 | 通过 | 使用环境变量 `KAGGLE_API_TOKEN`（脚本只检查是否存在，不打印值） |
+| 2 | 比赛数据合法获取 | 通过 | 规则已由你接受；`train.parquet` 3,033,286,496 B（2,539,608 行，18 列）、`test.parquet` 4,848,729 B（1,213 行，12 列）、`sample_submission.csv` 43,619 B，大小与 Kaggle 列表一致；train 约 1 分 50 秒下完（约 28 MB/s） |
 | 3 | RDKit 解析与指纹 | 通过 | 版本 2026.03.3；两种葡萄糖写法规范化后 InChIKey14 均为 `WQZGKKKJIJFFOK`（复现评估页示例）；Morgan 2048 位指纹、Tanimoto 正常 |
 | 4 | MatchMS 处理与相似度 | 通过 | default_filters + 归一化；CosineGreedy 0.9973（4 峰匹配），+14 Da 平移谱 ModifiedCosine 0.9973 |
 | 5 | PyTorch 训练 | 通过 | CPU 4 线程，合成数据 MLP 30 轮：loss 0.6921 → 0.3227，位准确率 0.862 |
 | 6 | 项目现有代码 | 通过 | `pytest tests`：29 passed，1 skipped（unittest 同样 30 个用例 OK） |
-| 7 | 新线程可复现 | 部分验证（云端 setup 脚本已保存，待新线程证实） | 在全新目录从仓库文件运行 `setup_env.sh` 后 `verify_env.py` 得到相同 7/9 结果；尚未在另一个真正新建的云端线程中验证 |
+| 7 | 新线程可复现 | 通过 | 2026-11-24 在新建的云端线程中，云端 setup 脚本已自动建好 `.venv`（Python 3.12.3），未手动安装任何包；下载数据后 `verify_env.py` **9/9 通过** |
 
 说明：第一次 PyTorch 检查失败过一次，原因是我写的测试断言过严（取的是第 1 轮之后的 loss 作基准），不是环境问题；改为与训练前 loss 比较后通过。
 
 GPU 训练脚本 `scripts/train_fp_gpu.py` 只用**合成的 parquet（8 个真实 SMILES + 随机峰）**在 CPU 上做了冒烟测试，确认数据读取、指纹标签、分子不相交划分、训练与保存流程能跑通；dev Tanimoto 约 0.01，这是合成数据，不代表任何真实性能。
+
+### 6.1 Kaggle 凭证与数据验证（2026-11-24，新云端线程）
+
+- `KAGGLE_API_TOKEN` 存在（只检查了是否存在和长度，值未打印、未写入任何文件或日志）。
+- CLI：`kaggle competitions files/download` 正常；`kernels list --mine` 能列出你的私有 Notebook（账号 `xiaoyuzhoux120`）；`competitions submissions` 能列出历史提交。
+- 数据下载到仓库内 `data/`（已被 `.gitignore` 忽略，不进 Git）。云端容器是临时的，新线程需要重新下载：`.venv/bin/kaggle competitions download enveda-CASMI26-molecule-id-mass-spectra -p data` 后解压，或逐个文件 `-f train.parquet`。
+- **Kaggle MCP 带 token 认证未成功**：握手和 `tools/list` 正常，但所有需要登录的只读工具（`list_competition_data_files`、`get_accelerator_quota`、`search_notebooks`、`download_competition_data_file`）都返回 `Unauthenticated`。试过 `Authorization: Bearer <token>`（协议版本 2025-03-26 与 2025-06-18）和 `X-Kaggle-Api-Token` 头，结果相同。同一个 token 在 CLI 中可用，所以问题在 MCP 端对该 token 的认证方式，原因未确认（文档页是前端渲染，自动抓取读不到正文）。在此解决前，数据和 Notebook 操作请走 CLI / kagglehub，MCP 只用于匿名可读的比赛页、讨论和公开内容。
+- 本次没有提交结果、没有发布或修改 Notebook、没有改团队信息。
 
 ## 7. CPU 验证与 GPU 训练
 
@@ -134,6 +142,8 @@ GPU 训练脚本 `scripts/train_fp_gpu.py` 只用**合成的 parquet（8 个真�
 - Kaggle GPU：`kaggle_gpu_training/` 是私有训练脚本模板（开 GPU、开互联网用于装 RDKit、只写 `/kaggle/working`），**没有推送**，由你审核后自己 push（步骤见该目录 README）。它与关网的提交 Notebook 分开。
 
 ## 8. 需要你手动完成的事项
+
+（2026-11-24 状态：第 1–3 步已完成，CLI 验证通过。）
 
 1. **接受比赛规则**（12 月 7 日前）：浏览器登录 Kaggle → 打开比赛页面 → Rules → “I Understand and Accept”。不接受无法下载数据。
 2. **生成 Kaggle API token**：Kaggle → 右上角头像 → Settings → API → “Generate New Token”，复制（以 `KGAT` 开头）。不要发到聊天里。
@@ -153,4 +163,5 @@ GPU 训练脚本 `scripts/train_fp_gpu.py` 只用**合成的 parquet（8 个真�
 - 没有提交比赛结果、没有发布或推送 Notebook、没有修改团队信息、没有调用付费服务。
 - 云端容器临时；比赛数据约 3 GB，下载后只在当前会话有效，且按规则不得外传。
 - 云端 4 核 / 16 GB 内存，载入完整 train.parquet 的全部列可能接近内存上限，建议按列读取或分批。
-- Kaggle MCP 部分工具需要登录才能用；OAuth 在 Claude Code 中有已知问题。
+- Kaggle MCP 部分工具需要登录才能用；用 API token 作 Bearer 头实测仍返回 `Unauthenticated`，OAuth 在 Claude Code 中有已知问题。目前以 CLI 为准。
+- 之前在聊天中泄露过的旧 token 应已在 Kaggle 设置中撤销；本次使用的是新 token。
