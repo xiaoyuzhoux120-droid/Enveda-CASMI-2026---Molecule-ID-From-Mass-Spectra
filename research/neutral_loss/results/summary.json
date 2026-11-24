@@ -1,0 +1,386 @@
+{
+ "summary": [
+  {
+   "index": "panels",
+   "eval_all": 2000.0,
+   "eval_B": 990.0,
+   "np_examples": 207.0
+  },
+  {
+   "index": "median_candidates",
+   "eval_all": 8.0,
+   "eval_B": 8.0,
+   "np_examples": 8.0
+  },
+  {
+   "index": "random",
+   "eval_all": 0.3794,
+   "eval_B": 0.3792,
+   "np_examples": 0.3678
+  },
+  {
+   "index": "random@1",
+   "eval_all": 0.1847,
+   "eval_B": 0.1855,
+   "np_examples": 0.1714
+  },
+  {
+   "index": "rr8_losses",
+   "eval_all": 0.4305,
+   "eval_B": 0.4283,
+   "np_examples": 0.4228
+  },
+  {
+   "index": "rr8_losses@1",
+   "eval_all": 0.2333,
+   "eval_B": 0.2296,
+   "np_examples": 0.2245
+  },
+  {
+   "index": "metfrag_lite",
+   "eval_all": 0.712,
+   "eval_B": 0.7103,
+   "np_examples": 0.5867
+  },
+  {
+   "index": "metfrag_lite@1",
+   "eval_all": 0.5679,
+   "eval_B": 0.5603,
+   "np_examples": 0.4082
+  },
+  {
+   "index": "nn_int_chem",
+   "eval_all": 0.4441,
+   "eval_B": 0.4464,
+   "np_examples": 0.4303
+  },
+  {
+   "index": "nn_int_chem@1",
+   "eval_all": 0.2522,
+   "eval_B": 0.2551,
+   "np_examples": 0.2424
+  },
+  {
+   "index": "nn_int_morgan",
+   "eval_all": 0.4004,
+   "eval_B": 0.3996,
+   "np_examples": 0.3605
+  },
+  {
+   "index": "nn_int_morgan@1",
+   "eval_all": 0.2045,
+   "eval_B": 0.2074,
+   "np_examples": 0.1498
+  },
+  {
+   "index": "nn_hr_chem",
+   "eval_all": 0.5059,
+   "eval_B": 0.5055,
+   "np_examples": 0.4869
+  },
+  {
+   "index": "nn_hr_chem@1",
+   "eval_all": 0.3142,
+   "eval_B": 0.3134,
+   "np_examples": 0.3048
+  },
+  {
+   "index": "nn_hr_morgan",
+   "eval_all": 0.4292,
+   "eval_B": 0.4269,
+   "np_examples": 0.3795
+  },
+  {
+   "index": "nn_hr_morgan@1",
+   "eval_all": 0.231,
+   "eval_B": 0.2301,
+   "np_examples": 0.1787
+  }
+ ],
+ "combos": [
+  {
+   "prior": "nn_int_chem",
+   "w_selected_on_A": 0.0,
+   "MRR_A": 0.7137,
+   "MRR_B": 0.7103,
+   "MRR_B_metfrag": 0.7103,
+   "dB": 0.0,
+   "dB_ci": [
+    0.0,
+    0.0
+   ],
+   "MRR_np": 0.5867,
+   "MRR_np_metfrag": 0.5867,
+   "dnp": 0.0,
+   "dnp_ci": [
+    0.0,
+    0.0
+   ],
+   "alone_vs_metfrag_B": [
+    -0.2638,
+    -0.2899,
+    -0.2379
+   ]
+  },
+  {
+   "prior": "nn_int_morgan",
+   "w_selected_on_A": 0.0,
+   "MRR_A": 0.7137,
+   "MRR_B": 0.7103,
+   "MRR_B_metfrag": 0.7103,
+   "dB": 0.0,
+   "dB_ci": [
+    0.0,
+    0.0
+   ],
+   "MRR_np": 0.5867,
+   "MRR_np_metfrag": 0.5867,
+   "dnp": 0.0,
+   "dnp_ci": [
+    0.0,
+    0.0
+   ],
+   "alone_vs_metfrag_B": [
+    -0.3107,
+    -0.3374,
+    -0.2843
+   ]
+  },
+  {
+   "prior": "nn_hr_chem",
+   "w_selected_on_A": 0.0,
+   "MRR_A": 0.7137,
+   "MRR_B": 0.7103,
+   "MRR_B_metfrag": 0.7103,
+   "dB": 0.0,
+   "dB_ci": [
+    0.0,
+    0.0
+   ],
+   "MRR_np": 0.5867,
+   "MRR_np_metfrag": 0.5867,
+   "dnp": 0.0,
+   "dnp_ci": [
+    0.0,
+    0.0
+   ],
+   "alone_vs_metfrag_B": [
+    -0.2048,
+    -0.2309,
+    -0.1775
+   ]
+  },
+  {
+   "prior": "nn_hr_morgan",
+   "w_selected_on_A": 0.0,
+   "MRR_A": 0.7137,
+   "MRR_B": 0.7103,
+   "MRR_B_metfrag": 0.7103,
+   "dB": 0.0,
+   "dB_ci": [
+    0.0,
+    0.0
+   ],
+   "MRR_np": 0.5867,
+   "MRR_np_metfrag": 0.5867,
+   "dnp": 0.0,
+   "dnp_ci": [
+    0.0,
+    0.0
+   ],
+   "alone_vs_metfrag_B": [
+    -0.2834,
+    -0.3099,
+    -0.2577
+   ]
+  },
+  {
+   "prior": "rr8_losses",
+   "w_selected_on_A": 0.25,
+   "MRR_A": 0.7195,
+   "MRR_B": 0.7151,
+   "MRR_B_metfrag": 0.7103,
+   "dB": 0.0048,
+   "dB_ci": [
+    0.0001,
+    0.0094
+   ],
+   "MRR_np": 0.5898,
+   "MRR_np_metfrag": 0.5867,
+   "dnp": 0.0031,
+   "dnp_ci": [
+    -0.006,
+    0.0132
+   ],
+   "alone_vs_metfrag_B": [
+    -0.282,
+    -0.305,
+    -0.2605
+   ]
+  }
+ ],
+ "ablation": [
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_int_chem",
+   "set": "eval_all",
+   "diff": 0.0617,
+   "ci": [
+    0.0511,
+    0.0725
+   ]
+  },
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_int_chem",
+   "set": "eval_B",
+   "diff": 0.059,
+   "ci": [
+    0.0443,
+    0.074
+   ]
+  },
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_int_chem",
+   "set": "np_examples",
+   "diff": 0.0565,
+   "ci": [
+    0.0276,
+    0.0852
+   ]
+  },
+  {
+   "a": "nn_hr_morgan",
+   "b": "nn_int_morgan",
+   "set": "eval_all",
+   "diff": 0.0288,
+   "ci": [
+    0.0218,
+    0.0359
+   ]
+  },
+  {
+   "a": "nn_hr_morgan",
+   "b": "nn_int_morgan",
+   "set": "eval_B",
+   "diff": 0.0273,
+   "ci": [
+    0.0168,
+    0.0373
+   ]
+  },
+  {
+   "a": "nn_hr_morgan",
+   "b": "nn_int_morgan",
+   "set": "np_examples",
+   "diff": 0.019,
+   "ci": [
+    0.0021,
+    0.0367
+   ]
+  },
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_hr_morgan",
+   "set": "eval_all",
+   "diff": 0.0766,
+   "ci": [
+    0.0611,
+    0.0915
+   ]
+  },
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_hr_morgan",
+   "set": "eval_B",
+   "diff": 0.0786,
+   "ci": [
+    0.0563,
+    0.1008
+   ]
+  },
+  {
+   "a": "nn_hr_chem",
+   "b": "nn_hr_morgan",
+   "set": "np_examples",
+   "diff": 0.1074,
+   "ci": [
+    0.062,
+    0.1534
+   ]
+  },
+  {
+   "a": "nn_int_chem",
+   "b": "nn_int_morgan",
+   "set": "eval_all",
+   "diff": 0.0437,
+   "ci": [
+    0.0284,
+    0.0586
+   ]
+  },
+  {
+   "a": "nn_int_chem",
+   "b": "nn_int_morgan",
+   "set": "eval_B",
+   "diff": 0.0469,
+   "ci": [
+    0.0263,
+    0.0674
+   ]
+  },
+  {
+   "a": "nn_int_chem",
+   "b": "nn_int_morgan",
+   "set": "np_examples",
+   "diff": 0.0698,
+   "ci": [
+    0.0279,
+    0.1154
+   ]
+  }
+ ],
+ "by_size": [
+  {
+   "size_bin": "2-3",
+   "metfrag_lite": 0.8536,
+   "nn_hr_chem": 0.7539,
+   "nn_hr_morgan": 0.7178,
+   "rr8_losses": 0.7131,
+   "panels": 504
+  },
+  {
+   "size_bin": "4-6",
+   "metfrag_lite": 0.7284,
+   "nn_hr_chem": 0.5612,
+   "nn_hr_morgan": 0.508,
+   "rr8_losses": 0.504,
+   "panels": 384
+  },
+  {
+   "size_bin": "7-12",
+   "metfrag_lite": 0.6506,
+   "nn_hr_chem": 0.4254,
+   "nn_hr_morgan": 0.3476,
+   "rr8_losses": 0.3825,
+   "panels": 380
+  },
+  {
+   "size_bin": "13-25",
+   "metfrag_lite": 0.5965,
+   "nn_hr_chem": 0.3567,
+   "nn_hr_morgan": 0.2448,
+   "rr8_losses": 0.2685,
+   "panels": 316
+  },
+  {
+   "size_bin": "26-40",
+   "metfrag_lite": 0.6693,
+   "nn_hr_chem": 0.3411,
+   "nn_hr_morgan": 0.2216,
+   "rr8_losses": 0.1874,
+   "panels": 416
+  }
+ ]
+}
