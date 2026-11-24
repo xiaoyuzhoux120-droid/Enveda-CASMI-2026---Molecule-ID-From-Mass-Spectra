@@ -21,7 +21,7 @@ GPU 机器：`TORCH_INDEX=https://download.pytorch.org/whl/cu128 bash scripts/se
 | 磁盘 | 根分区可写约 61 GB（每会话固定额度） |
 | Python | 系统 3.13.18；项目使用 `/usr/bin/python3.12`（3.12.3）建 `.venv`，与 Kaggle wheel 一致 |
 | 已有工具 | `uv`、`git`、`gh`（已有 GitHub 令牌），未重复安装 |
-| 会话性质 | 容器是临时的，闲置后回收；`.venv`、数据和模型不会保留，新线程需重新运行 setup（uv 缓存在时约 12 秒） |
+| 会话性质 | 容器是临时的，闲置后回收；`.venv`、数据和模型不会保留。Default 云端环境已保存一个 setup 脚本：新容器启动时自动在本仓库建 `.venv`（分支合并前按 `requirements.txt` + 研究包安装，合并后调用 `scripts/setup_env.sh`）。该脚本已在本会话的仓库副本上实测，但要等真正新建的线程才能证实 |
 
 ### 网络（云端环境 “Default”，受限模式 + 允许包管理器）
 
@@ -120,7 +120,7 @@ GPU 机器：`TORCH_INDEX=https://download.pytorch.org/whl/cu128 bash scripts/se
 | 4 | MatchMS 处理与相似度 | 通过 | default_filters + 归一化；CosineGreedy 0.9973（4 峰匹配），+14 Da 平移谱 ModifiedCosine 0.9973 |
 | 5 | PyTorch 训练 | 通过 | CPU 4 线程，合成数据 MLP 30 轮：loss 0.6921 → 0.3227，位准确率 0.862 |
 | 6 | 项目现有代码 | 通过 | `pytest tests`：29 passed，1 skipped（unittest 同样 30 个用例 OK） |
-| 7 | 新线程可复现 | 部分验证 | 在全新目录从仓库文件运行 `setup_env.sh` 后 `verify_env.py` 得到相同 7/9 结果；尚未在另一个真正新建的云端线程中验证 |
+| 7 | 新线程可复现 | 部分验证（云端 setup 脚本已保存，待新线程证实） | 在全新目录从仓库文件运行 `setup_env.sh` 后 `verify_env.py` 得到相同 7/9 结果；尚未在另一个真正新建的云端线程中验证 |
 
 说明：第一次 PyTorch 检查失败过一次，原因是我写的测试断言过严（取的是第 1 轮之后的 loss 作基准），不是环境问题；改为与训练前 loss 比较后通过。
 
