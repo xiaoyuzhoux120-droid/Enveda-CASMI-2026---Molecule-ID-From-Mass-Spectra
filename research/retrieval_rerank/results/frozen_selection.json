@@ -1,0 +1,9 @@
+{
+  "frozen_before_holdout": true,
+  "selected_on": "dev split, 600 class-2 proxy queries (565 in pool)",
+  "primary": "z_anaknn+.25prior",
+  "secondary": "ana_hist",
+  "control": "iso_hist (historical hybrid.py analog score, isomer-only neighbours)",
+  "acceptance": "holdout paired delta vs iso_hist CI95 lower bound > 0 and primary MRR >= ana_hist - 0.02",
+  "note": "iso_knn and z_isoknn+anaknn+.25prior on dev are affected by a divide-by-zero bug (fixed before holdout); not eligible"
+}
