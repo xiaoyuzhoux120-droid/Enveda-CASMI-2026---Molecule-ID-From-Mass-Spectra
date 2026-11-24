@@ -1,0 +1,5 @@
+rdkit 2026.03.3
+non-enveda180 n 6000 metric-key != inchikey14 column: 0.0388 fail 0 31.5 ms/struct
+  collapsed groups 5
+enveda180 n 3000 metric-key != inchikey14 column: 0.0057 fail 0 4.3 ms/struct
+  collapsed groups 0

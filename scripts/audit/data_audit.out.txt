@@ -1,0 +1,69 @@
+train rows 2539608
+['ingest_lib', 'normalized_smiles', 'inchikey', 'inchikey14', 'molecular_formula', 'ionization_mode', 'instrument_type', 'adduct', 'adduct_orig', 'precursor_mz', 'precursor_error_ppm', 'ms2_mzs', 'ms2_normalized_intensities', 'num_peaks', 'base_peak_intensity', 'collision_energy_ev', 'collision_energy_orig', 'collision_energy_orig_units']
+test (1213, 12) 400
+['molecule_id', 'spectrum_id', 'ms2_mzs', 'ms2_normalized_intensities', 'base_peak_intensity', 'adduct', 'ionization_mode', 'instrument_type', 'precursor_mz', 'collision_energy_orig', 'collision_energy_ev', 'collision_energy_orig_units']
+{'[M+H]+': 959, '[M-H]-': 193, '[M+CH2O2-H]-': 31, '[M+Na]+': 22, '[M+NH4]+': 4, '[M+K]+': 2, '[M+Cl]-': 2}
+{'positive': 987, 'negative': 226}
+spectra/molecule {'count': 400.0, 'mean': 3.0325, 'std': 1.382469458798739, 'min': 1.0, '25%': 2.0, '50%': 3.0, '75%': 4.0, 'max': 9.0}
+                    spectra  structs
+ingest_lib                          
+drug_plus              2545     2539
+enveda-180          1153785   182941
+enveda-np-examples     1184      250
+gnps                 220849    45750
+masaryk                 652      416
+massbank             101727     9180
+mona                  92416    11681
+msdial                40765     9127
+pluskal_ms2          527581    46821
+riken                347171    15892
+spectraverse          50933     9631
+drug_plus overlap with np-examples 145
+enveda-180 overlap with np-examples 0
+enveda-np-examples overlap with np-examples 250
+gnps overlap with np-examples 233
+masaryk overlap with np-examples 53
+massbank overlap with np-examples 208
+mona overlap with np-examples 231
+msdial overlap with np-examples 227
+pluskal_ms2 overlap with np-examples 224
+riken overlap with np-examples 246
+spectraverse overlap with np-examples 0
+unique structs 275810 only in enveda-180 180653 0.655
+              size      mean
+split                       
+dev          27375  0.656110
+diagnostic     250  0.000000
+holdout      27541  0.655169
+train       220644  0.655572
+abs ppm quantiles by lib
+                    0.50   0.90       0.99
+ingest_lib                                
+drug_plus           1.73   3.88   76305.77
+enveda-180          0.98   2.76       4.40
+enveda-np-examples  1.65   3.19       6.62
+gnps                1.67   6.62   77585.40
+masaryk             1.48   2.82       3.97
+massbank            1.95   4.90   11269.14
+mona                1.80   4.69   54361.90
+msdial              1.47   3.40       5.96
+pluskal_ms2         1.66   3.92    2868.49
+riken               3.75  22.49  117516.27
+spectraverse        0.65   1.64       4.88
+frac >30ppm by lib
+ingest_lib
+drug_plus             0.0350
+enveda-180            0.0000
+enveda-np-examples    0.0000
+gnps                  0.0712
+masaryk               0.0000
+massbank              0.0666
+mona                  0.0555
+msdial                0.0021
+pluskal_ms2           0.0963
+riken                 0.0801
+spectraverse          0.0001
+Name: a, dtype: float64
+visible test spectra with train match (precursor_mz 5dp + num_peaks): 1.0
+matched libs {'enveda-180': 1213}
+timsTOF train adducts {('enveda-180', '[M+H]+'): 588507, ('enveda-180', '[2M+Na]+'): 188158, ('enveda-180', '[M-H]-'): 184747, ('enveda-180', '[2M+H]+'): 89487, ('enveda-180', '[2M-H]-'): 52933, ('enveda-180', '[M+CH2O2-H]-'): 24556, ('enveda-180', '[M+Na]+'): 15957, ('enveda-180', '[M+NH4]+'): 4702, ('enveda-np-examples', '[M+H]+'): 569, ('enveda-np-examples', '[M-H]-'): 276, ('enveda-np-examples', '[M+CH2O2-H]-'): 105, ('enveda-np-examples', '[M+NH4]+'): 98, ('enveda-np-examples', '[M+Na]+'): 80, ('enveda-np-examples', '[M-H2O+H]+'): 24, ('enveda-np-examples', '[M+K]+'): 16, ('enveda-np-examples', '[M-2H2O+H]+'): 8}
