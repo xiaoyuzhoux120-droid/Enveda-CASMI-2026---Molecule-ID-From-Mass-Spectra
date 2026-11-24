@@ -1,0 +1,764 @@
+{
+ "pipeline_entropy": {
+  "spectrum_mrr": 0.9877128679643838,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9920269116834866,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 12.4,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0,
+  "ci95": [
+   0.0,
+   0.0
+  ]
+ },
+ "cos_sqrt_0.015": {
+  "spectrum_mrr": 0.9821363115008992,
+  "spectrum_top1": 0.9699064660431069,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9840986685654559,
+  "molecule_top1": 0.9728874830546769,
+  "n": 2213,
+  "secs": 9.9,
+  "cfg": {
+   "metric": 0,
+   "power": 0.5,
+   "ent_weight": false,
+   "floor": 0.0,
+   "topk": 0,
+   "rm_prec": false,
+   "tol_da": 0.015,
+   "tol_ppm": 0.0,
+   "shift": 0,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.005576556463484532,
+  "ci95": [
+   -0.0071913341447462625,
+   -0.003980561877487494
+  ]
+ },
+ "cos_sqrt_0.01": {
+  "spectrum_mrr": 0.9830027214879967,
+  "spectrum_top1": 0.9715331435542903,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9838808001257165,
+  "molecule_top1": 0.9724356077722549,
+  "n": 2213,
+  "secs": 10.3,
+  "cfg": {
+   "metric": 0,
+   "power": 0.5,
+   "ent_weight": false,
+   "floor": 0.0,
+   "topk": 0,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 0,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.004710146476386951,
+  "ci95": [
+   -0.006269900974524267,
+   -0.003241920649354181
+  ]
+ },
+ "cos_raw_0.01": {
+  "spectrum_mrr": 0.9647237911893795,
+  "spectrum_top1": 0.9435746238308256,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9595783385754413,
+  "molecule_top1": 0.9340262087663804,
+  "n": 2213,
+  "secs": 10.7,
+  "cfg": {
+   "metric": 0,
+   "power": 1.0,
+   "ent_weight": false,
+   "floor": 0.0,
+   "topk": 0,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 0,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.022989076775004464,
+  "ci95": [
+   -0.026349931729817377,
+   -0.019834352997964586
+  ]
+ },
+ "entropy_unweighted": {
+  "spectrum_mrr": 0.9811982599625837,
+  "spectrum_top1": 0.9685847905652705,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.983127521229911,
+  "molecule_top1": 0.9710799819249887,
+  "n": 2213,
+  "secs": 8.9,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": false,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.006514608001800056,
+  "ci95": [
+   -0.008297948939376772,
+   -0.004834003867204385
+  ]
+ },
+ "ent_tol_0.02": {
+  "spectrum_mrr": 0.9875571849019381,
+  "spectrum_top1": 0.9789548596990647,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9917783802781543,
+  "molecule_top1": 0.9859918662449164,
+  "n": 2213,
+  "secs": 13.2,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.02,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.00015568306244570835,
+  "ci95": [
+   -0.0007023040518000574,
+   0.00042130176030710364
+  ]
+ },
+ "ent_tol_0.005": {
+  "spectrum_mrr": 0.9881554957396078,
+  "spectrum_top1": 0.9804798698657992,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9919533149430646,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 11.8,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.005,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0004426277752238815,
+  "ci95": [
+   -0.00013648615146132214,
+   0.0009758978348383927
+  ]
+ },
+ "ent_tol_0.003": {
+  "spectrum_mrr": 0.9885549143852598,
+  "spectrum_top1": 0.9812932086213908,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.992193870797576,
+  "molecule_top1": 0.9868956168097605,
+  "n": 2213,
+  "secs": 11.8,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.003,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.000842046420876131,
+  "ci95": [
+   -3.927072632308847e-07,
+   0.0017091287041713582
+  ]
+ },
+ "ent_tol_10ppm+0.002": {
+  "spectrum_mrr": 0.9886156981520833,
+  "spectrum_top1": 0.9812932086213908,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9924051902254867,
+  "molecule_top1": 0.9873474920921825,
+  "n": 2213,
+  "secs": 11.6,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.002,
+   "tol_ppm": 10.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0009028301876994231,
+  "ci95": [
+   0.00017732623080838825,
+   0.0016054130247196324
+  ]
+ },
+ "ent_tol_20ppm+0.002": {
+  "spectrum_mrr": 0.9884023467509752,
+  "spectrum_top1": 0.9809882065880439,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9917227426835722,
+  "molecule_top1": 0.9859918662449164,
+  "n": 2213,
+  "secs": 10.4,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.002,
+   "tol_ppm": 20.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0006894787865913863,
+  "ci95": [
+   9.736488822095405e-05,
+   0.0012399438604510876
+  ]
+ },
+ "ent_tol_5ppm+0.001": {
+  "spectrum_mrr": 0.9876952345837269,
+  "spectrum_top1": 0.9795648637657585,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9923884119094241,
+  "molecule_top1": 0.9868956168097605,
+  "n": 2213,
+  "secs": 10.2,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.001,
+   "tol_ppm": 5.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -1.7633380657087393e-05,
+  "ci95": [
+   -0.0010372708189265365,
+   0.0009885389221049067
+  ]
+ },
+ "cos_sqrt_10ppm+0.002": {
+  "spectrum_mrr": 0.9835713340933588,
+  "spectrum_top1": 0.9726514843432289,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9846816235428977,
+  "molecule_top1": 0.973791233619521,
+  "n": 2213,
+  "secs": 8.6,
+  "cfg": {
+   "metric": 0,
+   "power": 0.5,
+   "ent_weight": false,
+   "floor": 0.0,
+   "topk": 0,
+   "rm_prec": false,
+   "tol_da": 0.002,
+   "tol_ppm": 10.0,
+   "shift": 0,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.004141533871025032,
+  "ci95": [
+   -0.005680599446361527,
+   -0.0026068098061895473
+  ]
+ },
+ "ent_rm_prec": {
+  "spectrum_mrr": 0.988065207092931,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9934789375910027,
+  "molecule_top1": 0.9891549932218707,
+  "n": 2213,
+  "secs": 12.2,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": true,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.00035233912854720436,
+  "ci95": [
+   -0.0005901964997504621,
+   0.0012917348486493536
+  ]
+ },
+ "ent_floor_0.01": {
+  "spectrum_mrr": 0.9868168630992055,
+  "spectrum_top1": 0.9775315168767792,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9912813174674899,
+  "molecule_top1": 0.9846362403976503,
+  "n": 2213,
+  "secs": 11.1,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.01,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.0008960048651782748,
+  "ci95": [
+   -0.0020944301561853654,
+   0.00041169519870477237
+  ]
+ },
+ "ent_floor_0": {
+  "spectrum_mrr": 0.9884318792434107,
+  "spectrum_top1": 0.9804798698657992,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9929952158601052,
+  "molecule_top1": 0.9882512426570267,
+  "n": 2213,
+  "secs": 11.4,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.0,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0007190112790269117,
+  "ci95": [
+   0.00010540725603276529,
+   0.001392112454528096
+  ]
+ },
+ "ent_top64": {
+  "spectrum_mrr": 0.9875126394869358,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9919164256941031,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 12.2,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 64,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.00020022847744803252,
+  "ci95": [
+   -0.0007211368455274617,
+   0.00020009474562242695
+  ]
+ },
+ "ent_top128": {
+  "spectrum_mrr": 0.9875441768247255,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9919064116081737,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 11.8,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 128,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.00016869113965815277,
+  "ci95": [
+   -0.000587437867148667,
+   7.531254707034195e-05
+  ]
+ },
+ "ent_centroid_0.005": {
+  "spectrum_mrr": 0.9885817054254766,
+  "spectrum_top1": 0.980784871899146,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9926294120600492,
+  "molecule_top1": 0.9873474920921825,
+  "n": 2213,
+  "secs": 19.1,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.005,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0008688374610927663,
+  "ci95": [
+   0.00019994412784204058,
+   0.0015361273673994275
+  ]
+ },
+ "ent_minmz_50": {
+  "spectrum_mrr": 0.9892375865238492,
+  "spectrum_top1": 0.9819032126880846,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9930436310689362,
+  "molecule_top1": 0.9882512426570267,
+  "n": 2213,
+  "secs": 11.8,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 50.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0015247185594653905,
+  "ci95": [
+   0.0007347207979216506,
+   0.0023174158896639096
+  ]
+ },
+ "ent_noshift": {
+  "spectrum_mrr": 0.9878306458222006,
+  "spectrum_top1": 0.9795648637657585,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9920269116834866,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 10.3,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 0,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.00011777785781678257,
+  "ci95": [
+   1.483074628032468e-05,
+   0.0002700862544014256
+  ]
+ },
+ "ent_modified": {
+  "spectrum_mrr": 0.9877128679643838,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9920269116834866,
+  "molecule_top1": 0.9864437415273385,
+  "n": 2213,
+  "secs": 10.7,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 2,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0,
+  "ci95": [
+   0.0,
+   0.0
+  ]
+ },
+ "ent_10ppm_rmprec": {
+  "spectrum_mrr": 0.9886117003717609,
+  "spectrum_top1": 0.980683204554697,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.993181932291738,
+  "molecule_top1": 0.9887031179394488,
+  "n": 2213,
+  "secs": 9.9,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": true,
+   "tol_da": 0.002,
+   "tol_ppm": 10.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0008988324073771578,
+  "ci95": [
+   -0.0001493778220162177,
+   0.0019467028513296787
+  ]
+ },
+ "ent_10ppm_rmprec_modified": {
+  "spectrum_mrr": 0.9885773451351915,
+  "spectrum_top1": 0.9805815372102481,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.993178508994144,
+  "molecule_top1": 0.9887031179394488,
+  "n": 2213,
+  "secs": 10.5,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": true,
+   "tol_da": 0.002,
+   "tol_ppm": 10.0,
+   "shift": 2,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0008644771708077323,
+  "ci95": [
+   -0.00019011251400497946,
+   0.0019150465181313255
+  ]
+ },
+ "ent_10ppm_modified": {
+  "spectrum_mrr": 0.9884818666524587,
+  "spectrum_top1": 0.9810898739324929,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9921767697530536,
+  "molecule_top1": 0.9868956168097605,
+  "n": 2213,
+  "secs": 8.9,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": false,
+   "tol_da": 0.002,
+   "tol_ppm": 10.0,
+   "shift": 2,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.0007689986880748825,
+  "ci95": [
+   8.798446524400415e-06,
+   0.0014964635339286764
+  ]
+ },
+ "ent_modified_rmprec": {
+  "spectrum_mrr": 0.988065207092931,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9934789375910027,
+  "molecule_top1": 0.9891549932218707,
+  "n": 2213,
+  "secs": 11.3,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": true,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 2,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": 0.00035233912854720436,
+  "ci95": [
+   -0.0005901964997504621,
+   0.0012917348486493536
+  ]
+ },
+ "cos_sqrt_modified_0.01_rmprec": {
+  "spectrum_mrr": 0.983455163424099,
+  "spectrum_top1": 0.9714314762098414,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9851031781894861,
+  "molecule_top1": 0.973791233619521,
+  "n": 2213,
+  "secs": 9.5,
+  "cfg": {
+   "metric": 0,
+   "power": 0.5,
+   "ent_weight": false,
+   "floor": 0.0,
+   "topk": 0,
+   "rm_prec": true,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 2,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.0
+  },
+  "d_mrr_vs_ref": -0.004257704540284642,
+  "ci95": [
+   -0.0058886538912969015,
+   -0.00258884103736213
+  ]
+ },
+ "ent_nl_0.5": {
+  "spectrum_mrr": 0.988065207092931,
+  "spectrum_top1": 0.9793615290768605,
+  "n_spectra": 9836,
+  "molecule_mrr": 0.9937048752322137,
+  "molecule_top1": 0.9896068685042928,
+  "n": 2213,
+  "secs": 12.1,
+  "cfg": {
+   "metric": 1,
+   "power": 1.0,
+   "ent_weight": true,
+   "floor": 0.002,
+   "topk": 256,
+   "rm_prec": true,
+   "tol_da": 0.01,
+   "tol_ppm": 0.0,
+   "shift": 1,
+   "centroid_da": 0.0,
+   "min_mz": 0.0,
+   "nl": 0.5
+  },
+  "d_mrr_vs_ref": 0.00035233912854720436,
+  "ci95": [
+   -0.0005901964997504621,
+   0.0012917348486493536
+  ]
+ },
+ "_meta": {
+  "task": "A",
+  "ref": "pipeline_entropy",
+  "n_query": 1000,
+  "n_lib": 40000
+ }
+}
