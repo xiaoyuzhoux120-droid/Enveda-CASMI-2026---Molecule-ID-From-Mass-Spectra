@@ -1,0 +1,14 @@
+# Research environment for Enveda CASMI 2026 (Python 3.12).
+# Install with scripts/setup_env.sh; exact resolved versions are in requirements-lock.txt.
+-r requirements-ml.txt
+# Kaggle's metric canonicalises with RDKit 2026.03.3, so pin it exactly.
+rdkit==2026.3.3
+matchms>=1.0,<2
+pyteomics>=5.0
+optuna>=5.0
+jupyterlab>=4.6
+ipykernel
+pytest>=9
+kagglehub>=1.0
+# torch: CPU build from https://download.pytorch.org/whl/cpu (see setup_env.sh);
+# on a CUDA machine install the matching CUDA build instead.

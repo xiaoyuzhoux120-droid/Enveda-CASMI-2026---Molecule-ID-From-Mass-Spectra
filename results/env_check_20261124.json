@@ -1,0 +1,91 @@
+{
+  "hardware": {
+    "ok": true,
+    "detail": {
+      "python": "3.12.3",
+      "cpus": 4,
+      "ram_gb": 16.9,
+      "disk_free_gb": 62.1,
+      "cuda_gpu": null
+    },
+    "seconds": 1.18
+  },
+  "versions": {
+    "ok": true,
+    "detail": {
+      "numpy": "2.5.5",
+      "pandas": "3.1.1",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1",
+      "joblib": "1.6.0",
+      "torch": "2.15.0+cpu",
+      "rdkit": "2026.3.3",
+      "matchms": "1.0.0",
+      "pyteomics": "5.0.2",
+      "optuna": "5.1.0",
+      "jupyterlab": "4.6.6",
+      "pytest": "9.2.0",
+      "kaggle": "2.2.5",
+      "kagglehub": "1.0.3"
+    },
+    "seconds": 3.97
+  },
+  "rdkit_metric_matching": {
+    "ok": true,
+    "detail": {
+      "inchikey14_glucose": "WQZGKKKJIJFFOK",
+      "tanimoto_salicylic_vs_aspirin": 0.448,
+      "morgan_bits_on": 18
+    },
+    "seconds": 0.02
+  },
+  "matchms_similarity": {
+    "ok": true,
+    "detail": {
+      "cosine_s1_s2": 0.9973,
+      "matches": 4,
+      "modified_cosine_shifted": 0.9973
+    },
+    "seconds": 2.32
+  },
+  "pytorch_training": {
+    "ok": true,
+    "detail": {
+      "device": "cpu",
+      "threads": 4,
+      "epochs": 30,
+      "loss_before": 0.6921,
+      "loss_after": 0.3227,
+      "train_bit_accuracy": 0.862
+    },
+    "seconds": 1.83
+  },
+  "kaggle_mcp_reachable": {
+    "ok": true,
+    "detail": {
+      "tools": 76,
+      "token_present": false,
+      "deadline": "2026-12-14T23:59:00Z",
+      "metric": "CASMI: Mean Average Precision"
+    },
+    "seconds": 0.53
+  },
+  "kaggle_cli_auth": {
+    "ok": false,
+    "detail": "RuntimeError: no Kaggle credential configured (see ENVIRONMENT_SETUP.md, manual steps)",
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/enveda-casmi-2026---molecule-id-from-mass-spectra/scripts/verify_env.py\", line 28, in run\n    detail = fn()\n             ^^^^\n  File \"/home/user/enveda-casmi-2026---molecule-id-from-mass-spectra/scripts/verify_env.py\", line 187, in kaggle_auth\n    raise RuntimeError(\"no Kaggle credential configured (see ENVIRONMENT_SETUP.md, manual steps)\")\nRuntimeError: no Kaggle credential configured (see ENVIRONMENT_SETUP.md, manual steps)\n",
+    "seconds": 0.0
+  },
+  "competition_data_present": {
+    "ok": false,
+    "detail": "RuntimeError: not downloaded yet: {'train.parquet': False, 'test.parquet': False} (needs Kaggle credential + accepted rules)",
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/enveda-casmi-2026---molecule-id-from-mass-spectra/scripts/verify_env.py\", line 28, in run\n    detail = fn()\n             ^^^^\n  File \"/home/user/enveda-casmi-2026---molecule-id-from-mass-spectra/scripts/verify_env.py\", line 201, in data_present\n    raise RuntimeError(f\"not downloaded yet: {files} (needs Kaggle credential + accepted rules)\")\nRuntimeError: not downloaded yet: {'train.parquet': False, 'test.parquet': False} (needs Kaggle credential + accepted rules)\n",
+    "seconds": 0.0
+  },
+  "project_tests": {
+    "ok": true,
+    "detail": "29 passed, 1 skipped in 5.53s",
+    "seconds": 6.71
+  }
+}

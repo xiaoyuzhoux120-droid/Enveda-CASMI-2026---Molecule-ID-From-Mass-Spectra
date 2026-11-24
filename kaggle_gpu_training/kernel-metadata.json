@@ -1,0 +1,17 @@
+{
+  "id": "giaok246/casmi-2026-fp-gpu-training",
+  "title": "CASMI 2026 FP GPU Training",
+  "code_file": "train_fp_gpu.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "competition_sources": [
+    "enveda-CASMI26-molecule-id-mass-spectra"
+  ],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
