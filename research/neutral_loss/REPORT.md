@@ -167,3 +167,22 @@ W=/path/to/work
 ```
 
 `results/` 中保存了 `summary.json`、`combiner_summary.json`、`vocab.json`、`lift_strong.csv`。`frag_rescore.py` 来自 Kaggle 公开 notebook 代码，没有提交到本仓库。
+
+## 10. 追加：在 FRP5 的 RR8 特征上重训 lambdarank（2026-11-24，Kaggle A/B 前的本地门槛）
+
+脚本：`research/neutral_loss/rr8_retrain.py`。直接复用 notebook 的 `rr_features`（102 维：MetFrag 风格解释度、峰覆盖、候选描述符、13 损失 agree/clash）和 `rr_overlay.model_features`。31 损失版本（`rr_features_ext`，170+4 维）只替换损失词典。在 8,000 个天然产物 fit 面板上训练 LightGBM lambdarank（200 树，15 叶，lr 0.05）。测试面板与第 6 节相同，测试集上不调任何参数。
+
+| 排序器 | eval MRR (2000) | np MRR (207) |
+|---|---:|---:|
+| MetFrag-lite | 0.7124 | 0.5883 |
+| notebook 原版 RR8 booster（13 损失） | 0.7451 | 0.6190 |
+| **重训 13 损失** | **0.7585** | **0.6510** |
+| 重训 31 损失 | 0.7546 | 0.6455 |
+
+| 配对差值（95% CI） | eval | np |
+|---|---|---|
+| 重训 13 − 原版 | +0.0133 [0.0050, 0.0219] | +0.0320 [0.0046, 0.0607] |
+| 重训 31 − 重训 13 | −0.0039 [−0.0096, 0.0016] | −0.0055 [−0.0280, 0.0156] |
+| 重训 31 − MetFrag | +0.0422 [0.0311, 0.0528] | +0.0572 [0.0200, 0.0954] |
+
+结论更新：在 RR8 已有的丰富谱图特征上，31 损失扩展**没有**进一步提升（与第 6 节的简化特征 GBDT 结论不同）。主要收益来自用天然产物面板重训。因此 Kaggle A/B 上线的是“重训 13 损失 booster + `V8 = 'BOTH'`”，特征代码与原 notebook 逐字节一致，只替换模型字符串（sha256 `6ad35fa1…e6cf`）。原版 booster 的训练数据未知，可能与本评测分子重叠，这只会让原版的数字偏高。

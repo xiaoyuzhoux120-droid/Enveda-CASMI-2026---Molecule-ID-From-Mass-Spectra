@@ -1,0 +1,82 @@
+{
+ "eval": {
+  "metfrag_lite": 0.7124,
+  "shipped_rr8_13": 0.7451,
+  "retrained_13": 0.7585,
+  "retrained_31": 0.7546,
+  "retrained_13-shipped_rr8_13": [
+   0.0133,
+   0.005,
+   0.0219
+  ],
+  "retrained_31-shipped_rr8_13": [
+   0.0094,
+   0.001,
+   0.0178
+  ],
+  "retrained_31-retrained_13": [
+   -0.0039,
+   -0.0096,
+   0.0016
+  ],
+  "shipped_rr8_13-metfrag_lite": [
+   0.0328,
+   0.0231,
+   0.0426
+  ],
+  "retrained_31-metfrag_lite": [
+   0.0422,
+   0.0311,
+   0.0528
+  ],
+  "panels": 2000
+ },
+ "np": {
+  "metfrag_lite": 0.5883,
+  "shipped_rr8_13": 0.619,
+  "retrained_13": 0.651,
+  "retrained_31": 0.6455,
+  "retrained_13-shipped_rr8_13": [
+   0.032,
+   0.0046,
+   0.0607
+  ],
+  "retrained_31-shipped_rr8_13": [
+   0.0265,
+   -0.0001,
+   0.0542
+  ],
+  "retrained_31-retrained_13": [
+   -0.0055,
+   -0.028,
+   0.0156
+  ],
+  "shipped_rr8_13-metfrag_lite": [
+   0.0307,
+   -0.0002,
+   0.0633
+  ],
+  "retrained_31-metfrag_lite": [
+   0.0572,
+   0.02,
+   0.0954
+  ],
+  "panels": 207
+ },
+ "train_panels": 8000,
+ "params": {
+  "objective": "lambdarank",
+  "learning_rate": 0.05,
+  "num_leaves": 15,
+  "min_data_in_leaf": 50,
+  "feature_fraction": 0.8,
+  "bagging_fraction": 0.8,
+  "bagging_freq": 1,
+  "lambda_l2": 1.0,
+  "lambdarank_truncation_level": 40,
+  "verbose": -1,
+  "seed": 0,
+  "num_threads": 4,
+  "num_boost_round": 200
+ }
+}
