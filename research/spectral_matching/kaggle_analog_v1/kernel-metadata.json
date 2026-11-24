@@ -1,0 +1,37 @@
+{
+  "id": "xiaoyuzhoux120/casmi26-nightly-analog-20261124",
+  "title": "CASMI26 Nightly Analog 20261124",
+  "code_file": "casmi26-nightly-analog-20261124.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "keywords": [
+    "gpu",
+    "chemistry"
+  ],
+  "dataset_sources": [
+    "samartalwar/casmi-2026-spectral-library-massbankharmonized",
+    "sanpier/casmi-spectrum-model-v1",
+    "taeyangg4/casmi26-extlib-gnps-full",
+    "dmitriigluzdov/casmi26-fold-safe-fpnet",
+    "taeyangg4/casmi26-fr3to25-clean",
+    "dmitriigluzdov/casmi26-natural-product-knowledge-table",
+    "dmitriigluzdov/casmi26-natural-product-panel-benchmark",
+    "dmitriigluzdov/casmi26-pubchem-popularity-prior",
+    "dmitriigluzdov/casmi26-attributed-v4g-reproduction-assets",
+    "sanpier/catalogue-experiment-saner",
+    "metric/rdkit-2026-3-3-wheel"
+  ],
+  "kernel_sources": [
+    "popwenman/casmi26-scorer-train-v80"
+  ],
+  "competition_sources": [
+    "enveda-CASMI26-molecule-id-mass-spectra"
+  ],
+  "model_sources": [],
+  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "machine_shape": "NvidiaTeslaT4"
+}

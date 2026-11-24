@@ -186,3 +186,9 @@ P=research/spectral_matching
 ```
 
 峰值内存约 9 GB（Task B 1,500+ 查询时），4 核 CPU 总耗时约 1.5 小时。
+
+## 8. 上线测试：FRP5 + analog 后置层（2026-11-24）
+
+- 实现：`analog_layer.py` + `notebook_cell_analog.py`，作为 FRP5（0.495）之后的唯一新增 cell（Ours · 4），其余 cell 字节不变；只重排 2–25 名，rank 1 与候选集合不变，任何异常/超时保留原文件。λ = 0.35。
+- 离线端到端代理（公开 250 分子 NP panel，`panel_eval.py`，`results/panel_analog_layer.json`）：λ ≤ 0.35 时三种情形差值都在 ±0.0003 以内（CI 含 0）；λ ≥ 0.75 在"结构不在池中"情形变差（−0.003）。该 panel 已饱和：真值在 2–25 名、可被本层移动的分子每种情形只有 14–19 个，且该情形的真值全来自未能映射结构的来源，因此**离线没有证明提升，也没有发现损害**。
+- Kaggle：notebook `xiaoyuzhoux120/casmi26-nightly-analog-20261124` v1，commit 运行通过（本层 334 s，400 分子）；提交 58847301，分数待出。public 榜约 125 个分子，±0.004 约等于一个分子从第 2 名到第 1 名，差 0.001–0.003 应视为噪声。
