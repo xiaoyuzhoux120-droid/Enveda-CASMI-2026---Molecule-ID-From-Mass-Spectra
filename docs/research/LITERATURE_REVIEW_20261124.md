@@ -14,7 +14,7 @@
 
 | 优先级 | 方向 | 文献证据 | 你的管线可能缺的部分 | 成本 | 合规 |
 |---|---|---|---|---|---|
-| P0 | **合规审计 GLACIER/ICEBERG 权重** | ICEBERG 的 NIST 训练权重是单独门控发放的（FRIGID issue #10 原话转述）；NIST 及其衍生权重被主办方明确禁止 | 确认你用的是 NPLIB1/MassSpecGym 公开数据训练的 checkpoint，而不是 NIST 版本 | 低 | **高风险，若用错会被取消资格** |
+| P0 | **合规审计 GLACIER/ICEBERG 权重** | ms-pred README：公开 ICEBERG 权重为 MassSpecGym 训练，NIST'20 版只给持证者；GLACIER 论文报告了 NIST'20 训练结果，公开权重来源未见说明；NIST 及其衍生权重被主办方明确禁止 | 确认 Notebook 中两者都是非 NIST 版本 | 低 | **高风险，若用错会被取消资格** |
 | P1 | **候选内 listwise / 同质量硬负样本训练的打分器** | 公开仓库 christianmcb：FPNet（peak transformer，10,226 位多族指纹 logits，用同质量硬负样本训练排序）把公开分从 0.146 提到 0.229；MassSpecGym 上 MIST 在同条件下 hit@1 14.64% 远超 fingerprint FFN 2.54% | 若双神经打分器是按位 BCE 训练的指纹预测，改为“候选内 softmax/InfoNCE + 同质量负样本”是最直接的升级 | 中（GPU 数小时） | 低 |
 | P1 | **分子式推断作为候选过滤/特征** | "MassSpecGym in the Wild" 表 2（已读原文）：mass 赛道随机基线 hit@1 0.43%，给定真实分子式 12.98%；MIST + 数据安全的 MIST-CF 分子式 32.14%，给真实分子式 52.84% | 用碎片子式一致性（subformula tree）给候选打分，比仅靠 35 ppm 精确质量窗口强得多 | 中（可自写分解，免 SIRIUS） | 低（MIST-CF 公开权重只用 NPLIB1） |
 | P1 | **CASMI 式多证据等权集成 + 文献热度先验** | CASMI 2016（摘要，待核）：6 个碎片打分器等权组合 Top1 82 vs 最佳单模型 70；Category 3 只用“参考文献计数”就 Top1 143/208；christianmcb：PubChem 热度先验 w=0.15 带来 +0.018 公开分；"in the Wild" 表 3：PubChem 默认排序（CID 顺序）单独就能 hit@1 49.98% | 若没有热度先验（PubChem 记录数/PubMed 数/CID），这是低成本高收益项 | 低 | 低（PubChem 公共领域；LOTUS CC BY；NPAtlas CC BY-NC 允许） |
@@ -108,7 +108,8 @@
 **ICEBERG**（Goldman et al., 2024；[arXiv 2304.13136](https://arxiv.org/abs/2304.13136)；代码 coleygroup/ms-pred）、**FraGNNet**（[arXiv 2404.02360](https://arxiv.org/abs/2404.02360)）、**MassFormer**（[arXiv 2111.04824](https://arxiv.org/abs/2111.04824)）、**GLACIER**（NeurIPS 2026，[arXiv 2606.29161](https://arxiv.org/abs/2606.29161)）
 - 用途：为没有参考谱的 class 2 候选生成模拟谱，再做谱图匹配；或用模拟谱做编码器预训练/增强。
 - MassSpecGym 摘要称 FraGNNet 是最强的谱模拟基线（待核）。
-- 合规：你已在用 GLACIER/ICEBERG，权重来源审计见第 5 节（正在核实，结果会补入）。
+- GLACIER（已读摘要原文）：单阶段 Transformer 碎片检测网络，MassSpecGym Top-1 检索 70.0%（有对比微调）/69.7%（无），NIST'20 上 52.5%/38.5%，推理比两阶段模型快约 8 倍。
+- 合规：公开 ICEBERG 权重是 MassSpecGym 训练，合规；GLACIER 存在 NIST'20 训练版本，你用的是哪一版必须确认，见第 5 节。
 
 ### 3.5 de novo 生成（class 3）
 
@@ -162,10 +163,11 @@
 | MIST 官方权重 | 未见许可声明 | **主基准 csi2022 含 NIST**，下载的权重来源未说明 | **不建议用**；用 MIST 代码在比赛数据上自训 |
 | MIST-CF 公开权重 | 未见许可声明 | 公开版只用 NPLIB1；NIST 版不公开 | 可用公开版；依赖 SIRIUS decomp |
 | JESTR 权重 | 未核实 | 论文有 NIST2020 训练版本 | 只用 MassSpecGym/NPLIB1 版本，或自训 |
-| ICEBERG（ms-pred） | MIT（FRIGID issue 转述） | **NIST 训练版另行门控发放** | 必须确认你用的是 NPLIB1/MassSpecGym 版本（核实中） |
-| GLACIER | 待核 | 待核 | 核实中 |
+| ICEBERG（ms-pred） | README 未给权重许可；代码 MIT（FRIGID issue 转述） | 公开下载的权重是 **MassSpecGym 训练**（README 原话）；NIST'20 版只发给持证者 | 若来自 ms-pred 官方 Dropbox 下载则合规；若来源是别人上传的 Kaggle 数据集，需追溯 |
+| GLACIER | 论文 CC BY-NC-ND（仅论文）；权重许可未见 | 论文同时报告 MassSpecGym（Top-1 检索 70.0%）和 **NIST'20** 结果，说明存在 NIST 训练版本；官方是否发布权重、发布哪个版本，未能确认。harrylau/msms-models 中的 GLACIER 是第三方重训版，卡片未说明是否用 NIST | **高风险，需你确认 Notebook 中 GLACIER 权重的确切来源与训练数据** |
 | FRIGID checkpoint | Zenodo 标 CC BY-NC 4.0，代码 Apache-2.0，issue #10 无维护者回复 | 其 MIST 编码器用 GLACIER 模拟谱增强，链式依赖 GLACIER | 待 GLACIER 结论 |
 | FPNet（Kaggle 用户发布） | 作者称沿用比赛数据条款 | 未说明 | 如使用，需向发布者确认训练数据 |
+| ICICLE（CRG-MIT，EI 谱模拟） | HF 标 MIT，但有门控 | **NIST23 训练**，卡片要求只分发给 NIST23 持证者 | **禁止使用** |
 | CFM-ID | — | 2016 版 CFM_retrain 用了 METLIN + NIST | 避免使用 NIST 训练的 CFM-ID 模型 |
 | SIRIUS / CSI:FingerID | — | CSI:FingerID 指纹预测依赖在线 Web 服务 | 比赛 Notebook 必须关网，**CSI:FingerID 不可用**；仅离线 `decomp` 可考虑 |
 
@@ -190,4 +192,4 @@
 - 没有读到你的 0.495 Notebook 代码，第 1 节“你可能缺的部分”都是推测。
 - Kaggle 讨论帖 #746430（CC BY-NC checkpoint 是否合格）和 #750330 的后续回复，本线程未能读取，需要你在浏览器中查看。
 - CASMI 2022 的获奖方法、MassSpecGym 与 JESTR 结果表、CASMI 2016 详细表格，都来自截断页面的摘要，引用前需对照 PDF。
-- GLACIER 与 ICEBERG 公开权重的训练数据正在核实，结论会补入第 5 节。
+- **GLACIER 权重来源无法从公开页面确认**，需要你对照 0.495 Notebook 挂载的数据集说明确认。ICEBERG 官方公开权重已确认是 MassSpecGym 训练。
